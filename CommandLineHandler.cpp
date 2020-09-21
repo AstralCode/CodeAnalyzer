@@ -20,22 +20,22 @@ int CCommandLineHandler::HandleArguments( std::filesystem::path& oInputDirectory
 {
 	if ( m_aArgumentStrings.size() != 2 )
 	{
-		return EProgramStatusCodes::IncorrectArgumentCount;
+		return EProgramStatusCodes::eIncorrectArgumentCount;
 	}
 
 	oInputDirectoryPath = m_aArgumentStrings[0];
 	if ( !std::filesystem::exists( oInputDirectoryPath ) )
 	{
-		return EProgramStatusCodes::IncorrectArgument;
+		return EProgramStatusCodes::eIncorrectArgument;
 	}
 
 	oOutputDirectoryPath = m_aArgumentStrings[1];
 	if ( !std::filesystem::exists( oOutputDirectoryPath ) )
 	{
-		return EProgramStatusCodes::IncorrectArgument;
+		return EProgramStatusCodes::eIncorrectArgument;
 	}
 
-    return EProgramStatusCodes::Success;
+    return EProgramStatusCodes::eSuccess;
 }
 
 void CCommandLineHandler::PrintUsage() const

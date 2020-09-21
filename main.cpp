@@ -10,7 +10,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 	const int iProgramStatusCode = oCommandLineHandler.HandleArguments( oInputDirectoryPath,
 																	    oOutputDirectoryPath );
-	if ( iProgramStatusCode != EProgramStatusCodes::Success )
+	if ( iProgramStatusCode != EProgramStatusCodes::eSuccess )
 	{
 		oCommandLineHandler.PrintUsage();
 	}

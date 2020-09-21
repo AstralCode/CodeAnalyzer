@@ -2,7 +2,7 @@
 
 enum EProgramStatusCodes
 {
-	Success,
-	IncorrectArgumentCount,
-	IncorrectArgument
+	eSuccess,
+	eIncorrectArgumentCount,
+	eIncorrectArgument
 };
