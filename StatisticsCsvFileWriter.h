@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-class CStatisticsAnalyzerModule;
+#include "CodeAnalyzer.h"
 
 class CStatisticsCsvFileWriter
 {
@@ -11,11 +11,11 @@ public:
 
 	void SetSeparator( const char cSeparator );
 
-	int WriteStatistics( const std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>>& oStatisticsAnalyzerModules );
+	int WriteStatistics( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules );
 
 private:
-	void WriteStatisticsHeaders( std::ofstream& oOutputFileStream, const std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>>& oStatisticsAnalyzerModules ) const;
-	void WriteStatisticsResults( std::ofstream& oOutputFileStream, const std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>>& oStatisticsAnalyzerModules ) const;
+	void WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules ) const;
+	void WriteStatisticsResults( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules ) const;
 
 	std::filesystem::path PrepareOutputFilePath() const;
 

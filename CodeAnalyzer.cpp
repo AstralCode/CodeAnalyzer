@@ -1,14 +1,17 @@
 #include "CodeAnalyzer.h"
 
+#include <fstream>
+#include <string>
+
 CCodeAnalyzer::CCodeAnalyzer( const std::filesystem::path& oInputDirectoryPath ) :
     m_oInputDirectoryPath{ oInputDirectoryPath }
 {
 
 }
 
-std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>> CCodeAnalyzer::GetModules() const
+CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() const
 {
-    std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>> oStatisticsAnalyzerModules{};
+    ConstStatisticsAnalyzerModuleVector oStatisticsAnalyzerModules{};
 
     std::for_each( m_aStatisticsAnalyzerModules.cbegin(), m_aStatisticsAnalyzerModules.cend(), [&oStatisticsAnalyzerModules]( const std::unique_ptr<CStatisticsAnalyzerModule>& upoModule )
     {
@@ -18,12 +21,63 @@ std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>> CCodeAnalyz
     return oStatisticsAnalyzerModules;
 }
 
-int CCodeAnalyzer::Execute()
+int CCodeAnalyzer::Execute() const
 {
-    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_aStatisticsAnalyzerModules )
+    int iProgramStatusCode = EProgramStatusCodes::eSuccess;
+
+    std::filesystem::recursive_directory_iterator oDirectoryRecursiveIt{ m_oInputDirectoryPath };
+    std::string oFileLineString;
+
+    for ( const std::filesystem::path& oFilePath : oDirectoryRecursiveIt )
     {
-        upoStatisticsAnalyzerModule->ProcessLine( "..." );
+        if ( !std::filesystem::is_directory( oFilePath ) )
+        {
+            if ( oFilePath.filename().has_extension() )
+            {
+                const StatisticsAnalyzerModuleVector aStatisticsAnalyzerModules = GetModules( oFilePath.filename().extension() );
+   
+                std::ifstream oFileStream{ oFilePath.string(), std::fstream::in };
+
+                if ( oFileStream.is_open() )
+                {
+                    for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
+                    {
+                        oStatisticsAnalyzerModule.get().OnStartProcess( oFilePath );
+                    }
+
+                    while ( std::getline( oFileStream, oFileLineString ) )
+                    {
+                        for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
+                        {
+                            oStatisticsAnalyzerModule.get().ProcessLine( oFileLineString );
+                        }
+                    }
+
+                    for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
+                    {
+                        oStatisticsAnalyzerModule.get().OnEndProcess( oFilePath );
+                    }
+
+                    oFileStream.close();
+                }
+            }
+        }
     }
 
-    return EProgramStatusCodes::eSuccess;
+    return iProgramStatusCode;
+}
+
+CCodeAnalyzer::StatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules( const std::filesystem::path& oAcceptedFileExtensionPath ) const
+{
+    CCodeAnalyzer::StatisticsAnalyzerModuleVector oStatisticsAnalyzerModules{};
+
+    std::for_each( m_aStatisticsAnalyzerModules.cbegin(), m_aStatisticsAnalyzerModules.cend(), [&oStatisticsAnalyzerModules, oAcceptedFileExtensionPath]( const std::unique_ptr<CStatisticsAnalyzerModule>& upoModule )
+    {
+        if ( upoModule->HasAcceptFileExtension( oAcceptedFileExtensionPath ) )
+        {
+            oStatisticsAnalyzerModules.emplace_back( std::ref( *upoModule ) );
+        }
+    });
+
+    return oStatisticsAnalyzerModules;
 }

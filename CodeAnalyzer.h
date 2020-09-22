@@ -9,16 +9,24 @@
 class CCodeAnalyzer final
 {
 public:
+	using StatisticsAnalyzerModule = std::reference_wrapper<CStatisticsAnalyzerModule>;
+	using ConstStatisticsAnalyzerModule = std::reference_wrapper<const CStatisticsAnalyzerModule>;
+
+	using StatisticsAnalyzerModuleVector = std::vector<StatisticsAnalyzerModule>;
+	using ConstStatisticsAnalyzerModuleVector = std::vector<ConstStatisticsAnalyzerModule>;
+
 	CCodeAnalyzer( const std::filesystem::path& oInputDirectoryPath );
 
 	template<typename TDerivedModule>
 	void AddModule();
 
-	std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>> GetModules() const;
+	ConstStatisticsAnalyzerModuleVector GetModules() const;
 
-	int Execute();
+	int Execute() const;
 
 private:
+	StatisticsAnalyzerModuleVector GetModules( const std::filesystem::path& oAcceptedFileExtensionPath ) const;
+
 	std::filesystem::path m_oInputDirectoryPath;
 
 	std::vector<std::unique_ptr<CStatisticsAnalyzerModule>> m_aStatisticsAnalyzerModules;
