@@ -17,7 +17,7 @@ public:
 
 	CCodeAnalyzer( const std::filesystem::path& oInputDirectoryPath );
 
-	template<typename TDerivedModule>
+	template<typename TDerivedStatisticsAnalyzerModule>
 	void AddModule();
 
 	ConstStatisticsAnalyzerModuleVector GetModules() const;
