@@ -17,7 +17,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 																  oOutputDirectoryPath );
 	if ( iProgramStatusCode != EProgramStatusCodes::eSuccess )
 	{
-		std::cerr << oCommandLineHandler.GetUsageMessage() << std::endl;
+		std::cerr << oCommandLineHandler.GetUsageMessage() << '\n';
 	}
 	else
 	{
