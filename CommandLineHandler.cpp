@@ -1,7 +1,5 @@
 #include "CommandLineHandler.h"
 
-#include <iostream>
-
 #include "ProgramStatusCodes.h"
 
 constexpr const char* USAGE_STR =
@@ -38,7 +36,7 @@ int CCommandLineHandler::HandleArguments( std::filesystem::path& oInputDirectory
     return EProgramStatusCodes::eSuccess;
 }
 
-void CCommandLineHandler::PrintUsage() const
+std::string CCommandLineHandler::GetUsageMessage() const
 {
-	std::cerr << USAGE_STR << std::endl;
+	return USAGE_STR;
 }

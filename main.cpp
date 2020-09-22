@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "ProgramStatusCodes.h"
 #include "CommandLineHandler.h"
 #include "CodeAnalyzer.h"
@@ -14,7 +16,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 																  oOutputDirectoryPath );
 	if ( iProgramStatusCode != EProgramStatusCodes::eSuccess )
 	{
-		oCommandLineHandler.PrintUsage();
+		std::cerr << oCommandLineHandler.GetUsageMessage() << std::endl;
 	}
 	else
 	{

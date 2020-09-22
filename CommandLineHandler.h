@@ -11,7 +11,7 @@ public:
 	int HandleArguments( std::filesystem::path& oInputDirectoryPath,
 						 std::filesystem::path& oOutputDirectoryPath ) const;
 
-	void PrintUsage() const;
+	std::string GetUsageMessage() const;
 
 private:
 	std::vector<std::string> m_aArgumentStrings;
