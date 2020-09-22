@@ -4,5 +4,6 @@ enum EProgramStatusCodes
 {
 	eSuccess,
 	eIncorrectArgumentCount,
-	eIncorrectArgument
+	eIncorrectArgument,
+	eOpenFileError
 };

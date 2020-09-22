@@ -4,6 +4,7 @@
 #include "CommandLineHandler.h"
 #include "CodeAnalyzer.h"
 #include "CodeLineCountModule.h"
+#include "StatisticsCsvFileWriter.h"
 
 int main( int iArgumentCount, char* apcArguments[] )
 {
@@ -24,6 +25,12 @@ int main( int iArgumentCount, char* apcArguments[] )
 		oCodeAnalyzer.AddModule<CCodeLineCountModule>();
 
 		iProgramStatusCode = oCodeAnalyzer.Execute();
+
+		if ( iProgramStatusCode == EProgramStatusCodes::eSuccess )
+		{
+			CStatisticsCsvFileWriter oStatisticsFileWriter{ oOutputDirectoryPath, ',' };
+			oStatisticsFileWriter.WriteStatistics( oCodeAnalyzer.GetModules() );
+		}
 	}
 
 	return iProgramStatusCode;

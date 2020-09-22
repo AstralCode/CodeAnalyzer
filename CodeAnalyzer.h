@@ -14,6 +14,8 @@ public:
 	template<typename TDerivedModule>
 	void AddModule();
 
+	std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>> GetModules() const;
+
 	int Execute();
 
 private:
