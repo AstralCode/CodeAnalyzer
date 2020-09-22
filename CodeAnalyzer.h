@@ -32,10 +32,10 @@ private:
 	std::vector<std::unique_ptr<CStatisticsAnalyzerModule>> m_aStatisticsAnalyzerModules;
 };
 
-template<typename TDerivedModule>
+template<typename TDerivedStatisticsAnalyzerModule>
 inline void CCodeAnalyzer::AddModule()
 {
-	static_assert(std::is_base_of<CStatisticsAnalyzerModule, TDerivedModule>::value, "TDerivedModule must derived from CStatisticsAnalyzerModule");
+	static_assert(std::is_base_of<CStatisticsAnalyzerModule, TDerivedStatisticsAnalyzerModule>::value, "TDerivedStatisticsAnalyzerModule class must derived from CStatisticsAnalyzerModule base class");
 
-	m_aStatisticsAnalyzerModules.push_back(std::make_unique<TDerivedModule>());
+	m_aStatisticsAnalyzerModules.push_back(std::make_unique<TDerivedStatisticsAnalyzerModule>());
 }
