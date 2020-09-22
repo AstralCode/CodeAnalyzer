@@ -14,6 +14,9 @@ public:
 	int WriteStatistics( const std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>>& oStatisticsAnalyzerModules );
 
 private:
+	void WriteStatisticsHeaders( std::ofstream& oOutputFileStream, const std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>>& oStatisticsAnalyzerModules ) const;
+	void WriteStatisticsResults( std::ofstream& oOutputFileStream, const std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>>& oStatisticsAnalyzerModules ) const;
+
 	std::filesystem::path PrepareOutputFilePath() const;
 
 	std::filesystem::path m_oOutputDirectoryPath;

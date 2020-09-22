@@ -23,12 +23,15 @@ int main( int iArgumentCount, char* apcArguments[] )
 	{
 		CCodeAnalyzer oCodeAnalyzer{ oInputDirectoryPath };
 		oCodeAnalyzer.AddModule<CCodeLineCountModule>();
+		oCodeAnalyzer.AddModule<CCodeLineCountModule>();
+		oCodeAnalyzer.AddModule<CCodeLineCountModule>();
+		oCodeAnalyzer.AddModule<CCodeLineCountModule>();
 
 		iProgramStatusCode = oCodeAnalyzer.Execute();
 
 		if ( iProgramStatusCode == EProgramStatusCodes::eSuccess )
 		{
-			CStatisticsCsvFileWriter oStatisticsFileWriter{ oOutputDirectoryPath, ',' };
+			CStatisticsCsvFileWriter oStatisticsFileWriter{ oOutputDirectoryPath, ';' };
 			oStatisticsFileWriter.WriteStatistics( oCodeAnalyzer.GetModules() );
 		}
 	}

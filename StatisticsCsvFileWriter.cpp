@@ -23,17 +23,12 @@ int CStatisticsCsvFileWriter::WriteStatistics( const std::vector<std::reference_
 	int iProgramStatusCode = EProgramStatusCodes::eSuccess;
 
 	const std::filesystem::path oOutputFilenameString = PrepareOutputFilePath();
-	std::ofstream oOutputFile{ oOutputFilenameString.u32string(), std::fstream::out | std::fstream::app };
+	std::ofstream oOutputFileStream{ oOutputFilenameString.u32string(), std::fstream::out | std::fstream::app };
 
-	if ( oOutputFile.is_open() )
+	if ( oOutputFileStream.is_open() )
 	{
-		for ( std::reference_wrapper<const CStatisticsAnalyzerModule> oStatisticsAnalyzerModule : oStatisticsAnalyzerModules )
-		{
-			const CStatisticsAnalyzerModule& oModule = oStatisticsAnalyzerModule.get();
-			oOutputFile << oModule.GetStatisticsHeader() << m_cSeparator << oModule.GetStatisticsResult() << std::endl;
-		}
-
-		oOutputFile.close();
+		WriteStatisticsHeaders( oOutputFileStream, oStatisticsAnalyzerModules );
+		WriteStatisticsResults( oOutputFileStream, oStatisticsAnalyzerModules );
 	}
 	else
 	{
@@ -41,6 +36,24 @@ int CStatisticsCsvFileWriter::WriteStatistics( const std::vector<std::reference_
 	}
 
 	return iProgramStatusCode;
+}
+
+void CStatisticsCsvFileWriter::WriteStatisticsHeaders( std::ofstream& oOutputFileStream, const std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>>& oStatisticsAnalyzerModules ) const
+{
+	for ( unsigned int uiIndex = 0u; uiIndex < oStatisticsAnalyzerModules.size(); ++uiIndex )
+	{
+		const CStatisticsAnalyzerModule& oModule = oStatisticsAnalyzerModules[uiIndex].get();
+		oOutputFileStream << oModule.GetStatisticsHeader() << ( ( uiIndex + 1 < oStatisticsAnalyzerModules.size() ) ? m_cSeparator : '\n' );
+	}
+}
+
+void CStatisticsCsvFileWriter::WriteStatisticsResults( std::ofstream& oOutputFileStream, const std::vector<std::reference_wrapper<const CStatisticsAnalyzerModule>>& oStatisticsAnalyzerModules ) const
+{
+	for ( unsigned int uiIndex = 0u; uiIndex < oStatisticsAnalyzerModules.size(); ++uiIndex )
+	{
+		const CStatisticsAnalyzerModule& oModule = oStatisticsAnalyzerModules[uiIndex].get();
+		oOutputFileStream << oModule.GetStatisticsResult() << ( ( uiIndex + 1 < oStatisticsAnalyzerModules.size() ) ? m_cSeparator : '\n' );
+	}
 }
 
 std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath() const
