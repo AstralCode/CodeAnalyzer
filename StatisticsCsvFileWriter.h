@@ -7,19 +7,20 @@
 class CStatisticsCsvFileWriter
 {
 public:
-	CStatisticsCsvFileWriter( const std::filesystem::path& oOutputDirectoryPath, const char cSeparator = ',' );
+	CStatisticsCsvFileWriter( const char cSeparator = ',' );
 
 	void SetSeparator( const char cSeparator );
 
-	int WriteStatistics( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules );
+	int WriteStatistics( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules,
+						 const std::filesystem::path& oOutputDirectoryPath );
 
 private:
-	void WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules ) const;
-	void WriteStatisticsResults( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules ) const;
+	void WriteStatisticsHeaders( std::ofstream& oFileStream,
+								 const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules ) const;
+	void WriteStatisticsResults( std::ofstream& oFileStream,
+								 const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules ) const;
 
-	std::filesystem::path PrepareOutputFilePath() const;
-
-	std::filesystem::path m_oOutputDirectoryPath;
+	std::filesystem::path PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath ) const;
 
 	char m_cSeparator;
 };

@@ -15,14 +15,12 @@ public:
 	using StatisticsAnalyzerModuleVector = std::vector<StatisticsAnalyzerModule>;
 	using ConstStatisticsAnalyzerModuleVector = std::vector<ConstStatisticsAnalyzerModule>;
 
-	CCodeAnalyzer( const std::filesystem::path& oInputDirectoryPath );
-
 	template<typename TDerivedStatisticsAnalyzerModule>
 	void AddModule();
 
 	ConstStatisticsAnalyzerModuleVector GetModules() const;
 
-	int Execute() const;
+	int Execute( const std::filesystem::path& oInputDirectoryPath ) const;
 
 private:
 	StatisticsAnalyzerModuleVector GetModules( const std::filesystem::path& oAcceptedFileExtensionPath ) const;

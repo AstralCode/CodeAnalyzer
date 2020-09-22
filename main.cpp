@@ -13,23 +13,23 @@ int main( int iArgumentCount, char* apcArguments[] )
 	std::filesystem::path oInputDirectoryPath{};
 	std::filesystem::path oOutputDirectoryPath{};
 
-	int iProgramStatusCode = oCommandLineHandler.HandleArguments( oInputDirectoryPath,
-																  oOutputDirectoryPath );
+	int iProgramStatusCode = oCommandLineHandler.HandleArguments( oInputDirectoryPath, oOutputDirectoryPath );
+
 	if ( iProgramStatusCode != EProgramStatusCodes::eSuccess )
 	{
 		std::cerr << oCommandLineHandler.GetUsageMessage() << '\n';
 	}
 	else
 	{
-		CCodeAnalyzer oCodeAnalyzer{ oInputDirectoryPath };
+		CCodeAnalyzer oCodeAnalyzer{};
 		oCodeAnalyzer.AddModule<CCodeLineCountModule>();
 
-		iProgramStatusCode = oCodeAnalyzer.Execute();
+		iProgramStatusCode = oCodeAnalyzer.Execute( oInputDirectoryPath );
 
 		if ( iProgramStatusCode == EProgramStatusCodes::eSuccess )
 		{
-			CStatisticsCsvFileWriter oStatisticsFileWriter{ oOutputDirectoryPath, ';' };
-			oStatisticsFileWriter.WriteStatistics( oCodeAnalyzer.GetModules() );
+			CStatisticsCsvFileWriter oStatisticsFileWriter{ ';' };
+			oStatisticsFileWriter.WriteStatistics( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
 		}
 	}
 

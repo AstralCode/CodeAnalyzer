@@ -5,8 +5,7 @@
 #include "ProgramStatusCodes.h"
 #include "OSLayerHelper.h"
 
-CStatisticsCsvFileWriter::CStatisticsCsvFileWriter( const std::filesystem::path& oOutputDirectoryPath, const char cSeparator ) :
-	m_oOutputDirectoryPath{ oOutputDirectoryPath },
+CStatisticsCsvFileWriter::CStatisticsCsvFileWriter( const char cSeparator ) :
 	m_cSeparator{ cSeparator }
 {
 
@@ -17,11 +16,11 @@ void CStatisticsCsvFileWriter::SetSeparator( const char cSeparator )
 	m_cSeparator = cSeparator;
 }
 
-int CStatisticsCsvFileWriter::WriteStatistics( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules )
+int CStatisticsCsvFileWriter::WriteStatistics( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules, const std::filesystem::path& oOutputDirectoryPath )
 {
 	int iProgramStatusCode = EProgramStatusCodes::eSuccess;
 
-	const std::filesystem::path oFilenameString = PrepareOutputFilePath();
+	const std::filesystem::path oFilenameString = PrepareOutputFilePath( oOutputDirectoryPath );
 	std::ofstream oFileStream{ oFilenameString.string(), std::fstream::out | std::fstream::app };
 
 	if ( oFileStream.is_open() )
@@ -33,7 +32,7 @@ int CStatisticsCsvFileWriter::WriteStatistics( const CCodeAnalyzer::ConstStatist
 	}
 	else
 	{
-		iProgramStatusCode = EProgramStatusCodes::eOpenFileError;
+		iProgramStatusCode = EProgramStatusCodes::eOpenOutputFileError;
 	}
 
 	return iProgramStatusCode;
@@ -57,12 +56,12 @@ void CStatisticsCsvFileWriter::WriteStatisticsResults( std::ofstream& oFileStrea
 	}
 }
 
-std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath() const
+std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath ) const
 {
 	const std::string oCurrentDateString = COSLayerHelper::currentDate();
 
 	std::string oCurrentTimeString = COSLayerHelper::currentTime();
 	std::replace( oCurrentTimeString.begin(), oCurrentTimeString.end(), ':', '-' );
 
-	return { m_oOutputDirectoryPath / ( "CodeAnalyzerStat--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" ) };
+	return { oOutputDirectoryPath / ( "CodeAnalyzerStat--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" ) };
 };

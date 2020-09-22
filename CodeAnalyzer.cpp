@@ -3,12 +3,6 @@
 #include <fstream>
 #include <string>
 
-CCodeAnalyzer::CCodeAnalyzer( const std::filesystem::path& oInputDirectoryPath ) :
-    m_oInputDirectoryPath{ oInputDirectoryPath }
-{
-
-}
-
 CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() const
 {
     ConstStatisticsAnalyzerModuleVector oStatisticsAnalyzerModules{};
@@ -21,14 +15,14 @@ CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() c
     return oStatisticsAnalyzerModules;
 }
 
-int CCodeAnalyzer::Execute() const
+int CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath ) const
 {
     int iProgramStatusCode = EProgramStatusCodes::eSuccess;
 
-    std::filesystem::recursive_directory_iterator oDirectoryRecursiveIt{ m_oInputDirectoryPath };
+    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     std::string oFileLineString;
 
-    for ( const std::filesystem::path& oFilePath : oDirectoryRecursiveIt )
+    for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
         if ( !std::filesystem::is_directory( oFilePath ) )
         {
@@ -59,6 +53,10 @@ int CCodeAnalyzer::Execute() const
                     }
 
                     oFileStream.close();
+                }
+                else
+                {
+                    iProgramStatusCode = EProgramStatusCodes::eOpenInputFileError;
                 }
             }
         }

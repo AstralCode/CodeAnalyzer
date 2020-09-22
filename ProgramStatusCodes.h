@@ -5,5 +5,6 @@ enum EProgramStatusCodes
 	eSuccess,
 	eIncorrectArgumentCount,
 	eIncorrectArgument,
-	eOpenFileError
+	eOpenInputFileError,
+	eOpenOutputFileError
 };
