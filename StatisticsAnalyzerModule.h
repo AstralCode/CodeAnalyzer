@@ -10,7 +10,7 @@ public:
 	CStatisticsAnalyzerModule() = default;
 	virtual ~CStatisticsAnalyzerModule() = default;
 
-	virtual int ProcessLine( const std::string& oLine, const unsigned int uiLineNumber ) = 0;
+	virtual int ProcessLine( const unsigned int uiLineNumber, const std::string& oLine ) = 0;
 
 	virtual void OnStartProcess( const std::filesystem::path& oFilePath ) = 0;
 	virtual void OnEndProcess( const std::filesystem::path& oFilePath ) = 0;

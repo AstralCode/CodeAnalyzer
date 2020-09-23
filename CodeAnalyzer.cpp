@@ -49,7 +49,7 @@ int CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath ) c
 
                         for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
                         {
-                            oStatisticsAnalyzerModule.get().ProcessLine( oFileLineString, uiLineCount );
+                            oStatisticsAnalyzerModule.get().ProcessLine( uiLineCount, oFileLineString );
                         }
                     }
 

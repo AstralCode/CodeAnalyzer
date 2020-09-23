@@ -12,9 +12,9 @@ CCodeLineCountModule::CCodeLineCountModule() :
 
 }
 
-int CCodeLineCountModule::ProcessLine( const std::string& oLine, const unsigned int uiLineNumber )
+int CCodeLineCountModule::ProcessLine( const unsigned int uiLineNumber, const std::string& oLine )
 {
-    std::cout << "CCodeLineCountModule::ProcessLine: " << oLine << std::endl;
+    std::cout << "CCodeLineCountModule::ProcessLine: " << uiLineNumber << ": " << oLine << std::endl;
 
     return static_cast<int>( EProgramStatusCodes::eSuccess );
 }
