@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "ProgramStatusCodes.h"
-#include "OSLayerHelper.h"
+#include "DateTimeHelper.h"
 
 CStatisticsCsvFileWriter::CStatisticsCsvFileWriter( const char cSeparator ) :
 	m_cSeparator{ cSeparator }

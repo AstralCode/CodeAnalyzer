@@ -12,7 +12,7 @@ CCodeLineCountModule::CCodeLineCountModule() :
 
 }
 
-int CCodeLineCountModule::ProcessLine( const std::string& oLine )
+int CCodeLineCountModule::ProcessLine( const std::string& oLine, const unsigned int uiLineNumber )
 {
     std::cout << "CCodeLineCountModule::ProcessLine: " << oLine << std::endl;
 

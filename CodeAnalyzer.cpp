@@ -20,7 +20,9 @@ int CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath ) c
     int iProgramStatusCode = static_cast<int>( EProgramStatusCodes::eSuccess);
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
-    std::string oFileLineString;
+    std::string oFileLineString{};
+
+    unsigned int uiLineCount{ 0u };
 
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
@@ -34,6 +36,8 @@ int CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath ) c
 
                 if ( oFileStream.is_open() )
                 {
+                    uiLineCount = 0u;
+
                     for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
                     {
                         oStatisticsAnalyzerModule.get().OnStartProcess( oFilePath );
@@ -41,9 +45,11 @@ int CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath ) c
 
                     while ( std::getline( oFileStream, oFileLineString ) )
                     {
+                        ++uiLineCount;
+
                         for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
                         {
-                            oStatisticsAnalyzerModule.get().ProcessLine( oFileLineString );
+                            oStatisticsAnalyzerModule.get().ProcessLine( oFileLineString, uiLineCount );
                         }
                     }
 
