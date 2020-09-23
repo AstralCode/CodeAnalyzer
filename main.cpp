@@ -15,7 +15,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 	int iProgramStatusCode = oCommandLineHandler.HandleArguments( oInputDirectoryPath, oOutputDirectoryPath );
 
-	if ( iProgramStatusCode != EProgramStatusCodes::eSuccess )
+	if ( iProgramStatusCode != static_cast<int>(EProgramStatusCodes::eSuccess) )
 	{
 		std::cerr << oCommandLineHandler.GetUsageMessage() << '\n';
 	}
@@ -26,7 +26,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 		iProgramStatusCode = oCodeAnalyzer.Execute( oInputDirectoryPath );
 
-		if ( iProgramStatusCode == EProgramStatusCodes::eSuccess )
+		if ( iProgramStatusCode == static_cast<int>( EProgramStatusCodes::eSuccess) )
 		{
 			CStatisticsCsvFileWriter oStatisticsFileWriter{ ';' };
 			oStatisticsFileWriter.WriteStatistics( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );

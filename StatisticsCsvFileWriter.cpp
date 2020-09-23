@@ -18,7 +18,7 @@ void CStatisticsCsvFileWriter::SetSeparator( const char cSeparator )
 
 int CStatisticsCsvFileWriter::WriteStatistics( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules, const std::filesystem::path& oOutputDirectoryPath )
 {
-	int iProgramStatusCode = EProgramStatusCodes::eSuccess;
+	int iProgramStatusCode = static_cast<int>( EProgramStatusCodes::eSuccess );
 
 	const std::filesystem::path oFilenameString = PrepareOutputFilePath( oOutputDirectoryPath );
 	std::ofstream oFileStream{ oFilenameString.string(), std::fstream::out | std::fstream::app };
@@ -32,7 +32,7 @@ int CStatisticsCsvFileWriter::WriteStatistics( const CCodeAnalyzer::ConstStatist
 	}
 	else
 	{
-		iProgramStatusCode = EProgramStatusCodes::eOpenOutputFileError;
+		iProgramStatusCode = static_cast<int>( EProgramStatusCodes::eOpenOutputFileError );
 	}
 
 	return iProgramStatusCode;

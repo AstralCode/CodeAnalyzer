@@ -17,7 +17,7 @@ CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() c
 
 int CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath ) const
 {
-    int iProgramStatusCode = EProgramStatusCodes::eSuccess;
+    int iProgramStatusCode = static_cast<int>( EProgramStatusCodes::eSuccess);
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     std::string oFileLineString;
@@ -56,7 +56,7 @@ int CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath ) c
                 }
                 else
                 {
-                    iProgramStatusCode = EProgramStatusCodes::eOpenInputFileError;
+                    iProgramStatusCode = static_cast<int>( EProgramStatusCodes::eOpenInputFileError );
                 }
             }
         }

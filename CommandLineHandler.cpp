@@ -18,22 +18,22 @@ int CCommandLineHandler::HandleArguments( std::filesystem::path& oInputDirectory
 {
 	if ( m_aArgumentStrings.size() != 2 )
 	{
-		return EProgramStatusCodes::eIncorrectArgumentCount;
+		return static_cast<int>( EProgramStatusCodes::eIncorrectArgumentCount );
 	}
 
 	oInputDirectoryPath = m_aArgumentStrings[0];
 	if ( !std::filesystem::exists( oInputDirectoryPath ) )
 	{
-		return EProgramStatusCodes::eIncorrectArgument;
+		return static_cast<int>( EProgramStatusCodes::eIncorrectArgument );
 	}
 
 	oOutputDirectoryPath = m_aArgumentStrings[1];
 	if ( !std::filesystem::exists( oOutputDirectoryPath ) )
 	{
-		return EProgramStatusCodes::eIncorrectArgument;
+		return static_cast<int>( EProgramStatusCodes::eIncorrectArgument );
 	}
 
-    return EProgramStatusCodes::eSuccess;
+    return static_cast<int>( EProgramStatusCodes::eSuccess );
 }
 
 std::string CCommandLineHandler::GetUsageMessage() const

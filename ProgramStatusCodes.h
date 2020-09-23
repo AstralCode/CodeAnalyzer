@@ -1,6 +1,6 @@
 #pragma once
 
-enum EProgramStatusCodes
+enum class EProgramStatusCodes
 {
 	eSuccess,
 	eIncorrectArgumentCount,

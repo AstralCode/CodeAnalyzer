@@ -16,7 +16,7 @@ int CCodeLineCountModule::ProcessLine( const std::string& oLine )
 {
     std::cout << "CCodeLineCountModule::ProcessLine: " << oLine << std::endl;
 
-    return EProgramStatusCodes::eSuccess;
+    return static_cast<int>( EProgramStatusCodes::eSuccess );
 }
 
 void CCodeLineCountModule::OnStartProcess( const std::filesystem::path& oFilePath )
