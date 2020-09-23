@@ -1,10 +1,10 @@
-#include "OSLayerHelper.h"
+#include "DateTimeHelper.h"
 
 #include <chrono>
 #include <iomanip>
 #include <sstream>
 
-std::string COSLayerHelper::currentDate()
+std::string CDateTimeHelper::currentDate()
 {
 	const auto dateTime = currentDateTime();
 
@@ -14,7 +14,7 @@ std::string COSLayerHelper::currentDate()
 	return stringStream.str();
 }
 
-std::string COSLayerHelper::currentTime()
+std::string CDateTimeHelper::currentTime()
 {
 	const auto dateTime = currentDateTime();
 
@@ -24,17 +24,7 @@ std::string COSLayerHelper::currentTime()
 	return stringStream.str();
 }
 
-bool COSLayerHelper::createDirectory( const std::filesystem::path path )
-{
-	return std::filesystem::create_directories( path );
-}
-
-bool COSLayerHelper::isFileExists( const std::filesystem::path path )
-{
-	return std::filesystem::exists( path );
-}
-
-std::tm COSLayerHelper::currentDateTime()
+std::tm CDateTimeHelper::currentDateTime()
 {
 	const auto currentTime = std::chrono::system_clock::now();
 	const auto currentTimeT = std::chrono::system_clock::to_time_t( currentTime );

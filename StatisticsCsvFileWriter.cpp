@@ -58,9 +58,9 @@ void CStatisticsCsvFileWriter::WriteStatisticsResults( std::ofstream& oFileStrea
 
 std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath ) const
 {
-	const std::string oCurrentDateString = COSLayerHelper::currentDate();
+	const std::string oCurrentDateString = CDateTimeHelper::currentDate();
 
-	std::string oCurrentTimeString = COSLayerHelper::currentTime();
+	std::string oCurrentTimeString = CDateTimeHelper::currentTime();
 	std::replace( oCurrentTimeString.begin(), oCurrentTimeString.end(), ':', '-' );
 
 	return { oOutputDirectoryPath / ( "CodeAnalyzerStat--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" ) };
