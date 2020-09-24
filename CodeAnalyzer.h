@@ -29,7 +29,6 @@ private:
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
 
 	std::filesystem::path m_oInputDirectoryPath;
-
 	std::vector<std::unique_ptr<CStatisticsAnalyzerModule>> m_oStatisticsAnalyzerModuleVector;
 };
 

@@ -69,6 +69,9 @@ std::filesystem::path CCodeFile::GetPath() const
 	return m_oFilePath;
 }
 
+// ^^x
+// unsigned int CCodeFile::GetLineCount
+// 3BGO JIRA-238 24-09-2020
 unsigned int CCodeFile::GetLineCount() const
 {
 	return GetCodeLines().size();
