@@ -25,8 +25,8 @@ public:
 	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath );
 
 private:
-	EProgramStatusCodes ReadCodeFileContent( const std::filesystem::path& oFilePath, CCodeFile::CodeLineVector& oCodeLineVector ) const;
-	void ProcessCodeFile( const std::filesystem::path& oFilePath, const CCodeFile::CodeLineVector& oCodeLineVector, const CCodeFile::EType oFileCodeType );
+	void ProcessFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, const CCodeFile::EType oFileCodeType );
+	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
 
 	std::filesystem::path m_oInputDirectoryPath;
 

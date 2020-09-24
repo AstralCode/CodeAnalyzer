@@ -34,7 +34,7 @@ void CCodeLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 // 3BGO JIRA-238 24-09-2020
 void CCodeLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
-    const std::string oCodeFileString = oSourceCodeFile.GetCode();
+
 }
 
 // ^^x

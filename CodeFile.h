@@ -6,8 +6,6 @@
 class CCodeFile
 {
 public:
-	using CodeLineVector = std::vector<std::string>;
-
 	enum class EType
 	{
 		eUnknown,
@@ -15,13 +13,13 @@ public:
 		eSource
 	};
 
-	CCodeFile( const std::filesystem::path& oFilePath, const CodeLineVector& oCodeLineVector );
+	CCodeFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
 	virtual ~CCodeFile() = default;
 
 	static EType CheckFileExtension( const std::filesystem::path& oFilePath );
 
-	const CodeLineVector& GetCodeLines() const;
-	std::string GetCode() const;
+	std::vector<std::string> GetCodeLines() const;
+	const std::string& GetContent() const;
 
 	std::filesystem::path GetPath() const;
 
@@ -29,6 +27,6 @@ public:
 
 private:
 	std::filesystem::path m_oFilePath;
-	CodeLineVector m_oCodeLineVector;
+	std::string m_oFileContentString;
 };
 

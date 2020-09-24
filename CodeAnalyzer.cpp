@@ -28,7 +28,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 {
     EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
 
-    CCodeFile::CodeLineVector oCodeLineVector{};
+    std::string oFileContentString{};
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     
@@ -40,11 +40,11 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 
             if ( oFileType != CCodeFile::EType::eUnknown )
             {
-                eStatus = ReadCodeFileContent( oFilePath, oCodeLineVector );
+                eStatus = ReadFileContent( oFilePath, oFileContentString );
 
                 if ( eStatus == EProgramStatusCodes::eSuccess )
                 {
-                    ProcessCodeFile( oFilePath, oCodeLineVector, oFileType );
+                    ProcessFile( oFilePath, oFileContentString, oFileType );
                 }
             }
         }
@@ -54,40 +54,15 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 }
 
 // ^^x
-// EProgramStatusCodes CCodeAnalyzer::ReadCodeFileContent
+// void CCodeAnalyzer::ProcessFile
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCodeAnalyzer::ReadCodeFileContent( const std::filesystem::path& oFilePath, CCodeFile::CodeLineVector& oCodeLineVector ) const
-{
-    EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
-
-    std::ifstream oFileStream{ oFilePath.string(), std::fstream::in };
-    std::string oFileLineString{};
-
-    if ( oFileStream.is_open() )
-    {
-        while ( std::getline( oFileStream, oFileLineString ) )
-        {
-            oCodeLineVector.push_back( oFileLineString );
-        }
-    }
-    else
-    {
-        eStatus = EProgramStatusCodes::eOpenInputFileError;
-    }
-
-    return eStatus;
-}
-
-// ^^x
-// void CCodeAnalyzer::ProcessCodeFile
-// 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::ProcessCodeFile( const std::filesystem::path& oFilePath, const CCodeFile::CodeLineVector& oCodeLineVector, const CCodeFile::EType oFileCodeType )
+void CCodeAnalyzer::ProcessFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, const CCodeFile::EType oFileCodeType )
 {
     for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
     {
         if ( oFileCodeType == CCodeFile::EType::eHeader )
         {
-            CHeaderCodeFile oHeaderCodeFile{ oFilePath, oCodeLineVector };
+            CHeaderCodeFile oHeaderCodeFile{ oFilePath, oFileContentString };
             upoStatisticsAnalyzerModule->OnStartProcess( oHeaderCodeFile );
             upoStatisticsAnalyzerModule->ProcessHeaderFile( oHeaderCodeFile );
             upoStatisticsAnalyzerModule->OnEndProcess( oHeaderCodeFile );
@@ -95,10 +70,31 @@ void CCodeAnalyzer::ProcessCodeFile( const std::filesystem::path& oFilePath, con
 
         if ( oFileCodeType == CCodeFile::EType::eSource )
         {
-            CSourceCodeFile oSourceCodeFile{ oFilePath, oCodeLineVector };
+            CSourceCodeFile oSourceCodeFile{ oFilePath, oFileContentString };
             upoStatisticsAnalyzerModule->OnStartProcess( oSourceCodeFile );
             upoStatisticsAnalyzerModule->ProcessSourceFile( oSourceCodeFile );
             upoStatisticsAnalyzerModule->OnEndProcess( oSourceCodeFile );
         }
     }
+}
+
+// ^^x
+// EProgramStatusCodes CCodeAnalyzer::ReadFileContent
+// 3BGO JIRA-238 24-09-2020
+EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const
+{
+    EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
+
+    std::ifstream oFileStream{ oFilePath.string(), std::fstream::in };
+
+    if ( oFileStream.is_open() )
+    {
+        oFileContentString.assign( std::istreambuf_iterator<char>{oFileStream}, std::istreambuf_iterator<char>{} );
+    }
+    else
+    {
+        eStatus = EProgramStatusCodes::eOpenInputFileError;
+    }
+
+    return eStatus;
 }
