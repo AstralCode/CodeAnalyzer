@@ -1,6 +1,6 @@
 #include "CodeLineCountModule.h"
 
-#include <iostream>
+#include "SourceCodeFile.h"
 
 constexpr const char* MODULE_HEADER_STR = "CodeLineCount";
 
@@ -16,15 +16,15 @@ CCodeLineCountModule::CCodeLineCountModule() :
 // ^^x
 // void CCodeLineCountModule::OnStartProcess
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::OnStartProcess( const CCodeFile& oCodeFile )
+void CCodeLineCountModule::OnStartProcess( const CCodeFile& )
 {
-    std::cout << "CCodeLineCountModule::OnStartProcess: " << oCodeFile.GetPath().string() << std::endl;
+
 }
 
 // ^^x
 // void CCodeLineCountModule::ProcessHeaderFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& oHeaderCodeFile )
+void CCodeLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 {
 
 }
@@ -34,15 +34,15 @@ void CCodeLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& oHeaderCode
 // 3BGO JIRA-238 24-09-2020
 void CCodeLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
-
+    const std::string oCodeFileString = oSourceCodeFile.GetCode();
 }
 
 // ^^x
 // void CCodeLineCountModule::OnEndProcess
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::OnEndProcess( const CCodeFile& oCodeFile )
+void CCodeLineCountModule::OnEndProcess( const CCodeFile& )
 {
-    std::cout << "CCodeLineCountModule::OnEndProcess: " << oCodeFile.GetPath().string() << std::endl;
+
 }
 
 // ^^x
