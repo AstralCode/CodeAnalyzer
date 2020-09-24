@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "ProgramStatusCodes.h"
-
 constexpr const char* MODULE_HEADER_STR = "CodeLineCount";
 
 // ^^x

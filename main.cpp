@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "ProgramStatusCodes.h"
 #include "CommandLineHandler.h"
 #include "CodeAnalyzer.h"
 #include "CodeLineCountModule.h"
