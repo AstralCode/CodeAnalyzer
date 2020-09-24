@@ -3,11 +3,17 @@
 #include <fstream>
 #include <string>
 
+#include "HeaderCodeFile.h"
+#include "SourceCodeFile.h"
+
+// ^^x
+// CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules
+// 3BGO JIRA-238 24-09-2020
 CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() const
 {
     ConstStatisticsAnalyzerModuleVector oStatisticsAnalyzerModules{};
 
-    std::for_each( m_aStatisticsAnalyzerModules.cbegin(), m_aStatisticsAnalyzerModules.cend(), [&oStatisticsAnalyzerModules]( const std::unique_ptr<CStatisticsAnalyzerModule>& upoModule )
+    std::for_each( m_oStatisticsAnalyzerModuleVector.cbegin(), m_oStatisticsAnalyzerModuleVector.cend(), [&oStatisticsAnalyzerModules]( const std::unique_ptr<CStatisticsAnalyzerModule>& upoModule )
     {
         oStatisticsAnalyzerModules.emplace_back( std::cref( *upoModule ) );
     });
@@ -15,73 +21,84 @@ CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() c
     return oStatisticsAnalyzerModules;
 }
 
-int CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath ) const
+// ^^x
+// EProgramStatusCodes CCodeAnalyzer::Execute
+// 3BGO JIRA-238 24-09-2020
+EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath )
 {
-    int iProgramStatusCode = static_cast<int>( EProgramStatusCodes::eSuccess);
+    EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
+
+    CCodeFile::CodeLineVector oCodeLineVector{};
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
-    std::string oFileLineString{};
-
-    unsigned int uiLineCount{ 0u };
-
+    
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
         if ( !std::filesystem::is_directory( oFilePath ) )
         {
-            if ( oFilePath.filename().has_extension() )
+            const CCodeFile::EType oFileType = CCodeFile::CheckFileExtension( oFilePath );
+
+            if ( oFileType != CCodeFile::EType::eUnknown )
             {
-                const StatisticsAnalyzerModuleVector aStatisticsAnalyzerModules = GetModules( oFilePath.filename().extension() );
-   
-                std::ifstream oFileStream{ oFilePath.string(), std::fstream::in };
+                eStatus = ReadCodeFileContent( oFilePath, oCodeLineVector );
 
-                if ( oFileStream.is_open() )
+                if ( eStatus == EProgramStatusCodes::eSuccess )
                 {
-                    uiLineCount = 0u;
-
-                    for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
-                    {
-                        oStatisticsAnalyzerModule.get().OnStartProcess( oFilePath );
-                    }
-
-                    while ( std::getline( oFileStream, oFileLineString ) )
-                    {
-                        ++uiLineCount;
-
-                        for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
-                        {
-                            oStatisticsAnalyzerModule.get().ProcessLine( uiLineCount, oFileLineString );
-                        }
-                    }
-
-                    for ( const StatisticsAnalyzerModule& oStatisticsAnalyzerModule : aStatisticsAnalyzerModules )
-                    {
-                        oStatisticsAnalyzerModule.get().OnEndProcess( oFilePath );
-                    }
-
-                    oFileStream.close();
-                }
-                else
-                {
-                    iProgramStatusCode = static_cast<int>( EProgramStatusCodes::eOpenInputFileError );
+                    ProcessCodeFile( oFilePath, oCodeLineVector, oFileType );
                 }
             }
         }
     }
 
-    return iProgramStatusCode;
+    return eStatus;
 }
 
-CCodeAnalyzer::StatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules( const std::filesystem::path& oAcceptedFileExtensionPath ) const
+// ^^x
+// EProgramStatusCodes CCodeAnalyzer::ReadCodeFileContent
+// 3BGO JIRA-238 24-09-2020
+EProgramStatusCodes CCodeAnalyzer::ReadCodeFileContent( const std::filesystem::path& oFilePath, CCodeFile::CodeLineVector& oCodeLineVector ) const
 {
-    CCodeAnalyzer::StatisticsAnalyzerModuleVector oStatisticsAnalyzerModules{};
+    EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
 
-    std::for_each( m_aStatisticsAnalyzerModules.cbegin(), m_aStatisticsAnalyzerModules.cend(), [&oStatisticsAnalyzerModules, oAcceptedFileExtensionPath]( const std::unique_ptr<CStatisticsAnalyzerModule>& upoModule )
+    std::ifstream oFileStream{ oFilePath.string(), std::fstream::in };
+    std::string oFileLineString{};
+
+    if ( oFileStream.is_open() )
     {
-        if ( upoModule->HasAcceptFileExtension( oAcceptedFileExtensionPath ) )
+        while ( std::getline( oFileStream, oFileLineString ) )
         {
-            oStatisticsAnalyzerModules.emplace_back( std::ref( *upoModule ) );
+            oCodeLineVector.push_back( oFileLineString );
         }
-    });
+    }
+    else
+    {
+        eStatus = EProgramStatusCodes::eOpenInputFileError;
+    }
 
-    return oStatisticsAnalyzerModules;
+    return eStatus;
+}
+
+// ^^x
+// void CCodeAnalyzer::ProcessCodeFile
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzer::ProcessCodeFile( const std::filesystem::path& oFilePath, const CCodeFile::CodeLineVector& oCodeLineVector, const CCodeFile::EType oFileCodeType )
+{
+    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
+    {
+        if ( oFileCodeType == CCodeFile::EType::eHeader )
+        {
+            CHeaderCodeFile oHeaderCodeFile{ oFilePath, oCodeLineVector };
+            upoStatisticsAnalyzerModule->OnStartProcess( oHeaderCodeFile );
+            upoStatisticsAnalyzerModule->ProcessHeaderFile( oHeaderCodeFile );
+            upoStatisticsAnalyzerModule->OnEndProcess( oHeaderCodeFile );
+        }
+
+        if ( oFileCodeType == CCodeFile::EType::eSource )
+        {
+            CSourceCodeFile oSourceCodeFile{ oFilePath, oCodeLineVector };
+            upoStatisticsAnalyzerModule->OnStartProcess( oSourceCodeFile );
+            upoStatisticsAnalyzerModule->ProcessSourceFile( oSourceCodeFile );
+            upoStatisticsAnalyzerModule->OnEndProcess( oSourceCodeFile );
+        }
+    }
 }

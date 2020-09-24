@@ -7,20 +7,11 @@
 class CStatisticsCsvFileWriter
 {
 public:
-	CStatisticsCsvFileWriter( const char cSeparator = ',' );
-
-	void SetSeparator( const char cSeparator );
-
-	int WriteStatistics( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules,
-						 const std::filesystem::path& oOutputDirectoryPath );
+	EProgramStatusCodes WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const std::filesystem::path& oOutputDirectoryPath, const char cDataSeparator = ';' );
 
 private:
-	void WriteStatisticsHeaders( std::ofstream& oFileStream,
-								 const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules ) const;
-	void WriteStatisticsResults( std::ofstream& oFileStream,
-								 const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules ) const;
+	void WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const char cDataSeparator ) const;
+	void WriteStatisticsResults( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const char cDataSeparator ) const;
 
 	std::filesystem::path PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath ) const;
-
-	char m_cSeparator;
 };

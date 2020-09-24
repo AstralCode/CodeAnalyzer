@@ -5,9 +5,9 @@
 class CDateTimeHelper final
 {
 public:
-	static std::string currentDate();
-	static std::string currentTime();
+	static std::string CurrentDate();
+	static std::string CurrentTime();
 
 private:
-	static std::tm currentDateTime();
+	static std::tm CurrentDateTime();
 };

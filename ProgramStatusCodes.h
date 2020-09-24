@@ -6,5 +6,7 @@ enum class EProgramStatusCodes
 	eIncorrectArgumentCount,
 	eIncorrectArgument,
 	eOpenInputFileError,
-	eOpenOutputFileError
+	eOpenOutputFileError,
+	eProcessHeaderCodeFileError,
+	eProcessSourceCodeFileError,
 };

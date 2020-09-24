@@ -4,33 +4,42 @@
 #include <iomanip>
 #include <sstream>
 
-std::string CDateTimeHelper::currentDate()
+// ^^x
+// std::string CDateTimeHelper::CurrentDate
+// 3BGO JIRA-238 24-09-2020
+std::string CDateTimeHelper::CurrentDate()
 {
-	const auto dateTime = currentDateTime();
+	const ::tm oDateTime = CurrentDateTime();
 
-	std::stringstream stringStream{};
-	stringStream << std::put_time( &dateTime, "%F" );
+	std::stringstream oStringStream{};
+	oStringStream << std::put_time( &oDateTime, "%F" );
 
-	return stringStream.str();
+	return oStringStream.str();
 }
 
-std::string CDateTimeHelper::currentTime()
+// ^^x
+// std::string CDateTimeHelper::CurrentTime
+// 3BGO JIRA-238 24-09-2020
+std::string CDateTimeHelper::CurrentTime()
 {
-	const auto dateTime = currentDateTime();
+	const ::tm oDateTime = CurrentDateTime();
 
-	std::stringstream stringStream{};
-	stringStream << std::put_time( &dateTime, "%T" );
+	std::stringstream oStringStream{};
+	oStringStream << std::put_time( &oDateTime, "%T" );
 
-	return stringStream.str();
+	return oStringStream.str();
 }
 
-std::tm CDateTimeHelper::currentDateTime()
+// ^^x
+// std::tm CDateTimeHelper::CurrentDateTime
+// 3BGO JIRA-238 24-09-2020
+std::tm CDateTimeHelper::CurrentDateTime()
 {
-	const auto currentTime = std::chrono::system_clock::now();
-	const auto currentTimeT = std::chrono::system_clock::to_time_t( currentTime );
+	const std::chrono::system_clock::time_point oCurrentTime = std::chrono::system_clock::now();
+	const ::time_t oCurrentTimeT = std::chrono::system_clock::to_time_t( oCurrentTime );
 
-	std::tm dateTime{};
-	localtime_s( &dateTime, &currentTimeT );
+	std::tm oDateTime{};
+	localtime_s( &oDateTime, &oCurrentTimeT );
 
-	return dateTime;
+	return oDateTime;
 }

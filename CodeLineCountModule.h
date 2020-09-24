@@ -7,15 +7,15 @@ class CCodeLineCountModule final : public CStatisticsAnalyzerModule
 public:
 	CCodeLineCountModule();
 
-	int ProcessLine( const unsigned int uiLineNumber, const std::string& oLine ) override;
+	void OnStartProcess( const CCodeFile& oCodeFile ) override;
 
-	void OnStartProcess( const std::filesystem::path& oFilePath ) override;
-	void OnEndProcess( const std::filesystem::path& oFilePath ) override;
+	void ProcessHeaderFile( const CHeaderCodeFile& oHeaderCodeFile ) override;
+	void ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile ) override;
+
+	void OnEndProcess( const CCodeFile& oCodeFile ) override;
 
 	std::string GetStatisticsHeader() const override;
 	unsigned int GetStatisticsResult() const override;
-
-	bool HasAcceptFileExtension( const std::filesystem::path& oFileExtensionPath ) const override;
 
 private:
 	unsigned int m_uiStatisticsResult;

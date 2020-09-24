@@ -6,6 +6,9 @@
 #include "CodeLineCountModule.h"
 #include "StatisticsCsvFileWriter.h"
 
+// ^^x
+// int main
+// 3BGO JIRA-238 24-09-2020
 int main( int iArgumentCount, char* apcArguments[] )
 {
 	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
@@ -13,9 +16,9 @@ int main( int iArgumentCount, char* apcArguments[] )
 	std::filesystem::path oInputDirectoryPath{};
 	std::filesystem::path oOutputDirectoryPath{};
 
-	int iProgramStatusCode = oCommandLineHandler.HandleArguments( oInputDirectoryPath, oOutputDirectoryPath );
+	EProgramStatusCodes eStatus = oCommandLineHandler.HandleArguments( oInputDirectoryPath, oOutputDirectoryPath );
 
-	if ( iProgramStatusCode != static_cast<int>( EProgramStatusCodes::eSuccess ) )
+	if ( eStatus != EProgramStatusCodes::eSuccess )
 	{
 		std::cerr << oCommandLineHandler.GetUsageMessage() << '\n';
 	}
@@ -24,14 +27,14 @@ int main( int iArgumentCount, char* apcArguments[] )
 		CCodeAnalyzer oCodeAnalyzer{};
 		oCodeAnalyzer.AddModule<CCodeLineCountModule>();
 
-		iProgramStatusCode = oCodeAnalyzer.Execute( oInputDirectoryPath );
+		eStatus = oCodeAnalyzer.Execute( oInputDirectoryPath );
 
-		if ( iProgramStatusCode == static_cast<int>( EProgramStatusCodes::eSuccess ) )
+		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
-			CStatisticsCsvFileWriter oStatisticsFileWriter{ ';' };
-			oStatisticsFileWriter.WriteStatistics( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
+			CStatisticsCsvFileWriter oStatisticsFileWriter{};
+			oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
 		}
 	}
 
-	return iProgramStatusCode;
+	return static_cast<int>( eStatus );
 }
