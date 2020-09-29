@@ -1,6 +1,7 @@
 #include "SourceCodeFile.h"
 
 #include <regex>
+#include <algorithm>
 
 // ^^x
 // CSourceCodeFile::CSourceCodeFile
@@ -16,18 +17,15 @@ CSourceCodeFile::CSourceCodeFile( const std::filesystem::path& oFilePath, const 
 // 3BGO JIRA-239 24-09-2020
 std::vector<std::string> CSourceCodeFile::RetrieveCodeFunctionNames() const
 {
-	std::vector<std::string> oCodeFunctionDatasetVector{};
+	std::vector<std::string> oFunctionNameVector{};
 
 	const std::string oCodeString = GetContent();
 
 	std::regex oRegexPattern{ R"(^[ \t]*(?:signed|unsigned[\s+])?[\w\d\_:<>*&]+\s+[\w\d\_:]+::[\w\d\_]+\((?:.*)\)(?:\s+const)?[ \t]*$)" };
-	
-	const std::sregex_token_iterator oRegexEndIt{};
-	for ( std::sregex_token_iterator oRegexStartIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern };
-		  oRegexStartIt != oRegexEndIt; ++oRegexStartIt )
-	{
-		oCodeFunctionDatasetVector.push_back( *oRegexStartIt );
-	}
 
-	return oCodeFunctionDatasetVector;
+	std::copy( std::sregex_token_iterator{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern },
+			   std::sregex_token_iterator{},
+			   std::back_inserter( oFunctionNameVector ) );
+
+	return oFunctionNameVector;
 }
