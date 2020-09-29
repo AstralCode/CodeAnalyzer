@@ -1,6 +1,5 @@
 #include "SourceCodeFile.h"
 
-#include <iostream>
 #include <regex>
 
 // ^^x
@@ -13,23 +12,21 @@ CSourceCodeFile::CSourceCodeFile( const std::filesystem::path& oFilePath, const 
 }
 
 // ^^x
-// std::vector<CodeFunctionDataset> CSourceCodeFile::RetrieveCodeFunctions
+// std::vector<std::string> CSourceCodeFile::RetrieveCodeFunctionNames
 // 3BGO JIRA-239 24-09-2020
-std::vector<CodeFunctionDataset> CSourceCodeFile::RetrieveCodeFunctions() const
+std::vector<std::string> CSourceCodeFile::RetrieveCodeFunctionNames() const
 {
-	std::vector<CodeFunctionDataset> oCodeFunctionDatasetVector{};
+	std::vector<std::string> oCodeFunctionDatasetVector{};
 
 	const std::string oCodeString = GetContent();
 
-	std::regex oRegexPattern{ R"()" };
-	std::smatch oRegexPatternMatch{};
-
-	if ( std::regex_match( oCodeString, oRegexPatternMatch, oRegexPattern ) )
+	std::regex oRegexPattern{ R"(^[ \t]*(?:signed|unsigned[\s+])?[\w\d\_:<>*&]+\s+[\w\d\_:]+::[\w\d\_]+\((?:.*)\)(?:\s+const)?[ \t]*$)" };
+	
+	const std::sregex_token_iterator oRegexEndIt{};
+	for ( std::sregex_token_iterator oRegexStartIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern };
+		  oRegexStartIt != oRegexEndIt; ++oRegexStartIt )
 	{
-		for ( const std::ssub_match& oMatchStrings : oRegexPatternMatch )
-		{
-			std::cout << oMatchStrings << std::endl;
-		}
+		oCodeFunctionDatasetVector.push_back( *oRegexStartIt );
 	}
 
 	return oCodeFunctionDatasetVector;

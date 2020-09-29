@@ -1,5 +1,7 @@
 #include "CodeLineCountModule.h"
 
+#include <iostream>
+
 #include "SourceCodeFile.h"
 
 constexpr const char* MODULE_HEADER_STR = "CodeLineCount";
@@ -34,7 +36,12 @@ void CCodeLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 // 3BGO JIRA-238 24-09-2020
 void CCodeLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
+    const std::vector<std::string> oFunctionNameVector = oSourceCodeFile.RetrieveCodeFunctionNames();
 
+    for ( const std::string& oFunctionNameString : oFunctionNameVector )
+    {
+        std::cout << ">>> " << oFunctionNameString << std::endl;
+    }
 }
 
 // ^^x
