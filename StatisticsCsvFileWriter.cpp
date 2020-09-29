@@ -8,7 +8,7 @@
 // ^^x
 // EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules, const std::filesystem::path& oOutputDirectoryPath, const char cDataSeparator )
+EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules, const std::filesystem::path& oOutputDirectoryPath, const char cDataSeparator/* = ';'*/ )
 {
 	EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
 
