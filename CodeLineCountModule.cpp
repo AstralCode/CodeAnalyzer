@@ -36,11 +36,15 @@ void CCodeLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 // 3BGO JIRA-238 24-09-2020
 void CCodeLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
-    const std::vector<std::string> oFunctionNameVector = oSourceCodeFile.RetrieveCodeFunctionNames();
+    const std::vector<std::pair<std::string, CCodeFunctionDataset>> oFunctionDatasetVector = oSourceCodeFile.RetrieveCodeFunctionDataset();
 
-    for ( const std::string& oFunctionNameString : oFunctionNameVector )
+    for ( const std::pair<std::string, CCodeFunctionDataset>& oFunctionDataset : oFunctionDatasetVector )
     {
-        std::cout << ">>> " << oFunctionNameString << std::endl;
+        std::cout << "# MATCH #      = " << oFunctionDataset.first << std::endl;
+        std::cout << "[ReturnType]   = " << oFunctionDataset.second.oReturnTypeString << std::endl;
+        std::cout << "[ClassName]    = " << oFunctionDataset.second.oClassNameString << std::endl;
+        std::cout << "[FunctionName] = " << oFunctionDataset.second.oFunctionNameString << std::endl;
+        std::cout << "[FunctionArgs] = " << oFunctionDataset.second.oFunctionArgsString << std::endl;
     }
 }
 

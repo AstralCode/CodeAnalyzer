@@ -1,7 +1,9 @@
 #include "SourceCodeFile.h"
 
 #include <regex>
-#include <algorithm>
+
+constexpr const char* CODE_FUNCTION_DATASET_REGEX_STR =
+	R"(^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_ :<>,*&]+)\s+([\w\d\_:]+)::([\w\d\_]+)\((.*)\)\s*(?:const)?[ \t]*$)";
 
 // ^^x
 // CSourceCodeFile::CSourceCodeFile
@@ -13,19 +15,40 @@ CSourceCodeFile::CSourceCodeFile( const std::filesystem::path& oFilePath, const 
 }
 
 // ^^x
-// std::vector<std::string> CSourceCodeFile::RetrieveCodeFunctionNames
+// std::vector<std::pair<std::string, CCodeFunctionDataset>> CSourceCodeFile::RetrieveCodeFunctionDataset
 // 3BGO JIRA-239 24-09-2020
-std::vector<std::string> CSourceCodeFile::RetrieveCodeFunctionNames() const
+std::vector<std::pair<std::string, CCodeFunctionDataset>> CSourceCodeFile::RetrieveCodeFunctionDataset() const
 {
-	std::vector<std::string> oFunctionNameVector{};
+	enum EMatchGroups
+	{
+		eEntireMatch,
+		eReturnType,
+		eClassName,
+		eFunctionName,
+		eFunctionArgs
+	};
 
+	const int aiSubMatches[] = { eEntireMatch, eReturnType, eClassName, eFunctionName, eFunctionArgs };
+	
+	const std::regex oRegexPattern{ CODE_FUNCTION_DATASET_REGEX_STR };
 	const std::string oCodeString = GetContent();
 
-	std::regex oRegexPattern{ R"(^[ \t]*(?:signed|unsigned[\s+])?[\w\d\_:<>*&]+\s+[\w\d\_:]+::[\w\d\_]+\((?:.*)\)(?:\s+const)?[ \t]*$)" };
+	std::vector<std::pair<std::string, CCodeFunctionDataset>> oFunctionDatasetVector{};
 
-	std::copy( std::sregex_token_iterator{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern },
-			   std::sregex_token_iterator{},
-			   std::back_inserter( oFunctionNameVector ) );
+	const std::sregex_token_iterator oRegexEndIt{};
+	for ( std::sregex_token_iterator oRegexStartIt{oCodeString.cbegin(), oCodeString.cend(), oRegexPattern, aiSubMatches };
+		  oRegexStartIt != oRegexEndIt; ++oRegexStartIt )
+	{
+		const std::string oMatchString = *oRegexStartIt++;
 
-	return oFunctionNameVector;
+		CCodeFunctionDataset oFunctionDataset{};
+		oFunctionDataset.oReturnTypeString = *oRegexStartIt++;
+		oFunctionDataset.oClassNameString = *oRegexStartIt++;
+		oFunctionDataset.oFunctionNameString = *oRegexStartIt++;
+		oFunctionDataset.oFunctionArgsString = *oRegexStartIt;
+
+		oFunctionDatasetVector.push_back( std::make_pair( oMatchString, oFunctionDataset ) );
+	}
+
+	return oFunctionDatasetVector;
 }
