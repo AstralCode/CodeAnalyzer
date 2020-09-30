@@ -2,10 +2,10 @@
 
 #include "StatisticsAnalyzerModule.h"
 
-class CCodeLineCountModule final : public CStatisticsAnalyzerModule
+class CMemberFunctionCountModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CCodeLineCountModule();
+	CMemberFunctionCountModule();
 
 	void OnStartProcess( const CCodeFile& oCodeFile ) override;
 

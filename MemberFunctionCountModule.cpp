@@ -1,40 +1,40 @@
-#include "CodeLineCountModule.h"
+#include "MemberFunctionCountModule.h"
 
 #include <iostream>
 
 #include "SourceCodeFile.h"
 
-constexpr const char* MODULE_HEADER_STR = "CodeLineCount";
+constexpr const char* MODULE_HEADER_STR = "Member function count";
 
 // ^^x
-// CCodeLineCountModule::CCodeLineCountModule
+// CMemberFunctionCountModule::CMemberFunctionCountModule
 // 3BGO JIRA-238 24-09-2020
-CCodeLineCountModule::CCodeLineCountModule() :
+CMemberFunctionCountModule::CMemberFunctionCountModule() :
     m_uiStatisticsResult{ 0u }
 {
 
 }
 
 // ^^x
-// void CCodeLineCountModule::OnStartProcess
+// void CMemberFunctionCountModule::OnStartProcess
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::OnStartProcess( const CCodeFile& )
+void CMemberFunctionCountModule::OnStartProcess( const CCodeFile& )
 {
 
 }
 
 // ^^x
-// void CCodeLineCountModule::ProcessHeaderFile
+// void CMemberFunctionCountModule::ProcessHeaderFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
+void CMemberFunctionCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 {
 
 }
 
 // ^^x
-// void CCodeLineCountModule::ProcessSourceFile
+// void CMemberFunctionCountModule::ProcessSourceFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
+void CMemberFunctionCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
     const std::vector<SFindMemberFunctionResult> oFindMemberFunctionResultVector = oSourceCodeFile.FindMemberFunctions();
 
@@ -48,28 +48,30 @@ void CCodeLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCode
         std::cout << "[Modifier]   = " << oFindMemberFunctionResult.oMemberFunctionDataset.oModifierString << '\n';
         std::cout << '\n';
     }
+
+    m_uiStatisticsResult = oFindMemberFunctionResultVector.size();
 }
 
 // ^^x
-// void CCodeLineCountModule::OnEndProcess
+// void CMemberFunctionCountModule::OnEndProcess
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::OnEndProcess( const CCodeFile& )
+void CMemberFunctionCountModule::OnEndProcess( const CCodeFile& )
 {
 
 }
 
 // ^^x
-// std::string CCodeLineCountModule::GetStatisticsHeader
+// std::string CMemberFunctionCountModule::GetStatisticsHeader
 // 3BGO JIRA-238 24-09-2020
-std::string CCodeLineCountModule::GetStatisticsHeader() const
+std::string CMemberFunctionCountModule::GetStatisticsHeader() const
 {
     return MODULE_HEADER_STR;
 }
 
 // ^^x
-// unsigned int CCodeLineCountModule::GetStatisticsResult
+// unsigned int CMemberFunctionCountModule::GetStatisticsResult
 // 3BGO JIRA-238 24-09-2020
-unsigned int CCodeLineCountModule::GetStatisticsResult() const
+unsigned int CMemberFunctionCountModule::GetStatisticsResult() const
 {
     return m_uiStatisticsResult;
 }
