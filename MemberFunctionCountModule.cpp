@@ -49,7 +49,7 @@ void CMemberFunctionCountModule::ProcessSourceFile( const CSourceCodeFile& oSour
         std::cout << '\n';
     }
 
-    m_uiStatisticsResult = oFindMemberFunctionResultVector.size();
+    m_uiStatisticsResult += oFindMemberFunctionResultVector.size();
 }
 
 // ^^x
