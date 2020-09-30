@@ -2,8 +2,10 @@
 
 #include "CodeFile.h"
 
-struct SMemberFunctionDataset
+struct SMemberFunctionHeaderDataset
 {
+	std::string oAuthorString{};
+	std::string oInfoString{};
 	std::string oReturnTypeString{};
 	std::string oClassNameString{};
 	std::string oNameString{};
@@ -11,10 +13,21 @@ struct SMemberFunctionDataset
 	std::string oModifierString{};
 };
 
-struct SFindMemberFunctionResult
+struct SMemberFunctionBodyDataset
+{
+	std::string oBodyString{};
+};
+
+struct SFindMemberFunctionHeaderResult
 {
 	std::string oMatchString{};
-	SMemberFunctionDataset oMemberFunctionDataset{};
+	SMemberFunctionHeaderDataset oMemberFunctionHeaderDataset{};
+};
+
+struct SFindMemberFunctionBodyResult
+{
+	std::string oMathString{};
+	SMemberFunctionBodyDataset oMemberFunctionBodyDataset{};
 };
 
 class CSourceCodeFile final : public CCodeFile
@@ -22,5 +35,6 @@ class CSourceCodeFile final : public CCodeFile
 public:
 	CSourceCodeFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
 
-	std::vector<SFindMemberFunctionResult> FindMemberFunctions() const;
+	std::vector<SFindMemberFunctionHeaderResult> FindMemberFunctionHeaders() const;
+	std::vector<SFindMemberFunctionBodyResult> FindMemberFunctionBodies() const;
 };

@@ -36,16 +36,18 @@ void CMemberFunctionLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 // 3BGO JIRA-239 30-09-2020
 void CMemberFunctionLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
-    const std::vector<SFindMemberFunctionResult> oFindMemberFunctionResultVector = oSourceCodeFile.FindMemberFunctions();
+    const std::vector<SFindMemberFunctionHeaderResult> oFindMemberFunctionHeaderResultVector = oSourceCodeFile.FindMemberFunctionHeaders();
 
-    for ( const SFindMemberFunctionResult& oFindMemberFunctionResult : oFindMemberFunctionResultVector )
+    for ( const SFindMemberFunctionHeaderResult& oFindMemberFunctionHeaderResult : oFindMemberFunctionHeaderResultVector )
     {
-        std::cout << "# MATCH #    = " << oFindMemberFunctionResult.oMatchString << '\n';
-        std::cout << "[ReturnType] = " << oFindMemberFunctionResult.oMemberFunctionDataset.oReturnTypeString << '\n';
-        std::cout << "[ClassName]  = " << oFindMemberFunctionResult.oMemberFunctionDataset.oClassNameString << '\n';
-        std::cout << "[Name]       = " << oFindMemberFunctionResult.oMemberFunctionDataset.oNameString << '\n';
-        std::cout << "[ArgList]    = " << oFindMemberFunctionResult.oMemberFunctionDataset.oArgListString << '\n';
-        std::cout << "[Modifier]   = " << oFindMemberFunctionResult.oMemberFunctionDataset.oModifierString << '\n';
+        std::cout << "# MATCH #    = " << oFindMemberFunctionHeaderResult.oMatchString << '\n';
+        std::cout << "[Author]     = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oAuthorString << '\n';
+        std::cout << "[Info]       = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oInfoString << '\n';
+        std::cout << "[ReturnType] = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oReturnTypeString << '\n';
+        std::cout << "[ClassName]  = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oClassNameString << '\n';
+        std::cout << "[Name]       = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oNameString << '\n';
+        std::cout << "[ArgList]    = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oArgListString << '\n';
+        std::cout << "[Modifier]   = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oModifierString << '\n';
         std::cout << '\n';
     }
 }

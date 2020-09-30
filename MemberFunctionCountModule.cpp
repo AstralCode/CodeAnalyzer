@@ -34,7 +34,7 @@ void CMemberFunctionCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 // 3BGO JIRA-238 24-09-2020
 void CMemberFunctionCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
-    m_uiStatisticsResult += oSourceCodeFile.FindMemberFunctions().size();
+    m_uiStatisticsResult += oSourceCodeFile.FindMemberFunctionHeaders().size();
 }
 
 // ^^x
