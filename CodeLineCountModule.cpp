@@ -36,16 +36,16 @@ void CCodeLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 // 3BGO JIRA-238 24-09-2020
 void CCodeLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
-    const std::vector<std::pair<std::string, CCodeMemberFunctionDataset>> oMemberFunctionDatasetVector = oSourceCodeFile.RetrieveMemberFunctionDataset();
+    const std::vector<SFindMemberFunctionResult> oFindMemberFunctionResultVector = oSourceCodeFile.FindMemberFunctions();
 
-    for ( const std::pair<std::string, CCodeMemberFunctionDataset>& oMemberFunctionDataset : oMemberFunctionDatasetVector )
+    for ( const SFindMemberFunctionResult& oFindMemberFunctionResult : oFindMemberFunctionResultVector )
     {
-        std::cout << "# MATCH #    = " << oMemberFunctionDataset.first << '\n';
-        std::cout << "[ReturnType] = " << oMemberFunctionDataset.second.oReturnTypeString << '\n';
-        std::cout << "[ClassName]  = " << oMemberFunctionDataset.second.oClassNameString << '\n';
-        std::cout << "[Name]       = " << oMemberFunctionDataset.second.oNameString << '\n';
-        std::cout << "[ArgList]    = " << oMemberFunctionDataset.second.oArgListString << '\n';
-        std::cout << "[Modifier]   = " << oMemberFunctionDataset.second.oModifierString << '\n';
+        std::cout << "# MATCH #    = " << oFindMemberFunctionResult.oMatchString << '\n';
+        std::cout << "[ReturnType] = " << oFindMemberFunctionResult.oMemberFunctionDataset.oReturnTypeString << '\n';
+        std::cout << "[ClassName]  = " << oFindMemberFunctionResult.oMemberFunctionDataset.oClassNameString << '\n';
+        std::cout << "[Name]       = " << oFindMemberFunctionResult.oMemberFunctionDataset.oNameString << '\n';
+        std::cout << "[ArgList]    = " << oFindMemberFunctionResult.oMemberFunctionDataset.oArgListString << '\n';
+        std::cout << "[Modifier]   = " << oFindMemberFunctionResult.oMemberFunctionDataset.oModifierString << '\n';
         std::cout << '\n';
     }
 }

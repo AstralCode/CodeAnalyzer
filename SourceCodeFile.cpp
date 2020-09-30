@@ -15,9 +15,9 @@ CSourceCodeFile::CSourceCodeFile( const std::filesystem::path& oFilePath, const 
 }
 
 // ^^x
-// std::vector<std::pair<std::string, CCodeFunctionDataset>> CSourceCodeFile::RetrieveMemberFunctionDataset
+// std::vector<SFindMemberFunctionResult> CSourceCodeFile::FindMemberFunctions
 // 3BGO JIRA-239 24-09-2020
-std::vector<std::pair<std::string, CCodeMemberFunctionDataset>> CSourceCodeFile::RetrieveMemberFunctionDataset() const
+std::vector<SFindMemberFunctionResult> CSourceCodeFile::FindMemberFunctions() const
 {
 	enum EMatchGroups
 	{
@@ -29,28 +29,27 @@ std::vector<std::pair<std::string, CCodeMemberFunctionDataset>> CSourceCodeFile:
 		eModifier
 	};
 
-	const int aiSubMatches[] = { eEntireMatch, eReturnType, eClassName, eName, eArgList, eModifier };
+	const int aiSubMatchGroups[] = { eEntireMatch, eReturnType, eClassName, eName, eArgList, eModifier };
 	
 	const std::regex oRegexPattern{ CODE_FUNCTION_DATASET_REGEX_STR };
 	const std::string oCodeString = GetContent();
 
-	std::vector<std::pair<std::string, CCodeMemberFunctionDataset>> oMemberFunctionDatasetVector{};
+	std::vector<SFindMemberFunctionResult> oFindResultVector{};
 
 	const std::sregex_token_iterator oRegexEndIt{};
-	for ( std::sregex_token_iterator oRegexStartIt{oCodeString.cbegin(), oCodeString.cend(), oRegexPattern, aiSubMatches };
-		  oRegexStartIt != oRegexEndIt; ++oRegexStartIt )
+	for ( std::sregex_token_iterator oRegexStartIt{oCodeString.cbegin(), oCodeString.cend(), oRegexPattern, aiSubMatchGroups }; oRegexStartIt != oRegexEndIt; ++oRegexStartIt )
 	{
-		const std::string oMatchString = *oRegexStartIt++;
+		SFindMemberFunctionResult oFindResult{};
 
-		CCodeMemberFunctionDataset oFunctionDataset{};
-		oFunctionDataset.oReturnTypeString = *oRegexStartIt++;
-		oFunctionDataset.oClassNameString = *oRegexStartIt++;
-		oFunctionDataset.oNameString = *oRegexStartIt++;
-		oFunctionDataset.oArgListString = *oRegexStartIt++;
-		oFunctionDataset.oModifierString = *oRegexStartIt;
+		oFindResult.oMatchString = *oRegexStartIt++;
+		oFindResult.oMemberFunctionDataset.oReturnTypeString = *oRegexStartIt++;
+		oFindResult.oMemberFunctionDataset.oClassNameString = *oRegexStartIt++;
+		oFindResult.oMemberFunctionDataset.oNameString = *oRegexStartIt++;
+		oFindResult.oMemberFunctionDataset.oArgListString = *oRegexStartIt++;
+		oFindResult.oMemberFunctionDataset.oModifierString = *oRegexStartIt;
 
-		oMemberFunctionDatasetVector.push_back( std::make_pair( oMatchString, oFunctionDataset ) );
+		oFindResultVector.push_back( oFindResult );
 	}
 
-	return oMemberFunctionDatasetVector;
+	return oFindResultVector;
 }
