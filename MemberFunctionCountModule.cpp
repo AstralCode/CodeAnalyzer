@@ -2,7 +2,7 @@
 
 #include "SourceCodeFile.h"
 
-constexpr const char* MODULE_HEADER_STR = "Member function count";
+constexpr const char* MODULE_HEADER_STR = "Functions";
 
 // ^^x
 // CMemberFunctionCountModule::CMemberFunctionCountModule
