@@ -2,12 +2,14 @@
 
 #include "CommandLineHandler.h"
 #include "CodeAnalyzer.h"
-#include "MemberFunctionCountModule.h"
 #include "StatisticsCsvFileWriter.h"
+#include "MemberFunctionCountModule.h"
+#include "MemberFunctionLineCountModule.h"
 
 // ^^x
 // int main
 // 3BGO JIRA-238 24-09-2020
+// 3BGO JIRA-239 30-09-2020
 int main( int iArgumentCount, char* apcArguments[] )
 {
 	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
@@ -25,6 +27,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 	{
 		CCodeAnalyzer oCodeAnalyzer{};
 		oCodeAnalyzer.AddModule<CMemberFunctionCountModule>();
+		oCodeAnalyzer.AddModule<CMemberFunctionLineCountModule>();
 
 		eStatus = oCodeAnalyzer.Execute( oInputDirectoryPath );
 
