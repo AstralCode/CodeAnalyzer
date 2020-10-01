@@ -3,7 +3,7 @@
 #include "CommandLineHandler.h"
 #include "CodeAnalyzer.h"
 #include "StatisticsCsvFileWriter.h"
-#include "MemberFunctionCountModule.h"
+#include "CodeFileLineCountModule.h"
 #include "MemberFunctionLineCountModule.h"
 
 // ^^x
@@ -26,7 +26,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 	else
 	{
 		CCodeAnalyzer oCodeAnalyzer{};
-		oCodeAnalyzer.AddModule<CMemberFunctionCountModule>();
+		oCodeAnalyzer.AddModule<CCodeFileLineCountModule>();
 		oCodeAnalyzer.AddModule<CMemberFunctionLineCountModule>();
 
 		eStatus = oCodeAnalyzer.Execute( oInputDirectoryPath );

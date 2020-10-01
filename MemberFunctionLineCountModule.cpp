@@ -4,7 +4,7 @@
 
 #include "SourceCodeFile.h"
 
-constexpr const char* MODULE_HEADER_STR = "Function lines";
+constexpr const char* MODULE_HEADER_STR = "Function Lines";
 
 // ^^x
 // CMemberFunctionLineCountModule::CMemberFunctionLineCountModule
