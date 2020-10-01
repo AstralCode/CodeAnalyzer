@@ -3,14 +3,19 @@
 #include "StatisticsAnalyzerModule.h"
 
 /*
-	### Module Description ####
-	This module calculates the total number of member function
-	in the source files.
+	### Module Description ###
+	This module separately count the number of member functions lengths
+	for different ranges. The line count ranges are:
+	[0] ->   0 - 20,
+	[1] ->  21 - 50,
+	[2] ->  51 - 100,
+	[3] -> 101 - 300,
+	[4] -> 301 - more
 */
-class CMemberFunctionCountModule final : public CStatisticsAnalyzerModule
+class CMemberFunctionLineCountRangeModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CMemberFunctionCountModule();
+	CMemberFunctionLineCountRangeModule();
 
 	void OnStartProcess( const CCodeFile& oCodeFile ) override;
 

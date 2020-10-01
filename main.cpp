@@ -4,7 +4,7 @@
 #include "StatisticsCsvFileWriter.h"
 #include "CodeFileLineCountModule.h"
 #include "MemberFunctionCountModule.h"
-#include "MemberFunctionLineCountModule.h"
+#include "MemberFunctionLineCountRangeModule.h"
 
 // ^^x
 // int main
@@ -32,7 +32,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 		oCodeAnalyzer.AddModule<CCodeFileLineCountModule>();
 		oCodeAnalyzer.AddModule<CMemberFunctionCountModule>();
-		oCodeAnalyzer.AddModule<CMemberFunctionLineCountModule>();
+		oCodeAnalyzer.AddModule<CMemberFunctionLineCountRangeModule>();
 
 		CConsoleInterface::NewLine();
 		CConsoleInterface::PrintLine( "Execute Code Analyzer..." );

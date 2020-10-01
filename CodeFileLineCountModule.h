@@ -2,6 +2,11 @@
 
 #include "StatisticsAnalyzerModule.h"
 
+/*
+	### Module Description ###
+	This module calculates the total number of lines of code
+	in the header and source files.
+*/
 class CCodeFileLineCountModule final : public CStatisticsAnalyzerModule
 {
 public:
@@ -14,8 +19,9 @@ public:
 
 	void OnEndProcess( const CCodeFile& oCodeFile ) override;
 
-	std::string GetStatisticsHeader() const override;
-	unsigned int GetStatisticsResult() const override;
+	std::string GetModuleName() const override;
+
+	std::vector<SStatisticsResult> GetStatistics() const override;
 
 private:
 	unsigned int m_uiStatisticsResult;

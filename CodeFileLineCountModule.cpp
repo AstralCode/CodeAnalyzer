@@ -45,17 +45,17 @@ void CCodeFileLineCountModule::OnEndProcess( const CCodeFile& )
 }
 
 // ^^x
-// std::string CCodeFileLineCountModule::GetStatisticsHeader
-// 3BGO JIRA-238 24-09-2020
-std::string CCodeFileLineCountModule::GetStatisticsHeader() const
+// std::string CCodeFileLineCountModule::GetModuleName
+// 3BGO JIRA-238 01-10-2020
+std::string CCodeFileLineCountModule::GetModuleName() const
 {
-    return { "Code Line Count" };
+    return "Code Line Counter";
 }
 
 // ^^x
-// unsigned int CCodeFileLineCountModule::GetStatisticsResult
+// std::vector<SStatisticsResult> CCodeFileLineCountModule::GetStatistics
 // 3BGO JIRA-238 24-09-2020
-unsigned int CCodeFileLineCountModule::GetStatisticsResult() const
+std::vector<SStatisticsResult> CCodeFileLineCountModule::GetStatistics() const
 {
-    return m_uiStatisticsResult;
+    return { { "Code Line Count", m_uiStatisticsResult } };
 }

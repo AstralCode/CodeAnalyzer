@@ -44,17 +44,17 @@ void CMemberFunctionCountModule::OnEndProcess( const CCodeFile& )
 }
 
 // ^^x
-// std::string CMemberFunctionCountModule::GetStatisticsHeader
-// 3BGO JIRA-239 01-10-2020
-std::string CMemberFunctionCountModule::GetStatisticsHeader() const
+// std::string CMemberFunctionCountModule::GetModuleName
+// 3BGO JIRA-238 01-10-2020
+std::string CMemberFunctionCountModule::GetModuleName() const
 {
-    return { "Function Count" };
+    return "Function Counter";
 }
 
 // ^^x
-// unsigned int CMemberFunctionCountModule::GetStatisticsResult
-// 3BGO JIRA-239 01-10-2020
-unsigned int CMemberFunctionCountModule::GetStatisticsResult() const
+// std::vector<SStatisticsResult> CMemberFunctionCountModule::GetStatistics
+// 3BGO JIRA-238 24-09-2020
+std::vector<SStatisticsResult> CMemberFunctionCountModule::GetStatistics() const
 {
-    return m_uiStatisticsResult;
+    return { { "Function Count", m_uiStatisticsResult } };
 }

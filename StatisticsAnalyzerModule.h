@@ -7,6 +7,12 @@
 class CHeaderCodeFile;
 class CSourceCodeFile;
 
+struct SStatisticsResult
+{
+	std::string oHeaderString{};
+	unsigned int oValueString{};
+};
+
 class CStatisticsAnalyzerModule
 {
 public:
@@ -20,6 +26,7 @@ public:
 
 	virtual void OnEndProcess( const CCodeFile& oCodeFile ) = 0;
 
-	virtual std::string GetStatisticsHeader() const = 0;
-	virtual unsigned int GetStatisticsResult() const = 0;
+	virtual std::string GetModuleName() const = 0;
+
+	virtual std::vector<SStatisticsResult> GetStatistics() const = 0;
 };

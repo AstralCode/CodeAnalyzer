@@ -61,7 +61,7 @@ void CCodeAnalyzer::ProcessFile( const std::filesystem::path& oFilePath, const s
 {
     for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
     {
-        CConsoleInterface::Print( "Process \"" + upoStatisticsAnalyzerModule->GetStatisticsHeader() + "\" module | " + oFilePath.string() );
+        CConsoleInterface::Print( "Process \"" + upoStatisticsAnalyzerModule->GetModuleName() + "\" module | " + oFilePath.string() );
 
         if ( oFileCodeType == CCodeFile::EType::eHeader )
         {
