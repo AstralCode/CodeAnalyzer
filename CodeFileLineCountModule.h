@@ -12,12 +12,12 @@ class CCodeFileLineCountModule final : public CStatisticsAnalyzerModule
 public:
 	CCodeFileLineCountModule();
 
-	void OnStartProcess( const CCodeFile& oCodeFile ) override;
+	void OnStartProcessFile( const CCodeFile& oCodeFile ) override;
 
 	void ProcessHeaderFile( const CHeaderCodeFile& oHeaderCodeFile ) override;
 	void ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile ) override;
 
-	void OnEndProcess( const CCodeFile& oCodeFile ) override;
+	void OnEndProcessFile( const CCodeFile& oCodeFile ) override;
 
 	std::string GetModuleName() const override;
 

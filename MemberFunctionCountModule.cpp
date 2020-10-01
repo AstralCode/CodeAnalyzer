@@ -12,9 +12,9 @@ CMemberFunctionCountModule::CMemberFunctionCountModule() :
 }
 
 // ^^x
-// void CMemberFunctionCountModule::OnStartProcess
+// void CMemberFunctionCountModule::OnStartProcessFile
 // 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::OnStartProcess( const CCodeFile& )
+void CMemberFunctionCountModule::OnStartProcessFile( const CCodeFile& )
 {
 
 }
@@ -36,9 +36,9 @@ void CMemberFunctionCountModule::ProcessSourceFile( const CSourceCodeFile& oSour
 }
 
 // ^^x
-// void CMemberFunctionCountModule::OnEndProcess
+// void CMemberFunctionCountModule::OnEndProcessFile
 // 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::OnEndProcess( const CCodeFile& )
+void CMemberFunctionCountModule::OnEndProcessFile( const CCodeFile& )
 {
 
 }

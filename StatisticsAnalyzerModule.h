@@ -19,12 +19,12 @@ public:
 	CStatisticsAnalyzerModule() = default;
 	virtual ~CStatisticsAnalyzerModule() = default;
 
-	virtual void OnStartProcess( const CCodeFile& oCodeFile ) = 0;
+	virtual void OnStartProcessFile( const CCodeFile& oCodeFile ) = 0;
 
 	virtual void ProcessHeaderFile( const CHeaderCodeFile& oHeaderCodeFile ) = 0;
 	virtual void ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile ) = 0;
 
-	virtual void OnEndProcess( const CCodeFile& oCodeFile ) = 0;
+	virtual void OnEndProcessFile( const CCodeFile& oCodeFile ) = 0;
 
 	virtual std::string GetModuleName() const = 0;
 

@@ -13,9 +13,9 @@ CCodeFileLineCountModule::CCodeFileLineCountModule() :
 }
 
 // ^^x
-// void CCodeFileLineCountModule::OnStartProcess
+// void CCodeFileLineCountModule::OnStartProcessFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeFileLineCountModule::OnStartProcess( const CCodeFile& )
+void CCodeFileLineCountModule::OnStartProcessFile( const CCodeFile& )
 {
 
 }
@@ -37,9 +37,9 @@ void CCodeFileLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSource
 }
 
 // ^^x
-// void CCodeFileLineCountModule::OnEndProcess
+// void CCodeFileLineCountModule::OnEndProcessFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeFileLineCountModule::OnEndProcess( const CCodeFile& )
+void CCodeFileLineCountModule::OnEndProcessFile( const CCodeFile& )
 {
 
 }

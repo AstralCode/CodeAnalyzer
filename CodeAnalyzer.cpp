@@ -66,17 +66,17 @@ void CCodeAnalyzer::ProcessFile( const std::filesystem::path& oFilePath, const s
         if ( oFileCodeType == CCodeFile::EType::eHeader )
         {
             CHeaderCodeFile oHeaderCodeFile{ oFilePath, oFileContentString };
-            upoStatisticsAnalyzerModule->OnStartProcess( oHeaderCodeFile );
+            upoStatisticsAnalyzerModule->OnStartProcessFile( oHeaderCodeFile );
             upoStatisticsAnalyzerModule->ProcessHeaderFile( oHeaderCodeFile );
-            upoStatisticsAnalyzerModule->OnEndProcess( oHeaderCodeFile );
+            upoStatisticsAnalyzerModule->OnEndProcessFile( oHeaderCodeFile );
         }
 
         if ( oFileCodeType == CCodeFile::EType::eSource )
         {
             CSourceCodeFile oSourceCodeFile{ oFilePath, oFileContentString };
-            upoStatisticsAnalyzerModule->OnStartProcess( oSourceCodeFile );
+            upoStatisticsAnalyzerModule->OnStartProcessFile( oSourceCodeFile );
             upoStatisticsAnalyzerModule->ProcessSourceFile( oSourceCodeFile );
-            upoStatisticsAnalyzerModule->OnEndProcess( oSourceCodeFile );
+            upoStatisticsAnalyzerModule->OnEndProcessFile( oSourceCodeFile );
         }
 
         CConsoleInterface::ClearLine();

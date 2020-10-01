@@ -12,9 +12,9 @@ CMemberFunctionLineCountRangeModule::CMemberFunctionLineCountRangeModule() :
 }
 
 // ^^x
-// void CMemberFunctionLineCountRangeModule::OnStartProcess
+// void CMemberFunctionLineCountRangeModule::OnStartProcessFile
 // 3BGO JIRA-239 30-09-2020
-void CMemberFunctionLineCountRangeModule::OnStartProcess( const CCodeFile& )
+void CMemberFunctionLineCountRangeModule::OnStartProcessFile( const CCodeFile& )
 {
 
 }
@@ -36,9 +36,9 @@ void CMemberFunctionLineCountRangeModule::ProcessSourceFile( const CSourceCodeFi
 }
 
 // ^^x
-// void CMemberFunctionLineCountRangeModule::OnEndProcess
+// void CMemberFunctionLineCountRangeModule::OnEndProcessFile
 // 3BGO JIRA-239 30-09-2020
-void CMemberFunctionLineCountRangeModule::OnEndProcess( const CCodeFile& )
+void CMemberFunctionLineCountRangeModule::OnEndProcessFile( const CCodeFile& )
 {
 
 }
