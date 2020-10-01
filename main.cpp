@@ -13,6 +13,8 @@
 int main( int iArgumentCount, char* apcArguments[] )
 {
 	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
+	CCodeAnalyzer oCodeAnalyzer{};
+	CStatisticsCsvFileWriter oStatisticsFileWriter{};
 
 	std::filesystem::path oInputDirectoryPath{};
 	std::filesystem::path oOutputDirectoryPath{};
@@ -28,7 +30,6 @@ int main( int iArgumentCount, char* apcArguments[] )
 		CConsoleInterface::PrintLine( "Input directory: \"" + oInputDirectoryPath.string() + "\"");
 		CConsoleInterface::PrintLine( "Output directory: \"" + oOutputDirectoryPath.string() + "\"" );
 
-		CCodeAnalyzer oCodeAnalyzer{};
 		oCodeAnalyzer.AddModule<CCodeFileLineCountModule>();
 		oCodeAnalyzer.AddModule<CMemberFunctionCountModule>();
 		oCodeAnalyzer.AddModule<CMemberFunctionLineCountModule>();
@@ -42,8 +43,6 @@ int main( int iArgumentCount, char* apcArguments[] )
 		{
 			CConsoleInterface::PrintLine( "Execute Code Analyzer completed!" );
 
-			CStatisticsCsvFileWriter oStatisticsFileWriter{};
-			
 			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
