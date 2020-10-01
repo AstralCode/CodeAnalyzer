@@ -1,5 +1,6 @@
 #include "CodeFileLineCountModule.h"
 
+#include "HeaderCodeFile.h"
 #include "SourceCodeFile.h"
 
 // ^^x
@@ -22,9 +23,9 @@ void CCodeFileLineCountModule::OnStartProcess( const CCodeFile& )
 // ^^x
 // void CCodeFileLineCountModule::ProcessHeaderFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeFileLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
+void CCodeFileLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& oHeaderCodeFile )
 {
-
+    m_uiStatisticsResult += oHeaderCodeFile.GetCodeLines().size();
 }
 
 // ^^x
