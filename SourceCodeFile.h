@@ -5,11 +5,11 @@
 struct SMemberFunctionHeaderDataset
 {
 	std::string oAuthorString{};
-	std::string oInfoString{};
+	std::string oInformationString{};
 	std::string oReturnTypeString{};
 	std::string oClassNameString{};
 	std::string oNameString{};
-	std::string oArgListString{};
+	std::string oArgumentsString{};
 	std::string oModifierString{};
 };
 

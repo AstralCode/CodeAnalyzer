@@ -48,11 +48,11 @@ std::vector<SFindMemberFunctionHeaderResult> CSourceCodeFile::FindMemberFunction
 		oResult.oMatchString = *oRegexBeginIt++;
 
 		oResult.oMemberFunctionHeaderDataset.oAuthorString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
-		oResult.oMemberFunctionHeaderDataset.oInfoString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
+		oResult.oMemberFunctionHeaderDataset.oInformationString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
 		oResult.oMemberFunctionHeaderDataset.oReturnTypeString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
 		oResult.oMemberFunctionHeaderDataset.oClassNameString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
 		oResult.oMemberFunctionHeaderDataset.oNameString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
-		oResult.oMemberFunctionHeaderDataset.oArgListString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
+		oResult.oMemberFunctionHeaderDataset.oArgumentsString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
 		oResult.oMemberFunctionHeaderDataset.oModifierString = CStringHelper::SimplifyString( *oRegexBeginIt );
 
 		oResultVector.push_back( oResult );
