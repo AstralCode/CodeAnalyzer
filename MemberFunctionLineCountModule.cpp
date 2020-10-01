@@ -1,7 +1,5 @@
 #include "MemberFunctionLineCountModule.h"
 
-#include <iostream>
-
 #include "SourceCodeFile.h"
 
 constexpr const char* MODULE_HEADER_STR = "Function Lines";
@@ -34,22 +32,9 @@ void CMemberFunctionLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 // ^^x
 // void CMemberFunctionLineCountModule::ProcessSourceFile
 // 3BGO JIRA-239 30-09-2020
-void CMemberFunctionLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
+void CMemberFunctionLineCountModule::ProcessSourceFile( const CSourceCodeFile& )
 {
-    const std::vector<SFindMemberFunctionHeaderResult> oFindMemberFunctionHeaderResultVector = oSourceCodeFile.FindMemberFunctionHeaders();
 
-    for ( const SFindMemberFunctionHeaderResult& oFindMemberFunctionHeaderResult : oFindMemberFunctionHeaderResultVector )
-    {
-        std::cout << "# MATCH #     = " << oFindMemberFunctionHeaderResult.oMatchString << '\n' << '\n';
-        std::cout << "[Author]      = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oAuthorString << '\n';
-        std::cout << "[Information] = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oInformationString << '\n';
-        std::cout << "[ReturnType]  = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oReturnTypeString << '\n';
-        std::cout << "[ClassName]   = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oClassNameString << '\n';
-        std::cout << "[Name]        = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oNameString << '\n';
-        std::cout << "[Arguments]   = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oArgumentsString << '\n';
-        std::cout << "[Modifier]    = " << oFindMemberFunctionHeaderResult.oMemberFunctionHeaderDataset.oModifierString << '\n';
-        std::cout << '\n';
-    }
 }
 
 // ^^x
