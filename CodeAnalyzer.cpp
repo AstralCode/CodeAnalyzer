@@ -5,6 +5,7 @@
 
 #include "HeaderCodeFile.h"
 #include "SourceCodeFile.h"
+#include "ConsoleInterface.h"
 
 // ^^x
 // CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules
@@ -60,6 +61,8 @@ void CCodeAnalyzer::ProcessFile( const std::filesystem::path& oFilePath, const s
 {
     for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
     {
+        CConsoleInterface::Print( "Process \"" + upoStatisticsAnalyzerModule->GetStatisticsHeader() + "\" module | " + oFilePath.string() );
+
         if ( oFileCodeType == CCodeFile::EType::eHeader )
         {
             CHeaderCodeFile oHeaderCodeFile{ oFilePath, oFileContentString };
@@ -75,6 +78,8 @@ void CCodeAnalyzer::ProcessFile( const std::filesystem::path& oFilePath, const s
             upoStatisticsAnalyzerModule->ProcessSourceFile( oSourceCodeFile );
             upoStatisticsAnalyzerModule->OnEndProcess( oSourceCodeFile );
         }
+
+        CConsoleInterface::ClearLine();
     }
 }
 

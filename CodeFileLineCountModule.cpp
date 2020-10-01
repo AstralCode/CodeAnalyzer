@@ -2,8 +2,6 @@
 
 #include "SourceCodeFile.h"
 
-constexpr const char* MODULE_HEADER_STR = "Code Lines";
-
 // ^^x
 // CCodeFileLineCountModule::CCodeFileLineCountModule
 // 3BGO JIRA-238 24-09-2020
@@ -50,7 +48,7 @@ void CCodeFileLineCountModule::OnEndProcess( const CCodeFile& )
 // 3BGO JIRA-238 24-09-2020
 std::string CCodeFileLineCountModule::GetStatisticsHeader() const
 {
-    return MODULE_HEADER_STR;
+    return { "Code Line Count" };
 }
 
 // ^^x

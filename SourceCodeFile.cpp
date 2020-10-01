@@ -4,8 +4,11 @@
 
 #include "StringHelper.h"
 
-constexpr const char* CODE_FUNCTION_DATASET_REGEX_STR =
-	R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]*)\s*\)\s*((?:const)?)[ \t]*$)";
+constexpr const char* FIND_MEMBER_FUNCTION_HEADERS_REGEX_STR =
+R"(^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]*)\s*\)\s*((?:const)?)[ \t]*$)";
+
+constexpr const char* FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR =
+R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]*)\s*\)\s*((?:const)?)[ \t]*$)";
 
 // ^^x
 // CSourceCodeFile::CSourceCodeFile
@@ -17,9 +20,32 @@ CSourceCodeFile::CSourceCodeFile( const std::filesystem::path& oFilePath, const 
 }
 
 // ^^x
-// std::vector<SFindMemberFunctionHeaderResult> CSourceCodeFile::FindMemberFunctionHeaders
+// std::vector<SFindMemberFunctionHeaderResult> CSourceCodeFile::FindMemberFunctionHeader
+// 3BGO JIRA-239 01-10-2020
+std::vector<SFindMemberFunctionHeaderResult> CSourceCodeFile::FindMemberFunctionHeader() const
+{
+	const std::regex oRegexPattern{ FIND_MEMBER_FUNCTION_HEADERS_REGEX_STR };
+	const std::string oCodeString = GetContent();
+
+	std::vector<SFindMemberFunctionHeaderResult> oResultVector{};
+
+	const std::sregex_token_iterator oRegexEndIt{};
+	for ( std::sregex_token_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
+	{
+		SFindMemberFunctionHeaderResult oResult{};
+
+		oResult.oMatchString = *oRegexBeginIt;
+
+		oResultVector.push_back( oResult );
+	}
+
+	return oResultVector;
+}
+
+// ^^x
+// std::vector<SFindMemberFunctionHeaderDetailResult> CSourceCodeFile::FindMemberFunctionHeaderDetails
 // 3BGO JIRA-239 24-09-2020
-std::vector<SFindMemberFunctionHeaderResult> CSourceCodeFile::FindMemberFunctionHeaders() const
+std::vector<SFindMemberFunctionHeaderDetailResult> CSourceCodeFile::FindMemberFunctionHeaderDetails() const
 {
 	enum EMatchGroups
 	{
@@ -35,15 +61,15 @@ std::vector<SFindMemberFunctionHeaderResult> CSourceCodeFile::FindMemberFunction
 
 	const int aiMatchGroups[] = { eEntireMatch, eAuthor, eInfo, eReturnType, eClassName, eName, eArgList, eModifier };
 	
-	const std::regex oRegexPattern{ CODE_FUNCTION_DATASET_REGEX_STR };
+	const std::regex oRegexPattern{ FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR };
 	const std::string oCodeString = GetContent();
 
-	std::vector<SFindMemberFunctionHeaderResult> oResultVector{};
+	std::vector<SFindMemberFunctionHeaderDetailResult> oResultVector{};
 
 	const std::sregex_token_iterator oRegexEndIt{};
 	for ( std::sregex_token_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern, aiMatchGroups }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
 	{
-		SFindMemberFunctionHeaderResult oResult{};
+		SFindMemberFunctionHeaderDetailResult oResult{};
 
 		oResult.oMatchString = *oRegexBeginIt++;
 

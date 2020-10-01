@@ -2,8 +2,6 @@
 
 #include "SourceCodeFile.h"
 
-constexpr const char* MODULE_HEADER_STR = "Function Lines";
-
 // ^^x
 // CMemberFunctionLineCountModule::CMemberFunctionLineCountModule
 // 3BGO JIRA-239 30-09-2020
@@ -32,9 +30,9 @@ void CMemberFunctionLineCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
 // ^^x
 // void CMemberFunctionLineCountModule::ProcessSourceFile
 // 3BGO JIRA-239 30-09-2020
-void CMemberFunctionLineCountModule::ProcessSourceFile( const CSourceCodeFile& )
+void CMemberFunctionLineCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
 {
-
+    m_uiStatisticsResult += oSourceCodeFile.FindMemberFunctionHeader().size();
 }
 
 // ^^x
@@ -50,7 +48,7 @@ void CMemberFunctionLineCountModule::OnEndProcess( const CCodeFile& )
 // 3BGO JIRA-239 30-09-2020
 std::string CMemberFunctionLineCountModule::GetStatisticsHeader() const
 {
-    return MODULE_HEADER_STR;
+    return { "Function Line Count" };
 }
 
 // ^^x

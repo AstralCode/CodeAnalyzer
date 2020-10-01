@@ -21,6 +21,11 @@ struct SMemberFunctionBodyDataset
 struct SFindMemberFunctionHeaderResult
 {
 	std::string oMatchString{};
+};
+
+struct SFindMemberFunctionHeaderDetailResult
+{
+	std::string oMatchString{};
 	SMemberFunctionHeaderDataset oMemberFunctionHeaderDataset{};
 };
 
@@ -35,6 +40,7 @@ class CSourceCodeFile final : public CCodeFile
 public:
 	CSourceCodeFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
 
-	std::vector<SFindMemberFunctionHeaderResult> FindMemberFunctionHeaders() const;
+	std::vector<SFindMemberFunctionHeaderResult> FindMemberFunctionHeader() const;
+	std::vector<SFindMemberFunctionHeaderDetailResult> FindMemberFunctionHeaderDetails() const;
 	std::vector<SFindMemberFunctionBodyResult> FindMemberFunctionBodies() const;
 };

@@ -1,9 +1,5 @@
 #include "CommandLineHandler.h"
 
-constexpr const char* USAGE_STR =
-	"usage:" "\n"
-	"\t"	"codeanalyzer.exe [input_directory_path] [output_directory_path]";
-
 // ^^x
 // CCommandLineHandler::CCommandLineHandler
 // 3BGO JIRA-238 24-09-2020
@@ -47,5 +43,5 @@ EProgramStatusCodes CCommandLineHandler::HandleArguments( std::filesystem::path&
 // 3BGO JIRA-238 24-09-2020
 std::string CCommandLineHandler::GetUsageMessage() const
 {
-	return USAGE_STR;
+	return { "usage:" "\n\t" "codeanalyzer.exe [input_directory_path] [output_directory_path]" };
 }

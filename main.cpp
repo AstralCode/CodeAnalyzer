@@ -1,9 +1,9 @@
-#include <iostream>
-
+#include "ConsoleInterface.h"
 #include "CommandLineHandler.h"
 #include "CodeAnalyzer.h"
 #include "StatisticsCsvFileWriter.h"
 #include "CodeFileLineCountModule.h"
+#include "MemberFunctionCountModule.h"
 #include "MemberFunctionLineCountModule.h"
 
 // ^^x
@@ -21,20 +21,35 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 	if ( eStatus != EProgramStatusCodes::eSuccess )
 	{
-		std::cerr << oCommandLineHandler.GetUsageMessage() << '\n';
+		CConsoleInterface::PrintLine( oCommandLineHandler.GetUsageMessage() );
 	}
 	else
 	{
+		CConsoleInterface::PrintLine( "Input directory: \"" + oInputDirectoryPath.string() + "\"");
+		CConsoleInterface::PrintLine( "Output directory: \"" + oOutputDirectoryPath.string() + "\"" );
+
 		CCodeAnalyzer oCodeAnalyzer{};
 		oCodeAnalyzer.AddModule<CCodeFileLineCountModule>();
+		oCodeAnalyzer.AddModule<CMemberFunctionCountModule>();
 		oCodeAnalyzer.AddModule<CMemberFunctionLineCountModule>();
+
+		CConsoleInterface::NewLine();
+		CConsoleInterface::PrintLine( "Execute Code Analyzer..." );
 
 		eStatus = oCodeAnalyzer.Execute( oInputDirectoryPath );
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
+			CConsoleInterface::PrintLine( "Execute Code Analyzer completed!" );
+
 			CStatisticsCsvFileWriter oStatisticsFileWriter{};
-			oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
+			
+			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
+
+			if ( eStatus == EProgramStatusCodes::eSuccess )
+			{
+				CConsoleInterface::PrintLine( "Report has been created." );
+			}
 		}
 	}
 
