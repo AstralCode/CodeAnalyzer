@@ -153,7 +153,10 @@ std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const C
 
 					if ( bFoundBackslash )
 					{
-						uiFindOffsetPos = oCodeString.find_first_not_of( R"( \t\n)", uiSyntaxCharacterPos ) + 1u;
+						uiFindOffsetPos = oCodeString.find_first_not_of( R"( \t\n)", uiSyntaxCharacterPos );
+
+						char c = oCodeString[uiFindOffsetPos];
+
 						bFoundBackslash = false;
 					}
 					else
@@ -256,7 +259,10 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 
 					if ( bFoundBackslash )
 					{
-						uiFindOffsetPos = oCodeString.find_first_not_of( R"( \t\n)", uiSyntaxCharacterPos ) + 1u;
+						uiFindOffsetPos = oCodeString.find_first_not_of( R"( \t\n)", uiSyntaxCharacterPos );
+
+						char c = oCodeString[uiFindOffsetPos];
+
 						bFoundBackslash = false;
 					}
 					else
