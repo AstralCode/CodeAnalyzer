@@ -52,7 +52,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
                     const std::string oProcessCodeFileNumber = std::to_string( uiProcessCodeFileNumber );
                     const std::string oProcessCodeFileCount = std::to_string( uiProcessCodeFileCount );
 
-                    CConsoleInterface::Print( "Process \"" + upoStatisticsAnalyzerModule->GetModuleName() + "\" module | File(" + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + "): " + oFilePath.string() );
+                    CConsoleInterface::Print( "Process \"" + upoStatisticsAnalyzerModule->GetModuleName() + "\" | File(" + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + "): " + oFilePath.string() );
                     
                     ProcessCodeFile( *upoStatisticsAnalyzerModule, oFilePath, oFileContentString, oFileType );
                 }
