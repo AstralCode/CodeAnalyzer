@@ -22,7 +22,10 @@ void CCodeFileLineCountModule::PreProcessCodeFile( const CCodeFile& )
 // 3BGO JIRA-238 24-09-2020
 void CCodeFileLineCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
-    GetStatistics( 0u ).uiValue += oCodeFile.GetCodeLines().size();
+    if ( oCodeFile.GetType() == CCodeFile::EType::eHeader || oCodeFile.GetType() == CCodeFile::EType::eSource )
+    {
+        GetStatistics( 0u ).uiValue += oCodeFile.GetCodeLines().size();
+    }
 }
 
 // ^^x

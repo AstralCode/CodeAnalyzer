@@ -23,19 +23,26 @@ struct SMemberFunctionBodyDataset
 
 struct SFindMemberFunctionHeaderResult
 {
-	std::string oMatchString{};
+	std::string oHeaderString{};
 };
 
 struct SFindMemberFunctionHeaderDetailResult
 {
-	std::string oMatchString{};
-	SMemberFunctionHeaderDataset oMemberFunctionHeaderDataset{};
+	SFindMemberFunctionHeaderResult oHeaderResult{};
+	SMemberFunctionHeaderDataset oHeaderDataset{};
 };
 
-struct SFindMemberFunctionBodyResult
+struct SFindMemberFunctionResult
 {
-	std::string oFunctionMatchString{};
-	std::string oFunctionBody{};
+	SFindMemberFunctionHeaderResult oHeaderResult{};
+	SMemberFunctionBodyDataset oBodyDataset{};
+};
+
+struct SFindMemberFunctionDetailResult
+{
+	SFindMemberFunctionHeaderResult oHeaderResult{};
+	SMemberFunctionHeaderDataset oHeaderDataset{};
+	SMemberFunctionBodyDataset oBodyDataset{};
 };
 
 class CCodeParser final
@@ -47,6 +54,7 @@ public:
 	CCodeParser& operator=( const CCodeParser& ) = delete;
 
 	std::vector<SFindMemberFunctionHeaderResult> FindMemberFunctionHeaders( const CCodeFile& oCodeFile ) const;
-	std::vector<SFindMemberFunctionHeaderDetailResult> FindMemberFunctionHeaderDetails( const CCodeFile& oCodeFile ) const;
-	std::vector<SFindMemberFunctionBodyResult> FindMemberFunctionBodies( const CCodeFile& oCodeFile ) const;
+	std::vector<SFindMemberFunctionHeaderDetailResult> FindMemberFunctionHeadersDetails( const CCodeFile& oCodeFile ) const;
+	std::vector<SFindMemberFunctionResult> FindMemberFunctions( const CCodeFile& oCodeFile ) const;
+	std::vector<SFindMemberFunctionDetailResult> FindMemberFunctionsDetails( const CCodeFile& oCodeFile ) const;
 };

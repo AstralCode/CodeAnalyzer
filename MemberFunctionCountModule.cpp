@@ -24,7 +24,10 @@ void CMemberFunctionCountModule::PreProcessCodeFile( const CCodeFile& )
 // 3BGO JIRA-239 01-10-2020
 void CMemberFunctionCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
-    GetStatistics( 0u ).uiValue += m_oCodeParser.FindMemberFunctionHeaders( oCodeFile ).size();
+    if ( oCodeFile.GetType() == CCodeFile::EType::eSource )
+    {
+        GetStatistics( 0u ).uiValue += m_oCodeParser.FindMemberFunctionHeaders( oCodeFile ).size();
+    }
 }
 
 // ^^x

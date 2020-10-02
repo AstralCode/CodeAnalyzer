@@ -29,35 +29,38 @@ void CMemberFunctionCodeLineRangeModule::PreProcessCodeFile( const CCodeFile& )
 // 3BGO JIRA-239 30-09-2020
 void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
-    const std::vector<SFindMemberFunctionBodyResult> oFindFunctionBodyResultVector = m_oCodeParser.FindMemberFunctionBodies( oCodeFile );
-
-    for ( const SFindMemberFunctionBodyResult& oFunctionBodyResult : oFindFunctionBodyResultVector )
+    if ( oCodeFile.GetType() == CCodeFile::EType::eSource )
     {
-        unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( oFunctionBodyResult.oFunctionBody ).size();
+        const std::vector<SFindMemberFunctionDetailResult> oFunctionResultVector = m_oCodeParser.FindMemberFunctionsDetails( oCodeFile );
 
-        if ( uiFunctionCodeLineCount > 2u )
+        for ( const SFindMemberFunctionDetailResult& oFunctionResult : oFunctionResultVector )
         {
-            uiFunctionCodeLineCount -= 2u;
+            unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( oFunctionResult.oBodyDataset.oBodyString ).size();
 
-            if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 0u, 20u ) )
+            if ( uiFunctionCodeLineCount > 2u )
             {
-                ++GetStatistics( 0u ).uiValue;
-            }
-            else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 21u, 50u ) )
-            {
-                ++GetStatistics( 1u ).uiValue;
-            }
-            else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 51u, 100u ) )
-            {
-                ++GetStatistics( 2u ).uiValue;
-            }
-            else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 101u, 300u ) )
-            {
-                ++GetStatistics( 3u ).uiValue;
-            }
-            else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 301u, std::numeric_limits<unsigned int>::max() ) )
-            {
-                ++GetStatistics( 4u ).uiValue;
+                uiFunctionCodeLineCount -= 2u;
+
+                if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 0u, 20u ) )
+                {
+                    ++GetStatistics( 0u ).uiValue;
+                }
+                else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 21u, 50u ) )
+                {
+                    ++GetStatistics( 1u ).uiValue;
+                }
+                else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 51u, 100u ) )
+                {
+                    ++GetStatistics( 2u ).uiValue;
+                }
+                else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 101u, 300u ) )
+                {
+                    ++GetStatistics( 3u ).uiValue;
+                }
+                else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 301u, std::numeric_limits<unsigned int>::max() ) )
+                {
+                    ++GetStatistics( 4u ).uiValue;
+                }
             }
         }
     }

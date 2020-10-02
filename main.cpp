@@ -5,6 +5,7 @@
 #include "CodeFileLineCountModule.h"
 #include "MemberFunctionCountModule.h"
 #include "MemberFunctionCodeLineRangeModule.h"
+#include "DateTimeHelper.h"
 
 // ^^x
 // int main
@@ -35,13 +36,13 @@ int main( int iArgumentCount, char* apcArguments[] )
 		oCodeAnalyzer.AddModule<CMemberFunctionCodeLineRangeModule>();
 
 		CConsoleInterface::NewLine();
-		CConsoleInterface::PrintLine( "Execute Code Analyzer..." );
+		CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Execute Code Analyzer..." );
 
 		eStatus = oCodeAnalyzer.Execute( oInputDirectoryPath );
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
-			CConsoleInterface::PrintLine( "Execute Code Analyzer completed!" );
+			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Execute completed!" );
 
 			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
 
