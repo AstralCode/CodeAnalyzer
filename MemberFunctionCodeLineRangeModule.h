@@ -14,10 +14,10 @@
 	[3] -> 101 - 300,
 	[4] -> 301 - more
 */
-class CMemberFunctionLineCountRangeModule final : public CStatisticsAnalyzerModule
+class CMemberFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CMemberFunctionLineCountRangeModule( CCodeParser& oCodeParser );
+	CMemberFunctionCodeLineRangeModule( CCodeParser& oCodeParser );
 
 	void PreProcessCodeFile( const CCodeFile& oCodeFile ) override;
 	void ProcessCodeFile( const CCodeFile& oCodeFile ) override;
