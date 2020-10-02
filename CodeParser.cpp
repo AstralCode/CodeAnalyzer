@@ -119,7 +119,7 @@ std::vector<SFindMemberFunctionBodyResult> CCodeParser::FindMemberFunctionBodies
 				{
 					const std::string oFunctionLocalBracketString = oCodeString.substr( uiFunctionLocalBracketPos - 1u, 3u );
 
-					if ( std::regex_match( oFunctionLocalBracketString, std::regex( CHECK_FUNCTION_BRACKET_REGEX_STR ) ) )
+					if ( std::regex_match( oFunctionLocalBracketString, std::regex{ CHECK_FUNCTION_BRACKET_REGEX_STR } ) )
 					{
 						if ( oCodeString[uiFunctionLocalBracketPos] == '{' )
 						{
