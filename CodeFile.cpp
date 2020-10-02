@@ -1,6 +1,6 @@
 #include "CodeFile.h"
 
-#include <sstream>
+#include "StringHelper.h"
 
 // ^^x
 // CCodeFile::CCodeFile
@@ -34,17 +34,7 @@ const std::string& CCodeFile::GetContent() const
 // 3BGO JIRA-238 24-09-2020
 std::vector<std::string> CCodeFile::GetCodeLines() const
 {
-	std::vector<std::string> oCodeLineVector{};
-
-	std::istringstream oStringStream{ m_oContentString };
-	std::string oCodeLine{};
-
-	while ( std::getline( oStringStream, oCodeLine ) )
-	{
-		oCodeLineVector.push_back( oCodeLine );
-	}
-
-	return oCodeLineVector;
+	return CStringHelper::SplitLines( m_oContentString );
 }
 
 // ^^x

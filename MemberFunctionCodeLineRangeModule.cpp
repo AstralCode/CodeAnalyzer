@@ -1,5 +1,8 @@
 #include "MemberFunctionCodeLineRangeModule.h"
 
+#include "CodeParser.h"
+#include "StringHelper.h"
+
 // ^^x
 // CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule
 // 3BGO JIRA-239 30-09-2020
@@ -24,9 +27,40 @@ void CMemberFunctionCodeLineRangeModule::PreProcessCodeFile( const CCodeFile& )
 // ^^x
 // void CMemberFunctionCodeLineRangeModule::ProcessCodeFile
 // 3BGO JIRA-239 30-09-2020
-void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& )
+void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
+    const std::vector<SFindMemberFunctionBodyResult> oFindFunctionBodyResultVector = m_oCodeParser.FindMemberFunctionBodies( oCodeFile );
 
+    for ( const SFindMemberFunctionBodyResult& oFunctionBodyResult : oFindFunctionBodyResultVector )
+    {
+        unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( oFunctionBodyResult.oFunctionBody ).size();
+
+        if ( uiFunctionCodeLineCount > 2u )
+        {
+            uiFunctionCodeLineCount -= 2u;
+
+            if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 0u, 20u ) )
+            {
+                ++GetStatistics( 0u ).uiValue;
+            }
+            else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 21u, 50u ) )
+            {
+                ++GetStatistics( 1u ).uiValue;
+            }
+            else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 51u, 100u ) )
+            {
+                ++GetStatistics( 2u ).uiValue;
+            }
+            else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 101u, 300u ) )
+            {
+                ++GetStatistics( 3u ).uiValue;
+            }
+            else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 301u, std::numeric_limits<unsigned int>::max() ) )
+            {
+                ++GetStatistics( 4u ).uiValue;
+            }
+        }
+    }
 }
 
 // ^^x
