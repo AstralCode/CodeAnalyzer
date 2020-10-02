@@ -76,5 +76,5 @@ void CMemberFunctionCodeLineRangeModule::PostProcessCodeFile( const CCodeFile& )
 // 3BGO JIRA-238 01-10-2020
 std::string CMemberFunctionCodeLineRangeModule::GetModuleName() const
 {
-    return "Function Code Line Range Counter";
+    return "Function Line Range";
 }
