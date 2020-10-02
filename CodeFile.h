@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <vector>
 
-class CCodeFile
+class CCodeFile final
 {
 public:
 	enum class EType
@@ -13,20 +13,21 @@ public:
 		eSource
 	};
 
-	CCodeFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
-	virtual ~CCodeFile() = default;
+	CCodeFile( const std::filesystem::path& oPath, const std::string& oContentString, const EType eType );
 
-	static EType CheckFileExtension( const std::filesystem::path& oFilePath );
-
-	std::vector<std::string> GetCodeLines() const;
-	const std::string& GetContent() const;
+	CCodeFile( const CCodeFile& ) = delete;
+	CCodeFile& operator=( const CCodeFile& ) = delete;
 
 	std::filesystem::path GetPath() const;
 
-	unsigned int GetLineCount() const;
+	const std::string& GetContent() const;
+	std::vector<std::string> GetCodeLines() const;
+
+	EType GetType() const;
 
 private:
-	std::filesystem::path m_oFilePath;
-	std::string m_oFileContentString;
-};
+	std::filesystem::path m_oPath;
+	std::string m_oContentString;
 
+	EType m_eType;
+};

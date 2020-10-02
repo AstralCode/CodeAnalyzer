@@ -1,44 +1,37 @@
 #include "MemberFunctionCountModule.h"
 
-#include "SourceCodeFile.h"
+#include "CodeParser.h"
 
 // ^^x
 // CMemberFunctionCountModule::CMemberFunctionCountModule
 // 3BGO JIRA-239 01-10-2020
-CMemberFunctionCountModule::CMemberFunctionCountModule() :
-    m_uiStatisticsResult{ 0u }
+CMemberFunctionCountModule::CMemberFunctionCountModule( CCodeParser& oCodeParser ) :
+    CStatisticsAnalyzerModule{ oCodeParser }
+{
+    CreateStatistics( "Function Count" );
+}
+
+// ^^x
+// void CMemberFunctionCountModule::PreProcessCodeFile
+// 3BGO JIRA-239 01-10-2020
+void CMemberFunctionCountModule::PreProcessCodeFile( const CCodeFile& )
 {
 
 }
 
 // ^^x
-// void CMemberFunctionCountModule::OnStartProcessFile
+// void CMemberFunctionCountModule::ProcessCodeFile
 // 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::OnStartProcessFile( const CCodeFile& )
+void CMemberFunctionCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
-
+    const unsigned int uiResult = m_oCodeParser.FindMemberFunctionHeader( oCodeFile ).size();
+    AddStatisticsResult( 0u, uiResult );
 }
 
 // ^^x
-// void CMemberFunctionCountModule::ProcessHeaderFile
+// void CMemberFunctionCountModule::PostProcessCodeFile
 // 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::ProcessHeaderFile( const CHeaderCodeFile& )
-{
-
-}
-
-// ^^x
-// void CMemberFunctionCountModule::ProcessSourceFile
-// 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile )
-{
-    m_uiStatisticsResult += oSourceCodeFile.FindMemberFunctionHeader().size();
-}
-
-// ^^x
-// void CMemberFunctionCountModule::OnEndProcessFile
-// 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::OnEndProcessFile( const CCodeFile& )
+void CMemberFunctionCountModule::PostProcessCodeFile( const CCodeFile& )
 {
 
 }
@@ -51,10 +44,3 @@ std::string CMemberFunctionCountModule::GetModuleName() const
     return "Function Counter";
 }
 
-// ^^x
-// std::vector<SStatisticsResult> CMemberFunctionCountModule::GetStatistics
-// 3BGO JIRA-238 24-09-2020
-std::vector<SStatisticsResult> CMemberFunctionCountModule::GetStatistics() const
-{
-    return { { "Function Count", m_uiStatisticsResult } };
-}

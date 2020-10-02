@@ -1,32 +1,40 @@
 #pragma once
 
-#include <filesystem>
-
 #include "CodeFile.h"
-
-class CHeaderCodeFile;
-class CSourceCodeFile;
 
 struct SStatisticsResult
 {
 	std::string oHeaderString{};
-	unsigned int oValueString{};
+	unsigned int uiValue{ 0u };
 };
+
+class CCodeParser;
 
 class CStatisticsAnalyzerModule
 {
 public:
-	CStatisticsAnalyzerModule() = default;
+	CStatisticsAnalyzerModule( CCodeParser& oCodeParser );
 	virtual ~CStatisticsAnalyzerModule() = default;
 
-	virtual void OnStartProcessFile( const CCodeFile& oCodeFile ) = 0;
+	CStatisticsAnalyzerModule( const CStatisticsAnalyzerModule& ) = delete;
+	CStatisticsAnalyzerModule& operator=( const CStatisticsAnalyzerModule& ) = delete;
 
-	virtual void ProcessHeaderFile( const CHeaderCodeFile& oHeaderCodeFile ) = 0;
-	virtual void ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile ) = 0;
-
-	virtual void OnEndProcessFile( const CCodeFile& oCodeFile ) = 0;
+	virtual void PreProcessCodeFile( const CCodeFile& oCodeFile ) = 0;
+	virtual void ProcessCodeFile( const CCodeFile& oCodeFile ) = 0;
+	virtual void PostProcessCodeFile( const CCodeFile& oCodeFile ) = 0;
 
 	virtual std::string GetModuleName() const = 0;
 
-	virtual std::vector<SStatisticsResult> GetStatistics() const = 0;
+	std::vector<SStatisticsResult> GetStatisticsResults() const;
+
+protected:
+	CCodeParser& m_oCodeParser;
+
+	void CreateStatistics( const std::string& oHeaderString );
+	void SetStatisticsResult( const unsigned int uiIndex, const unsigned int uiValue );
+	void AddStatisticsResult( const unsigned int uiIndex, const unsigned int uiValue );
+	unsigned int GetStatisticsResult( const unsigned int uiIndex ) const;
+
+private:
+	std::vector<SStatisticsResult> m_oResultVector;
 };

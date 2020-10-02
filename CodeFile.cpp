@@ -5,34 +5,28 @@
 // ^^x
 // CCodeFile::CCodeFile
 // 3BGO JIRA-238 24-09-2020
-CCodeFile::CCodeFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString ) :
-	m_oFilePath{ oFilePath },
-	m_oFileContentString{ oFileContentString }
+CCodeFile::CCodeFile( const std::filesystem::path& oPath, const std::string& oContentString, const EType eType ) :
+	m_oPath{ oPath },
+	m_oContentString{ oContentString },
+	m_eType{ eType }
 {
 
 }
 
 // ^^x
-// CCodeFile::EType CCodeFile::CheckFileExtension
+// std::filesystem::path CCodeFile::GetPath
 // 3BGO JIRA-238 24-09-2020
-CCodeFile::EType CCodeFile::CheckFileExtension( const std::filesystem::path& oFilePath )
+std::filesystem::path CCodeFile::GetPath() const
 {
-	CCodeFile::EType eFileType = CCodeFile::EType::eUnknown;
+	return m_oPath;
+}
 
-	if ( oFilePath.has_extension() )
-	{
-		if ( oFilePath.extension() == ".h" )
-		{
-			eFileType = CCodeFile::EType::eHeader;
-		}
-
-		if ( oFilePath.extension() == ".cpp" )
-		{
-			eFileType = CCodeFile::EType::eSource;
-		}
-	}
-
-	return eFileType;
+// ^^x
+// const std::string& CCodeFile::GetContent
+// 3BGO JIRA-238 24-09-2020
+const std::string& CCodeFile::GetContent() const
+{
+	return m_oContentString;
 }
 
 // ^^x
@@ -42,7 +36,7 @@ std::vector<std::string> CCodeFile::GetCodeLines() const
 {
 	std::vector<std::string> oCodeLineVector{};
 
-	std::istringstream oStringStream{ m_oFileContentString };
+	std::istringstream oStringStream{ m_oContentString };
 	std::string oCodeLine{};
 
 	while ( std::getline( oStringStream, oCodeLine ) )
@@ -54,25 +48,9 @@ std::vector<std::string> CCodeFile::GetCodeLines() const
 }
 
 // ^^x
-// const std::string& CCodeFile::GetContent
+// CCodeFile::EType CCodeFile::GetType
 // 3BGO JIRA-238 24-09-2020
-const std::string& CCodeFile::GetContent() const
+CCodeFile::EType CCodeFile::GetType() const
 {
-	return m_oFileContentString;
-}
-
-// ^^x
-// std::filesystem::path CCodeFile::GetPath
-// 3BGO JIRA-238 24-09-2020
-std::filesystem::path CCodeFile::GetPath() const
-{
-	return m_oFilePath;
-}
-
-// ^^x
-// unsigned int CCodeFile::GetLineCount
-// 3BGO JIRA-238 24-09-2020
-unsigned int CCodeFile::GetLineCount() const
-{
-	return GetCodeLines().size();
+	return m_eType;
 }

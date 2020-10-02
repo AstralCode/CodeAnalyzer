@@ -25,7 +25,7 @@ inline void CConsoleInterface::Print( T&& oOutputT )
 }
 
 // ^^x
-// void CConsoleInterface::ProcessFile
+// void CConsoleInterface::ProcessCodeFile
 // 3BGO JIRA-238 01-10-2020
 template <typename T>
 inline void CConsoleInterface::PrintLine( T&& oOutputT )

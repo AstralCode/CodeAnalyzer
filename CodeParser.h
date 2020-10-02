@@ -1,6 +1,9 @@
 #pragma once
 
-#include "CodeFile.h"
+#include <string>
+#include <vector>
+
+class CCodeFile;
 
 struct SMemberFunctionHeaderDataset
 {
@@ -35,12 +38,9 @@ struct SFindMemberFunctionBodyResult
 	SMemberFunctionBodyDataset oMemberFunctionBodyDataset{};
 };
 
-class CSourceCodeFile final : public CCodeFile
+class CCodeParser final
 {
 public:
-	CSourceCodeFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
-
-	std::vector<SFindMemberFunctionHeaderResult> FindMemberFunctionHeader() const;
-	std::vector<SFindMemberFunctionHeaderDetailResult> FindMemberFunctionHeaderDetails() const;
-	std::vector<SFindMemberFunctionBodyResult> FindMemberFunctionBodies() const;
+	std::vector<SFindMemberFunctionHeaderResult> FindMemberFunctionHeader( const CCodeFile& oCodeFile ) const;
+	std::vector<SFindMemberFunctionHeaderDetailResult> FindMemberFunctionHeaderDetails( const CCodeFile& oCodeFile ) const;
 };

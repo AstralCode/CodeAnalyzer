@@ -10,19 +10,11 @@
 class CMemberFunctionCountModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CMemberFunctionCountModule();
+	CMemberFunctionCountModule( CCodeParser& oCodeParser );
 
-	void OnStartProcessFile( const CCodeFile& oCodeFile ) override;
-
-	void ProcessHeaderFile( const CHeaderCodeFile& oHeaderCodeFile ) override;
-	void ProcessSourceFile( const CSourceCodeFile& oSourceCodeFile ) override;
-
-	void OnEndProcessFile( const CCodeFile& oCodeFile ) override;
+	void PreProcessCodeFile( const CCodeFile& oCodeFile ) override;
+	void ProcessCodeFile( const CCodeFile& oCodeFile ) override;
+	void PostProcessCodeFile( const CCodeFile& oCodeFile ) override;
 
 	std::string GetModuleName() const override;
-
-	std::vector<SStatisticsResult> GetStatistics() const override;
-
-private:
-	unsigned int m_uiStatisticsResult;
 };

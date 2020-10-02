@@ -2,9 +2,8 @@
 
 #include <fstream>
 #include <string>
+#include <algorithm>
 
-#include "HeaderCodeFile.h"
-#include "SourceCodeFile.h"
 #include "ConsoleInterface.h"
 
 // ^^x
@@ -29,23 +28,33 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 {
     EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
 
+    const unsigned int uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
+
     std::string oFileContentString{};
+    unsigned int uiProcessCodeFileNumber = 0u;
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
-        if ( !std::filesystem::is_directory( oFilePath ) )
+        const CCodeFile::EType oFileType = AnalyzeCodeFileType( oFilePath );
+
+        if ( oFileType != CCodeFile::EType::eUnknown )
         {
-            const CCodeFile::EType oFileType = CCodeFile::CheckFileExtension( oFilePath );
+            ++uiProcessCodeFileNumber;
 
-            if ( oFileType != CCodeFile::EType::eUnknown )
+            eStatus = ReadFileContent( oFilePath, oFileContentString );
+
+            if ( eStatus == EProgramStatusCodes::eSuccess )
             {
-                eStatus = ReadFileContent( oFilePath, oFileContentString );
-
-                if ( eStatus == EProgramStatusCodes::eSuccess )
+                for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
                 {
-                    ProcessFile( oFilePath, oFileContentString, oFileType );
+                    const std::string oProcessCodeFileNumber = std::to_string( uiProcessCodeFileNumber );
+                    const std::string oProcessCodeFileCount = std::to_string( uiProcessCodeFileCount );
+
+                    CConsoleInterface::Print( "Process \"" + upoStatisticsAnalyzerModule->GetModuleName() + "\" module | File(" + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + ")" + oFilePath.string() );
+                    
+                    ProcessCodeFile( *upoStatisticsAnalyzerModule, oFilePath, oFileContentString, oFileType );
                 }
             }
         }
@@ -55,32 +64,40 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 }
 
 // ^^x
-// void CCodeAnalyzer::ProcessFile
+// CCodeFile::EType CCodeAnalyzer::AnalyzeCodeFileType
 // 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::ProcessFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, const CCodeFile::EType oFileCodeType )
+CCodeFile::EType CCodeAnalyzer::AnalyzeCodeFileType( const std::filesystem::path& oFilePath )
 {
-    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
+    CCodeFile::EType eType = CCodeFile::EType::eUnknown;
+
+    if ( std::filesystem::is_regular_file( oFilePath ) && oFilePath.has_extension() )
     {
-        CConsoleInterface::Print( "Process \"" + upoStatisticsAnalyzerModule->GetModuleName() + "\" module | " + oFilePath.string() );
-
-        if ( oFileCodeType == CCodeFile::EType::eHeader )
+        if ( oFilePath.extension() == ".h" )
         {
-            CHeaderCodeFile oHeaderCodeFile{ oFilePath, oFileContentString };
-            upoStatisticsAnalyzerModule->OnStartProcessFile( oHeaderCodeFile );
-            upoStatisticsAnalyzerModule->ProcessHeaderFile( oHeaderCodeFile );
-            upoStatisticsAnalyzerModule->OnEndProcessFile( oHeaderCodeFile );
+            eType = CCodeFile::EType::eHeader;
         }
 
-        if ( oFileCodeType == CCodeFile::EType::eSource )
+        if ( oFilePath.extension() == ".cpp" )
         {
-            CSourceCodeFile oSourceCodeFile{ oFilePath, oFileContentString };
-            upoStatisticsAnalyzerModule->OnStartProcessFile( oSourceCodeFile );
-            upoStatisticsAnalyzerModule->ProcessSourceFile( oSourceCodeFile );
-            upoStatisticsAnalyzerModule->OnEndProcessFile( oSourceCodeFile );
+            eType = CCodeFile::EType::eSource;
         }
-
-        CConsoleInterface::ClearLine();
     }
+
+    return eType;
+}
+
+// ^^x
+// void CCodeAnalyzer::ProcessCodeFile
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzer::ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const std::filesystem::path& oPath, const std::string& oContentString, const CCodeFile::EType eType )
+{
+    CCodeFile oCodeFile{ oPath, oContentString, eType };
+
+    oAnalyzerModule.PreProcessCodeFile( oCodeFile );
+    oAnalyzerModule.ProcessCodeFile( oCodeFile );
+    oAnalyzerModule.PostProcessCodeFile( oCodeFile );
+
+    CConsoleInterface::ClearLine();
 }
 
 // ^^x
@@ -94,7 +111,7 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
 
     if ( oFileStream.is_open() )
     {
-        oFileContentString.assign( std::istreambuf_iterator<char>{oFileStream}, std::istreambuf_iterator<char>{} );
+        oFileContentString.assign( std::istreambuf_iterator<char>{ oFileStream }, std::istreambuf_iterator<char>{} );
     }
     else
     {
@@ -102,4 +119,14 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
     }
 
     return eStatus;
+}
+
+unsigned int CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const
+{
+    return std::count_if( std::filesystem::recursive_directory_iterator{ oDirectoryPath },
+                          std::filesystem::recursive_directory_iterator{},
+                          [this]( const std::filesystem::path& oFilePath )
+                          {
+                              return AnalyzeCodeFileType( oFilePath ) != CCodeFile::EType::eUnknown;
+                          } );
 }
