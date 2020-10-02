@@ -121,6 +121,9 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
     return eStatus;
 }
 
+// ^^x
+// unsigned int CCodeAnalyzer::CountNumberCodeFiles
+// 3BGO JIRA-238 24-09-2020
 unsigned int CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const
 {
     return std::count_if( std::filesystem::recursive_directory_iterator{ oDirectoryPath },
