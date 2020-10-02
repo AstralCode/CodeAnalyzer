@@ -42,7 +42,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
-			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Execute completed!" );
+			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Finish!" );
 
 			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
 
