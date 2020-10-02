@@ -116,8 +116,6 @@ std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const C
 			{
 				const std::size_t uiSyntaxCharacterPos = oCodeString.find_first_of( R"({}'"\)", uiFindOffsetPos );
 
-				char uiSyntax = oCodeString[uiSyntaxCharacterPos];
-
 				if ( uiSyntaxCharacterPos != std::string::npos )
 				{
 					if ( oCodeString[uiSyntaxCharacterPos] == '{' )
@@ -220,8 +218,6 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 			while ( uiFunctionBracketLevel > 0u )
 			{
 				const std::size_t uiSyntaxCharacterPos = oCodeString.find_first_of( R"({}'"\)", uiFindOffsetPos );
-
-				char uiSyntax = oCodeString[uiSyntaxCharacterPos];
 
 				if ( uiSyntaxCharacterPos != std::string::npos )
 				{
