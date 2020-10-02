@@ -31,9 +31,9 @@ void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCode
 {
     if ( oCodeFile.GetType() == CCodeFile::EType::eSource )
     {
-        const std::vector<SFindMemberFunctionDetailResult> oFunctionResultVector = m_oCodeParser.FindMemberFunctionsDetails( oCodeFile );
+        const std::vector<SFindMemberFunctionResult> oFunctionResultVector = m_oCodeParser.FindMemberFunctions( oCodeFile );
 
-        for ( const SFindMemberFunctionDetailResult& oFunctionResult : oFunctionResultVector )
+        for ( const SFindMemberFunctionResult& oFunctionResult : oFunctionResultVector )
         {
             unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( oFunctionResult.oBodyDataset.oBodyString ).size();
 
