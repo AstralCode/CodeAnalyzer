@@ -41,6 +41,11 @@ struct SFindMemberFunctionBodyResult
 class CCodeParser final
 {
 public:
+	CCodeParser() = default;
+
+	CCodeParser( const CCodeParser& ) = delete;
+	CCodeParser& operator=( const CCodeParser& ) = delete;
+
 	std::vector<SFindMemberFunctionHeaderResult> FindMemberFunctionHeader( const CCodeFile& oCodeFile ) const;
 	std::vector<SFindMemberFunctionHeaderDetailResult> FindMemberFunctionHeaderDetails( const CCodeFile& oCodeFile ) const;
 };

@@ -16,6 +16,11 @@ public:
 	using StatisticsAnalyzerModuleVector = std::vector<StatisticsAnalyzerModule>;
 	using ConstStatisticsAnalyzerModuleVector = std::vector<ConstStatisticsAnalyzerModule>;
 
+	CCodeAnalyzer() = default;
+
+	CCodeAnalyzer( const CCodeAnalyzer& ) = delete;
+	CCodeAnalyzer& operator=( const CCodeAnalyzer& ) = delete;
+
 	template<typename TDerivedStatisticsAnalyzerModule>
 	void AddModule();
 

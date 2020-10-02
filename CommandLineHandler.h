@@ -10,6 +10,9 @@ class CCommandLineHandler final
 public:
 	CCommandLineHandler( int iArgumentCount, char* apcArguments[] );
 
+	CCommandLineHandler( const CCommandLineHandler& ) = delete;
+	CCommandLineHandler& operator=( const CCommandLineHandler& ) = delete;
+
 	EProgramStatusCodes HandleArguments( std::filesystem::path& oInputDirectoryPath, std::filesystem::path& oOutputDirectoryPath ) const;
 
 	std::string GetUsageMessage() const;
