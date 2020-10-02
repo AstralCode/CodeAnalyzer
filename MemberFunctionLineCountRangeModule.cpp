@@ -6,11 +6,11 @@
 CMemberFunctionLineCountRangeModule::CMemberFunctionLineCountRangeModule( CCodeParser& oCodeParser ) :
     CStatisticsAnalyzerModule{ oCodeParser }
 {
-    CreateStatistics( "Function Line Count[0-20]" );
-    CreateStatistics( "Function Line Count[21-50]" );
-    CreateStatistics( "Function Line Count[51-100]" );
-    CreateStatistics( "Function Line Count[101-300]" );
-    CreateStatistics( "Function Line Count[301-more]" );
+    CreateStatistics( "Function Code Line Count[0-20]" );
+    CreateStatistics( "Function Code Line Count[21-50]" );
+    CreateStatistics( "Function Code Line Count[51-100]" );
+    CreateStatistics( "Function Code Line Count[101-300]" );
+    CreateStatistics( "Function Code Line Count[301-more]" );
 }
 
 // ^^x
@@ -42,5 +42,5 @@ void CMemberFunctionLineCountRangeModule::PostProcessCodeFile( const CCodeFile& 
 // 3BGO JIRA-238 01-10-2020
 std::string CMemberFunctionLineCountRangeModule::GetModuleName() const
 {
-    return "Function Line Range Counter";
+    return "Function Code Line Range Counter";
 }
