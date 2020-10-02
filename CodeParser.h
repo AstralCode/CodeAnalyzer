@@ -32,12 +32,6 @@ struct SFindMemberFunctionHeaderDetailResult
 	SMemberFunctionHeaderDataset oMemberFunctionHeaderDataset{};
 };
 
-struct SFindMemberFunctionBodyResult
-{
-	std::string oMathString{};
-	SMemberFunctionBodyDataset oMemberFunctionBodyDataset{};
-};
-
 class CCodeParser final
 {
 public:
