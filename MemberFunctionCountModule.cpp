@@ -25,7 +25,7 @@ void CMemberFunctionCountModule::PreProcessCodeFile( const CCodeFile& )
 void CMemberFunctionCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
     const unsigned int uiResult = m_oCodeParser.FindMemberFunctionHeader( oCodeFile ).size();
-    AddStatisticsResult( 0u, uiResult );
+    GetStatistics( 0u ).uiValue += uiResult;
 }
 
 // ^^x

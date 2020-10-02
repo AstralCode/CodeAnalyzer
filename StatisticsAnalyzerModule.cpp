@@ -26,25 +26,9 @@ void CStatisticsAnalyzerModule::CreateStatistics( const std::string& oHeaderStri
 }
 
 // ^^x
-// void CStatisticsAnalyzerModule::SetStatisticsResult
+// SStatisticsResult& CStatisticsAnalyzerModule::GetStatistics
 // 3BGO JIRA-238 02-10-2020
-void CStatisticsAnalyzerModule::SetStatisticsResult( const unsigned int uiIndex, const unsigned int uiValue )
+SStatisticsResult& CStatisticsAnalyzerModule::GetStatistics( const unsigned int uiIndex )
 {
-	m_oResultVector[uiIndex].uiValue = uiValue;
-}
-
-// ^^x
-// void CStatisticsAnalyzerModule::AddStatisticsResult
-// 3BGO JIRA-238 02-10-2020
-void CStatisticsAnalyzerModule::AddStatisticsResult( const unsigned int uiIndex, const unsigned int uiValue )
-{
-	m_oResultVector[uiIndex].uiValue += uiValue;
-}
-
-// ^^x
-// unsigned int CStatisticsAnalyzerModule::GetStatisticsResult
-// 3BGO JIRA-238 02-10-2020
-unsigned int CStatisticsAnalyzerModule::GetStatisticsResult( const unsigned int uiIndex ) const
-{
-	return m_oResultVector[uiIndex].uiValue;
+	return m_oResultVector[ uiIndex ];
 }

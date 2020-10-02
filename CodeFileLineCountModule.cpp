@@ -23,7 +23,7 @@ void CCodeFileLineCountModule::PreProcessCodeFile( const CCodeFile& )
 void CCodeFileLineCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
     const unsigned int uiResult = oCodeFile.GetCodeLines().size();
-    AddStatisticsResult( 0u, uiResult );
+    GetStatistics( 0u ).uiValue += uiResult;
 }
 
 // ^^x

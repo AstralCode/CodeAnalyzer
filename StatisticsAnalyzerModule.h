@@ -31,9 +31,7 @@ protected:
 	CCodeParser& m_oCodeParser;
 
 	void CreateStatistics( const std::string& oHeaderString );
-	void SetStatisticsResult( const unsigned int uiIndex, const unsigned int uiValue );
-	void AddStatisticsResult( const unsigned int uiIndex, const unsigned int uiValue );
-	unsigned int GetStatisticsResult( const unsigned int uiIndex ) const;
+	SStatisticsResult& GetStatistics( const unsigned int uiIndex );
 
 private:
 	std::vector<SStatisticsResult> m_oResultVector;
