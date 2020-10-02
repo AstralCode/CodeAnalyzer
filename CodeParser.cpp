@@ -11,16 +11,13 @@ R"(^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d
 constexpr const char* FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR =
 R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]*)\s*\)\s*((?:const)?)[ \t]*$)";
 
-constexpr const char* CHECK_FUNCTION_BRACKET_REGEX_STR =
-R"([\{\}\s]{3})";
-
 // ^^x
 // std::vector<SFindMemberFunctionHeaderResult> CCodeParser::FindMemberFunctionHeaders
 // 3BGO JIRA-238 02-10-2020
 std::vector<SFindMemberFunctionHeaderResult> CCodeParser::FindMemberFunctionHeaders( const CCodeFile& oCodeFile ) const
 {
 	const std::regex oRegexPattern{FIND_MEMBER_FUNCTION_HEADERS_REGEX_STR};
-	const std::string oCodeString = oCodeFile.GetContent();
+	const std::string& oCodeString = oCodeFile.GetContent();
 
 	std::vector<SFindMemberFunctionHeaderResult> oResultVector{};
 
@@ -59,7 +56,7 @@ std::vector<SFindMemberFunctionHeaderDetailResult> CCodeParser::FindMemberFuncti
 	const int aiMatchGroups[] = {eEntireMatch, eAuthor, eInfo, eReturnType, eClassName, eName, eArgList, eModifier};
 
 	const std::regex oRegexPattern{FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR};
-	const std::string oCodeString = oCodeFile.GetContent();
+	const std::string& oCodeString = oCodeFile.GetContent();
 
 	const std::sregex_token_iterator oRegexEndIt{};
 	for ( std::sregex_token_iterator oRegexBeginIt{oCodeString.cbegin(), oCodeString.cend(), oRegexPattern, aiMatchGroups }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
@@ -68,13 +65,13 @@ std::vector<SFindMemberFunctionHeaderDetailResult> CCodeParser::FindMemberFuncti
 
 		oResult.oHeaderResult.oHeaderString = *oRegexBeginIt++;
 
-		oResult.oHeaderDataset.oAuthorString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
-		oResult.oHeaderDataset.oInformationString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
-		oResult.oHeaderDataset.oReturnTypeString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
-		oResult.oHeaderDataset.oClassNameString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
-		oResult.oHeaderDataset.oNameString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
-		oResult.oHeaderDataset.oArgumentsString = CStringHelper::SimplifyString( *oRegexBeginIt++ );
-		oResult.oHeaderDataset.oModifierString = CStringHelper::SimplifyString( *oRegexBeginIt );
+		oResult.oHeaderDataset.oAuthorString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oResult.oHeaderDataset.oInformationString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oResult.oHeaderDataset.oReturnTypeString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oResult.oHeaderDataset.oClassNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oResult.oHeaderDataset.oNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oResult.oHeaderDataset.oArgumentsString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oResult.oHeaderDataset.oModifierString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
 
 		oResultVector.push_back( oResult );
 	}
@@ -107,31 +104,64 @@ std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const C
 		const std::size_t uiFunctionBracketOpenPos = oCodeString.find_first_of( '{', uiMatchEndPos );
 		uiFindOffsetPos = uiFunctionBracketOpenPos + 1u;
 
+		bool bBeginCharacterLiteral = false;
+		bool bBeginStringLiteral = false;
+		bool bFoundBackslash = false;
+
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiFunctionBracketLevel = 1u;
 
 			while ( uiFunctionBracketLevel > 0u )
 			{
-				const std::size_t uiFunctionLocalBracketPos = oCodeString.find_first_of( "{}", uiFindOffsetPos );
+				const std::size_t uiSyntaxCharacterPos = oCodeString.find_first_of( R"({}'"\)", uiFindOffsetPos );
 
-				if ( uiFunctionLocalBracketPos != std::string::npos )
+				char uiSyntax = oCodeString[uiSyntaxCharacterPos];
+
+				if ( uiSyntaxCharacterPos != std::string::npos )
 				{
-					const std::string oFunctionLocalBracketString = oCodeString.substr( uiFunctionLocalBracketPos - 1u, 3u );
-
-					if ( std::regex_match( oFunctionLocalBracketString, std::regex{ CHECK_FUNCTION_BRACKET_REGEX_STR } ) )
+					if ( oCodeString[uiSyntaxCharacterPos] == '{' )
 					{
-						if ( oCodeString[uiFunctionLocalBracketPos] == '{' )
+						if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
 						{
 							++uiFunctionBracketLevel;
 						}
-						else
+					}
+					else if ( oCodeString[uiSyntaxCharacterPos] == '}' )
+					{
+						if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
 						{
 							--uiFunctionBracketLevel;
 						}
 					}
+					else if ( oCodeString[uiSyntaxCharacterPos] == '\'' )
+					{
+						if ( !bBeginStringLiteral )
+						{
+							bBeginCharacterLiteral = !bBeginCharacterLiteral;
+						}
+					}
+					else if ( oCodeString[uiSyntaxCharacterPos] == '"' )
+					{
+						bBeginStringLiteral = !bBeginStringLiteral;
+					}
+					else if ( oCodeString[uiSyntaxCharacterPos] == '\\' )
+					{
+						if ( !bBeginStringLiteral )
+						{
+							bFoundBackslash = true;
+						}
+					}
 
-					uiFindOffsetPos = uiFunctionLocalBracketPos + 1u;
+					if ( bFoundBackslash )
+					{
+						uiFindOffsetPos = oCodeString.find_first_not_of( R"( \t\n)", uiSyntaxCharacterPos ) + 1u;
+						bFoundBackslash = false;
+					}
+					else
+					{
+						uiFindOffsetPos = uiSyntaxCharacterPos + 1u;
+					}
 				}
 				else
 				{
@@ -179,31 +209,64 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 		const std::size_t uiFunctionBracketOpenPos = oCodeString.find_first_of( '{', uiMatchEndPos );
 		uiFindOffsetPos = uiFunctionBracketOpenPos + 1u;
 
+		bool bBeginCharacterLiteral = false;
+		bool bBeginStringLiteral = false;
+		bool bFoundBackslash = false;
+
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiFunctionBracketLevel = 1u;
 
 			while ( uiFunctionBracketLevel > 0u )
 			{
-				const std::size_t uiFunctionLocalBracketPos = oCodeString.find_first_of( "{}", uiFindOffsetPos );
+				const std::size_t uiSyntaxCharacterPos = oCodeString.find_first_of( R"({}'"\)", uiFindOffsetPos );
 
-				if ( uiFunctionLocalBracketPos != std::string::npos )
+				char uiSyntax = oCodeString[uiSyntaxCharacterPos];
+
+				if ( uiSyntaxCharacterPos != std::string::npos )
 				{
-					const std::string oFunctionLocalBracketString = oCodeString.substr( uiFunctionLocalBracketPos - 1u, 3u );
-
-					if ( std::regex_match( oFunctionLocalBracketString, std::regex{ CHECK_FUNCTION_BRACKET_REGEX_STR } ) )
+					if ( oCodeString[uiSyntaxCharacterPos] == '{' )
 					{
-						if ( oCodeString[uiFunctionLocalBracketPos] == '{' )
+						if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
 						{
 							++uiFunctionBracketLevel;
 						}
-						else
+					}
+					else if ( oCodeString[uiSyntaxCharacterPos] == '}' )
+					{
+						if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
 						{
 							--uiFunctionBracketLevel;
 						}
 					}
+					else if ( oCodeString[uiSyntaxCharacterPos] == '\'' )
+					{
+						if ( !bBeginStringLiteral )
+						{
+							bBeginCharacterLiteral = !bBeginCharacterLiteral;
+						}
+					}
+					else if ( oCodeString[uiSyntaxCharacterPos] == '"' )
+					{
+						bBeginStringLiteral = !bBeginStringLiteral;
+					}
+					else if ( oCodeString[uiSyntaxCharacterPos] == '\\' )
+					{
+						if ( !bBeginStringLiteral )
+						{
+							bFoundBackslash = true;
+						}
+					}
 
-					uiFindOffsetPos = uiFunctionLocalBracketPos + 1u;
+					if ( bFoundBackslash )
+					{
+						uiFindOffsetPos = oCodeString.find_first_not_of( R"( \t\n)", uiSyntaxCharacterPos ) + 1u;
+						bFoundBackslash = false;
+					}
+					else
+					{
+						uiFindOffsetPos = uiSyntaxCharacterPos + 1u;
+					}
 				}
 				else
 				{

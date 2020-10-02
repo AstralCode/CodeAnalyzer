@@ -6,7 +6,7 @@
 
 // ^^x
 // std::string CStringHelper::SimplifyString
-// 3BGO JIRA-239 30-09-2020
+// 3BGO JIRA-238 30-09-2020
 std::string CStringHelper::SimplifyString( const std::string& oInputString )
 {
 	std::string oResultString{};
@@ -16,7 +16,17 @@ std::string CStringHelper::SimplifyString( const std::string& oInputString )
 						  return std::isspace( cFirst ) && std::isspace( cSecond );
 					  } );
 
-	std::replace( oResultString.begin(), oResultString.end(), '\n', ' ' );
+	return oResultString;
+}
+
+// ^^x
+// std::string CStringHelper::Replace
+// 3BGO JIRA-238 02-10-2020
+std::string CStringHelper::Replace( const std::string& oInputString, const char cOld, const char cNew )
+{
+	std::string oResultString{ oInputString };
+
+	std::replace( oResultString.begin(), oResultString.end(), cOld, cNew );
 
 	return oResultString;
 }
