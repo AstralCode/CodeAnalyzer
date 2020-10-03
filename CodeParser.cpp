@@ -11,6 +11,9 @@ R"(^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d
 constexpr const char* FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR =
 R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]*)\s*\)\s*((?:const)?)[ \t]*$)";
 
+constexpr const char* FIND_COMMENTS_REGEX_STR =
+R"((?:\/\*.*?\*\/)|(?:\/\/.*))";
+
 // ^^x
 // std::vector<SFindMemberFunctionHeaderResult> CCodeParser::FindMemberFunctionHeaders
 // 3BGO JIRA-238 02-10-2020
@@ -86,93 +89,29 @@ std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const C
 {
 	std::vector<SFindMemberFunctionResult> oResultVector{};
 
-	const std::string& oCodeString = oCodeFile.GetContent();
+	const std::string oCodeString = oCodeFile.GetContent();
 	const std::vector<SFindMemberFunctionHeaderResult> oFindFunctionHeaderResultVector = FindMemberFunctionHeaders( oCodeFile );
+	const std::string oCodeNonCommentsString = RemoveCommentsFromCode( oCodeString );
 
-	std::size_t uiFunctionBracketLevel = 0u;
-	std::size_t uiFindOffsetPos = std::string::npos;
+	std::size_t uiFindCurrentOffsetPos = 0u;
 
 	for ( const SFindMemberFunctionHeaderResult& oFunctionHeaderResult : oFindFunctionHeaderResultVector )
 	{
 		SFindMemberFunctionResult oResult{};
-
 		oResult.oHeaderResult = oFunctionHeaderResult;
 
-		const std::size_t uiMatchBegPos = oCodeString.find( oFunctionHeaderResult.oHeaderString, ( uiFindOffsetPos != std::string::npos ) ? uiFindOffsetPos : 0u );
-		const std::size_t uiMatchEndPos = uiMatchBegPos + oFunctionHeaderResult.oHeaderString.size();
-
-		const std::size_t uiFunctionBracketOpenPos = oCodeString.find_first_of( '{', uiMatchEndPos );
-		uiFindOffsetPos = uiFunctionBracketOpenPos + 1u;
-
-		bool bBeginCharacterLiteral = false;
-		bool bBeginStringLiteral = false;
-		bool bFoundBackslash = false;
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeNonCommentsString, oFunctionHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
 
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
-			uiFunctionBracketLevel = 1u;
+			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
+			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeNonCommentsString, uiFindCurrentOffsetPos );
 
-			while ( uiFunctionBracketLevel > 0u )
+			if ( uiFindCurrentOffsetPos != std::string::npos )
 			{
-				const std::size_t uiSyntaxCharacterPos = oCodeString.find_first_of( R"({}'"\)", uiFindOffsetPos );
+				const std::size_t uiFunctionBracketClosePos = uiFindCurrentOffsetPos - uiFunctionBracketOpenPos;
 
-				if ( uiSyntaxCharacterPos != std::string::npos )
-				{
-					if ( oCodeString[uiSyntaxCharacterPos] == '{' )
-					{
-						if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
-						{
-							++uiFunctionBracketLevel;
-						}
-					}
-					else if ( oCodeString[uiSyntaxCharacterPos] == '}' )
-					{
-						if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
-						{
-							--uiFunctionBracketLevel;
-						}
-					}
-					else if ( oCodeString[uiSyntaxCharacterPos] == '\'' )
-					{
-						if ( !bBeginStringLiteral )
-						{
-							bBeginCharacterLiteral = !bBeginCharacterLiteral;
-						}
-					}
-					else if ( oCodeString[uiSyntaxCharacterPos] == '"' )
-					{
-						bBeginStringLiteral = !bBeginStringLiteral;
-					}
-					else if ( oCodeString[uiSyntaxCharacterPos] == '\\' )
-					{
-						if ( !bBeginStringLiteral )
-						{
-							bFoundBackslash = true;
-						}
-					}
-
-					if ( bFoundBackslash )
-					{
-						uiFindOffsetPos = oCodeString.find_first_not_of( R"( \t\n)", uiSyntaxCharacterPos );
-
-						bFoundBackslash = false;
-					}
-					else
-					{
-						uiFindOffsetPos = uiSyntaxCharacterPos + 1u;
-					}
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			if ( uiFunctionBracketLevel == 0u )
-			{
-				const std::size_t uiFunctionBracketClosePos = uiFindOffsetPos - uiFunctionBracketOpenPos;
-
-				oResult.oBodyDataset.oBodyString = oCodeString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
+				oResult.oBodyDataset.oBodyString = oCodeNonCommentsString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
 
 				oResultVector.push_back( oResult );
 			}
@@ -189,94 +128,30 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 {
 	std::vector<SFindMemberFunctionDetailResult> oResultVector{};
 
-	const std::string& oCodeString = oCodeFile.GetContent();
+	const std::string oCodeString = oCodeFile.GetContent();
 	const std::vector<SFindMemberFunctionHeaderDetailResult> oFindFunctionHeaderDetailResultVector = FindMemberFunctionHeadersDetails( oCodeFile );
+	const std::string oCodeNonCommentsString = RemoveCommentsFromCode( oCodeString );
 
-	std::size_t uiFunctionBracketLevel = 0u;
-	std::size_t uiFindOffsetPos = std::string::npos;
+	std::size_t uiFindCurrentOffsetPos = 0u;
 
 	for ( const SFindMemberFunctionHeaderDetailResult& oFunctionHeaderDetailResult : oFindFunctionHeaderDetailResultVector )
 	{
 		SFindMemberFunctionDetailResult oResult{};
-
 		oResult.oHeaderResult = oFunctionHeaderDetailResult.oHeaderResult;
 		oResult.oHeaderDataset = oFunctionHeaderDetailResult.oHeaderDataset;
 
-		const std::size_t uiMatchBegPos = oCodeString.find( oFunctionHeaderDetailResult.oHeaderResult.oHeaderString, ( uiFindOffsetPos != std::string::npos ) ? uiFindOffsetPos : 0u );
-		const std::size_t uiMatchEndPos = uiMatchBegPos + oFunctionHeaderDetailResult.oHeaderResult.oHeaderString.size();
-
-		const std::size_t uiFunctionBracketOpenPos = oCodeString.find_first_of( '{', uiMatchEndPos );
-		uiFindOffsetPos = uiFunctionBracketOpenPos + 1u;
-
-		bool bBeginCharacterLiteral = false;
-		bool bBeginStringLiteral = false;
-		bool bFoundBackslash = false;
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeNonCommentsString, oFunctionHeaderDetailResult.oHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
 
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
-			uiFunctionBracketLevel = 1u;
+			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
+			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( RemoveCommentsFromCode( oCodeNonCommentsString ), uiFindCurrentOffsetPos );
 
-			while ( uiFunctionBracketLevel > 0u )
+			if ( uiFindCurrentOffsetPos != std::string::npos )
 			{
-				const std::size_t uiSyntaxCharacterPos = oCodeString.find_first_of( R"({}'"\)", uiFindOffsetPos );
+				const std::size_t uiFunctionBracketClosePos = uiFindCurrentOffsetPos - uiFunctionBracketOpenPos;
 
-				if ( uiSyntaxCharacterPos != std::string::npos )
-				{
-					if ( oCodeString[uiSyntaxCharacterPos] == '{' )
-					{
-						if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
-						{
-							++uiFunctionBracketLevel;
-						}
-					}
-					else if ( oCodeString[uiSyntaxCharacterPos] == '}' )
-					{
-						if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
-						{
-							--uiFunctionBracketLevel;
-						}
-					}
-					else if ( oCodeString[uiSyntaxCharacterPos] == '\'' )
-					{
-						if ( !bBeginStringLiteral )
-						{
-							bBeginCharacterLiteral = !bBeginCharacterLiteral;
-						}
-					}
-					else if ( oCodeString[uiSyntaxCharacterPos] == '"' )
-					{
-						bBeginStringLiteral = !bBeginStringLiteral;
-					}
-					else if ( oCodeString[uiSyntaxCharacterPos] == '\\' )
-					{
-						if ( !bBeginStringLiteral )
-						{
-							bFoundBackslash = true;
-						}
-					}
-
-					if ( bFoundBackslash )
-					{
-						uiFindOffsetPos = oCodeString.find_first_not_of( R"( \t\n)", uiSyntaxCharacterPos );
-
-						bFoundBackslash = false;
-					}
-					else
-					{
-						uiFindOffsetPos = uiSyntaxCharacterPos + 1u;
-					}
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			if ( uiFunctionBracketLevel == 0u )
-			{
-				const std::size_t uiFunctionBracketClosePos = uiFindOffsetPos - uiFunctionBracketOpenPos;
-
-				oResult.oBodyDataset.oBodyString = oCodeString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
+				oResult.oBodyDataset.oBodyString = oCodeNonCommentsString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
 
 				oResultVector.push_back( oResult );
 			}
@@ -284,4 +159,88 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 	}
 
 	return oResultVector;
+}
+
+// ^^x
+// std::size_t CCodeParser::FindFunctionBracketOpenPosition
+// 3BGO JIRA-238 02-10-2020
+std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionHeaderString, std::size_t uiCurrentOffsetPos ) const
+{
+	const std::size_t uiFunctionHeaderBegPos = oCodeString.find( oFunctionHeaderString, uiCurrentOffsetPos );
+	const std::size_t uiFunctionHeaderEndPos = uiFunctionHeaderBegPos + oFunctionHeaderString.size();
+
+	return oCodeString.find_first_of( '{', uiFunctionHeaderEndPos );
+}
+
+// ^^x
+// std::size_t CCodeParser::FindFunctionBracketClosePosition
+// 3BGO JIRA-238 02-10-2020
+std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentOffsetPos ) const
+{
+	std::size_t uiFunctionBracketLevel{ 1u };
+
+	bool bBeginCharacterLiteral{ false };
+	bool bBeginStringLiteral{ false };
+
+	while ( uiFunctionBracketLevel > 0u )
+	{
+		std::size_t uiSyntaxCharacterPos = oCodeString.find_first_of( "{}'\"", uiCurrentOffsetPos );
+
+		if ( uiSyntaxCharacterPos != std::string::npos )
+		{
+			if ( oCodeString[uiSyntaxCharacterPos] == '{' )
+			{
+				if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
+				{
+					++uiFunctionBracketLevel;
+				}
+			}
+			else if ( oCodeString[uiSyntaxCharacterPos] == '}' )
+			{
+				if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
+				{
+					--uiFunctionBracketLevel;
+				}
+			}
+			else if ( oCodeString[uiSyntaxCharacterPos] == '\'' )
+			{
+				if ( !bBeginStringLiteral )
+				{
+					bBeginCharacterLiteral = !bBeginCharacterLiteral;
+				}
+			}
+			else if ( oCodeString[uiSyntaxCharacterPos] == '"' )
+			{
+				bBeginStringLiteral = !bBeginStringLiteral;
+			}
+			else if ( oCodeString[uiSyntaxCharacterPos] == '\\' )
+			{
+				if ( !bBeginStringLiteral )
+				{
+					uiSyntaxCharacterPos = oCodeString.find_first_not_of( " \t\n", uiSyntaxCharacterPos + 1u );
+				}
+			}
+			
+			uiCurrentOffsetPos = uiSyntaxCharacterPos + 1u;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if ( uiFunctionBracketLevel > 0u )
+	{
+		uiCurrentOffsetPos = std::string::npos;
+	}
+
+	return uiCurrentOffsetPos;
+}
+
+// ^^x
+// std::string CCodeParser::RemoveCommentsFromCode
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RemoveCommentsFromCode( const std::string& oCodeString ) const
+{
+	return std::regex_replace( oCodeString, std::regex{ FIND_COMMENTS_REGEX_STR }, "" );
 }
