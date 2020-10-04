@@ -58,6 +58,7 @@ public:
 	std::vector<SFindMemberFunctionResult> FindMemberFunctions( const CCodeFile& oCodeFile ) const;
 	std::vector<SFindMemberFunctionDetailResult> FindMemberFunctionsDetails( const CCodeFile& oCodeFile ) const;
 
+	std::string RemoveSinglelineComments( const std::string& oCodeString ) const;
 	std::string RemoveMultilineComments( const std::string& oCodeString ) const;
 
 private:

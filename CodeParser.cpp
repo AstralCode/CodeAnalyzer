@@ -12,7 +12,7 @@ constexpr const char* FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR =
 R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]*)\s*\)\s*((?:const)?)[ \t]*$)";
 
 constexpr const char* FIND_SINGLELINE_COMMENTS_REGEX_STR =
-R"((?:\/\/.*)";
+R"((?:\/\/.*))";
 
 constexpr const char* FIND_MULTILINE_COMMENTS_REGEX_STR =
 R"((?:\/\*.*?\*\/))";
@@ -94,6 +94,7 @@ std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const C
 
 	const std::string oCodeString = oCodeFile.GetContent();
 	const std::vector<SFindMemberFunctionHeaderResult> oFindFunctionHeaderResultVector = FindMemberFunctionHeaders( oCodeFile );
+	const std::string oCodeNonSinglelineString = RemoveSinglelineComments( oCodeString );
 
 	std::size_t uiFindCurrentOffsetPos = 0u;
 
@@ -102,18 +103,18 @@ std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const C
 		SFindMemberFunctionResult oResult{};
 		oResult.oHeaderResult = oFunctionHeaderResult;
 
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeString, oFunctionHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeNonSinglelineString, oFunctionHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
 
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
-			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeString, uiFindCurrentOffsetPos );
+			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeNonSinglelineString, uiFindCurrentOffsetPos );
 
 			if ( uiFindCurrentOffsetPos != std::string::npos )
 			{
 				const std::size_t uiFunctionBracketClosePos = uiFindCurrentOffsetPos - uiFunctionBracketOpenPos;
 
-				oResult.oBodyDataset.oBodyString = oCodeString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
+				oResult.oBodyDataset.oBodyString = oCodeNonSinglelineString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
 
 				oResultVector.push_back( oResult );
 			}
@@ -132,6 +133,7 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 
 	const std::string oCodeString = oCodeFile.GetContent();
 	const std::vector<SFindMemberFunctionHeaderDetailResult> oFindFunctionHeaderDetailResultVector = FindMemberFunctionHeadersDetails( oCodeFile );
+	const std::string oCodeNonSinglelineString = RemoveSinglelineComments( oCodeString );
 
 	std::size_t uiFindCurrentOffsetPos = 0u;
 
@@ -141,18 +143,18 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 		oResult.oHeaderResult = oFunctionHeaderDetailResult.oHeaderResult;
 		oResult.oHeaderDataset = oFunctionHeaderDetailResult.oHeaderDataset;
 
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeString, oFunctionHeaderDetailResult.oHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeNonSinglelineString, oFunctionHeaderDetailResult.oHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
 
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
-			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( RemoveMultilineComments( oCodeString ), uiFindCurrentOffsetPos );
+			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( RemoveMultilineComments( oCodeNonSinglelineString ), uiFindCurrentOffsetPos );
 
 			if ( uiFindCurrentOffsetPos != std::string::npos )
 			{
 				const std::size_t uiFunctionBracketClosePos = uiFindCurrentOffsetPos - uiFunctionBracketOpenPos;
 
-				oResult.oBodyDataset.oBodyString = oCodeString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
+				oResult.oBodyDataset.oBodyString = oCodeNonSinglelineString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
 
 				oResultVector.push_back( oResult );
 			}
@@ -160,6 +162,14 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 	}
 
 	return oResultVector;
+}
+
+// ^^x
+// std::string CCodeParser::RemoveSinglelineComments
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RemoveSinglelineComments( const std::string& oCodeString ) const
+{
+	return std::regex_replace( oCodeString, std::regex{ FIND_SINGLELINE_COMMENTS_REGEX_STR }, "" );
 }
 
 // ^^x
