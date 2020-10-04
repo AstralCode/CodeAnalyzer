@@ -47,6 +47,8 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 
             if ( eStatus == EProgramStatusCodes::eSuccess )
             {
+                PreProcessFileContent( oFileContentString );
+
                 for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
                 {
                     const std::string oProcessCodeFileNumber = std::to_string( uiProcessCodeFileNumber );
@@ -119,6 +121,14 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
     }
 
     return eStatus;
+}
+
+// ^^x
+// void CCodeAnalyzer::PreProcessFileContent
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) const
+{
+    oFileContentString = m_oCodePareser.RemoveMultilineComments( oFileContentString );
 }
 
 // ^^x

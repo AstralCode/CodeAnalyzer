@@ -33,6 +33,7 @@ private:
 
 	void ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const std::filesystem::path& oPath, const std::string& oContentString, const CCodeFile::EType eType );
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
+	void PreProcessFileContent( std::string& oFileContentString ) const;
 
 	unsigned int CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
 

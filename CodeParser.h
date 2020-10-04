@@ -58,9 +58,9 @@ public:
 	std::vector<SFindMemberFunctionResult> FindMemberFunctions( const CCodeFile& oCodeFile ) const;
 	std::vector<SFindMemberFunctionDetailResult> FindMemberFunctionsDetails( const CCodeFile& oCodeFile ) const;
 
+	std::string RemoveMultilineComments( const std::string& oCodeString ) const;
+
 private:
 	std::size_t FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionHeaderString, std::size_t uiCurrentOffsetPos ) const;
 	std::size_t FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentOffsetPos ) const;
-
-	std::string RemoveCommentsFromCode( const std::string& oCodeString ) const;
 };
