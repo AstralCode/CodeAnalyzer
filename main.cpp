@@ -36,7 +36,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 		oCodeAnalyzer.AddModule<CMemberFunctionCodeLineRangeModule>();
 
 		CConsoleInterface::NewLine();
-		CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Execute Code Analyzer..." );
+		CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Code analysis in progress..." );
 
 		eStatus = oCodeAnalyzer.Execute( oInputDirectoryPath );
 
