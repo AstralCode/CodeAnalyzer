@@ -47,6 +47,5 @@ inline void CConsoleInterface::NewLine()
 // 3BGO JIRA-238 01-10-2020
 inline void CConsoleInterface::ClearLine()
 {
-	printf( "%c[2K", 27 );
-	printf( "\r" );
+	printf( "\r                                                                                                           \r" );
 }
