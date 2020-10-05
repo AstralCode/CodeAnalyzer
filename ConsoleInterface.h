@@ -48,5 +48,5 @@ inline void CConsoleInterface::NewLine()
 inline void CConsoleInterface::ClearLine()
 {
 	printf( "%c[2K", 27 );
-	Print( '\r' );
+	printf( "\r" );
 }
