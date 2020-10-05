@@ -1,49 +1,8 @@
 #pragma once
 
-#include <string>
 #include <vector>
 
-class CCodeFile;
-
-struct SMemberFunctionHeaderDataset
-{
-	std::string oAuthorString{};
-	std::string oInformationString{};
-	std::string oReturnTypeString{};
-	std::string oClassNameString{};
-	std::string oNameString{};
-	std::string oArgumentsString{};
-	std::string oModifierString{};
-};
-
-struct SMemberFunctionBodyDataset
-{
-	std::string oBodyString{};
-};
-
-struct SFindMemberFunctionHeaderResult
-{
-	std::string oHeaderString{};
-};
-
-struct SFindMemberFunctionHeaderDetailResult
-{
-	SFindMemberFunctionHeaderResult oHeaderResult{};
-	SMemberFunctionHeaderDataset oHeaderDataset{};
-};
-
-struct SFindMemberFunctionResult
-{
-	SFindMemberFunctionHeaderResult oHeaderResult{};
-	SMemberFunctionBodyDataset oBodyDataset{};
-};
-
-struct SFindMemberFunctionDetailResult
-{
-	SFindMemberFunctionHeaderResult oHeaderResult{};
-	SMemberFunctionHeaderDataset oHeaderDataset{};
-	SMemberFunctionBodyDataset oBodyDataset{};
-};
+#include "MemberFunctionDataset.h"
 
 class CCodeParser final
 {
@@ -53,15 +12,16 @@ public:
 	CCodeParser( const CCodeParser& ) = delete;
 	CCodeParser& operator=( const CCodeParser& ) = delete;
 
-	std::vector<SFindMemberFunctionHeaderResult> FindMemberFunctionHeaders( const CCodeFile& oCodeFile ) const;
-	std::vector<SFindMemberFunctionHeaderDetailResult> FindMemberFunctionHeadersDetails( const CCodeFile& oCodeFile ) const;
-	std::vector<SFindMemberFunctionResult> FindMemberFunctions( const CCodeFile& oCodeFile ) const;
-	std::vector<SFindMemberFunctionDetailResult> FindMemberFunctionsDetails( const CCodeFile& oCodeFile ) const;
+	std::vector<SMemberFunctionHeaderDataset> FindMemberFunctionHeaders( const std::string oCodeString ) const;
+	std::vector<SMemberFunctionHeaderDataset> FindMemberFunctionHeadersDetails( const std::string oCodeString ) const;
+	std::vector<SMemberFunctionHeaderDataset> FindMemberFunctions( const std::string oCodeString, const bool bFindHeaderDetails = false ) const;
 
 	std::string RemoveSingleLineComments( const std::string& oCodeString ) const;
 	std::string RemoveMultilineComments( const std::string& oCodeString ) const;
 
 private:
-	std::size_t FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionHeaderString, std::size_t uiCurrentOffsetPos ) const;
-	std::size_t FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentOffsetPos ) const;
+	std::size_t FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionHeaderString, const std::size_t uiCurrentSearchOffsetPos ) const;
+	std::size_t FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentSearchOffsetPos ) const;
+
+	std::string RetrieveBodyFunction( const std::string& oCodeString, const std::size_t uiFunctionBracketOpenPos, const std::size_t uiFunctionBracketClosePos ) const;
 };

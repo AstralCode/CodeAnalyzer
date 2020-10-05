@@ -18,32 +18,31 @@ constexpr const char* FIND_MULTILINE_COMMENTS_REGEX_STR =
 R"((?:\/\*.*?\*\/))";
 
 // ^^x
-// std::vector<SFindMemberFunctionHeaderResult> CCodeParser::FindMemberFunctionHeaders
+// std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeaders
 // 3BGO JIRA-238 02-10-2020
-std::vector<SFindMemberFunctionHeaderResult> CCodeParser::FindMemberFunctionHeaders( const CCodeFile& oCodeFile ) const
+std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeaders( const std::string oCodeString ) const
 {
-	const std::regex oRegexPattern{FIND_MEMBER_FUNCTION_HEADERS_REGEX_STR};
-	const std::string& oCodeString = oCodeFile.GetContent();
+	const std::regex oRegexPattern{ FIND_MEMBER_FUNCTION_HEADERS_REGEX_STR };
 
-	std::vector<SFindMemberFunctionHeaderResult> oResultVector{};
+	std::vector<SMemberFunctionHeaderDataset> oDatasetVector{};
 
 	const std::sregex_token_iterator oRegexEndIt{};
 	for ( std::sregex_token_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
 	{
-		SFindMemberFunctionHeaderResult oResult{};
+		SMemberFunctionHeaderDataset oDataset{};
 
-		oResult.oHeaderString = *oRegexBeginIt;
+		oDataset.oHeaderString = *oRegexBeginIt;
 
-		oResultVector.push_back( oResult );
+		oDatasetVector.push_back( oDataset );
 	}
 
-	return oResultVector;
+	return oDatasetVector;
 }
 
 // ^^x
-// std::vector<SFindMemberFunctionHeaderDetailResult> CCodeParser::FindMemberFunctionHeadersDetails
+// std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeadersDetails
 // 3BGO JIRA-238 02-10-2020
-std::vector<SFindMemberFunctionHeaderDetailResult> CCodeParser::FindMemberFunctionHeadersDetails( const CCodeFile& oCodeFile ) const
+std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeadersDetails( const std::string oCodeString ) const
 {
 	enum EMatchGroups
 	{
@@ -57,111 +56,61 @@ std::vector<SFindMemberFunctionHeaderDetailResult> CCodeParser::FindMemberFuncti
 		eModifier
 	};
 
-	std::vector<SFindMemberFunctionHeaderDetailResult> oResultVector{};
+	std::vector<SMemberFunctionHeaderDataset> oDatasetVector{};
 
-	const int aiMatchGroups[] = {eEntireMatch, eAuthor, eInfo, eReturnType, eClassName, eName, eArgList, eModifier};
+	const int aiMatchGroups[] = { eEntireMatch, eAuthor, eInfo, eReturnType, eClassName, eName, eArgList, eModifier };
 
-	const std::regex oRegexPattern{FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR};
-	const std::string& oCodeString = oCodeFile.GetContent();
+	const std::regex oRegexPattern{ FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR };
 
 	const std::sregex_token_iterator oRegexEndIt{};
-	for ( std::sregex_token_iterator oRegexBeginIt{oCodeString.cbegin(), oCodeString.cend(), oRegexPattern, aiMatchGroups }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
+	for ( std::sregex_token_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern, aiMatchGroups }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
 	{
-		SFindMemberFunctionHeaderDetailResult oResult{};
+		SMemberFunctionHeaderDataset oDataset{};
 
-		oResult.oHeaderResult.oHeaderString = *oRegexBeginIt++;
+		oDataset.oHeaderString = *oRegexBeginIt++;
+		oDataset.oAuthorString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oDataset.oInformationString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oDataset.oReturnTypeString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oDataset.oClassNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oDataset.oNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oDataset.oArgumentsString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oDataset.oModifierString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt ), '\n', ' ' );
 
-		oResult.oHeaderDataset.oAuthorString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oResult.oHeaderDataset.oInformationString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oResult.oHeaderDataset.oReturnTypeString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oResult.oHeaderDataset.oClassNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oResult.oHeaderDataset.oNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oResult.oHeaderDataset.oArgumentsString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oResult.oHeaderDataset.oModifierString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt ), '\n', ' ' );
-
-		oResultVector.push_back( oResult );
+		oDatasetVector.push_back( oDataset );
 	}
 
-	return oResultVector;
+	return oDatasetVector;
 }
 
 // ^^x
-// std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions
+// std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctions
 // 3BGO JIRA-238 02-10-2020
-std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const CCodeFile& oCodeFile ) const
+std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctions( const std::string oCodeString, const bool bFindHeaderDetails/* = false*/ ) const
 {
-	std::vector<SFindMemberFunctionResult> oResultVector{};
-
-	const std::string oCodeString = oCodeFile.GetContent();
-	const std::vector<SFindMemberFunctionHeaderResult> oFindFunctionHeaderResultVector = FindMemberFunctionHeaders( oCodeFile );
+	std::vector<SMemberFunctionHeaderDataset> oFunctionHeaderDatasetVector = ( bFindHeaderDetails ? FindMemberFunctionHeadersDetails( oCodeString ) : FindMemberFunctionHeaders( oCodeString ) );
+	
 	const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
 
-	std::size_t uiFindCurrentOffsetPos = 0u;
+	std::size_t uiCurrentSearchOffsetPos = 0u;
 
-	for ( const SFindMemberFunctionHeaderResult& oFunctionHeaderResult : oFindFunctionHeaderResultVector )
+	for ( SMemberFunctionHeaderDataset& oFunctionHeaderResult : oFunctionHeaderDatasetVector )
 	{
-		SFindMemberFunctionResult oResult{};
-		oResult.oHeaderResult = oFunctionHeaderResult;
-
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oFunctionHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
-
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oFunctionHeaderResult.oHeaderString, uiCurrentSearchOffsetPos );
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
-			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
-			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeWithoutCommentsString, uiFindCurrentOffsetPos );
+			uiCurrentSearchOffsetPos = uiFunctionBracketOpenPos + 1u;
 
-			if ( uiFindCurrentOffsetPos != std::string::npos )
+			const std::size_t uiFunctionBracketClosePos = FindFunctionBracketClosePosition( oCodeWithoutCommentsString, uiCurrentSearchOffsetPos );
+			if ( uiFunctionBracketClosePos != std::string::npos )
 			{
-				const std::size_t uiFunctionBracketClosePos = uiFindCurrentOffsetPos - uiFunctionBracketOpenPos;
+				uiCurrentSearchOffsetPos = uiFunctionBracketClosePos;
 
-				oResult.oBodyDataset.oBodyString = oCodeWithoutCommentsString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
-
-				oResultVector.push_back( oResult );
+				oFunctionHeaderResult.oBodyString = RetrieveBodyFunction( oCodeWithoutCommentsString, uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
 			}
 		}
 	}
 
-	return oResultVector;
-}
-
-// ^^x
-// std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDetails
-// 3BGO JIRA-238 02-10-2020
-std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDetails( const CCodeFile& oCodeFile ) const
-{
-	std::vector<SFindMemberFunctionDetailResult> oResultVector{};
-
-	const std::string oCodeString = oCodeFile.GetContent();
-	const std::vector<SFindMemberFunctionHeaderDetailResult> oFindFunctionHeaderDetailResultVector = FindMemberFunctionHeadersDetails( oCodeFile );
-	const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
-
-	std::size_t uiFindCurrentOffsetPos = 0u;
-
-	for ( const SFindMemberFunctionHeaderDetailResult& oFunctionHeaderDetailResult : oFindFunctionHeaderDetailResultVector )
-	{
-		SFindMemberFunctionDetailResult oResult{};
-		oResult.oHeaderResult = oFunctionHeaderDetailResult.oHeaderResult;
-		oResult.oHeaderDataset = oFunctionHeaderDetailResult.oHeaderDataset;
-
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oFunctionHeaderDetailResult.oHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
-
-		if ( uiFunctionBracketOpenPos != std::string::npos )
-		{
-			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
-			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeWithoutCommentsString, uiFindCurrentOffsetPos );
-
-			if ( uiFindCurrentOffsetPos != std::string::npos )
-			{
-				const std::size_t uiFunctionBracketClosePos = uiFindCurrentOffsetPos - uiFunctionBracketOpenPos;
-
-				oResult.oBodyDataset.oBodyString = oCodeWithoutCommentsString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
-
-				oResultVector.push_back( oResult );
-			}
-		}
-	}
-
-	return oResultVector;
+	return oFunctionHeaderDatasetVector;
 }
 
 // ^^x
@@ -183,9 +132,9 @@ std::string CCodeParser::RemoveMultilineComments( const std::string& oCodeString
 // ^^x
 // std::size_t CCodeParser::FindFunctionBracketOpenPosition
 // 3BGO JIRA-238 02-10-2020
-std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionHeaderString, std::size_t uiCurrentOffsetPos ) const
+std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionHeaderString, const std::size_t uiCurrentSearchOffsetPos ) const
 {
-	const std::size_t uiFunctionHeaderBegPos = oCodeString.find( oFunctionHeaderString, uiCurrentOffsetPos );
+	const std::size_t uiFunctionHeaderBegPos = oCodeString.find( oFunctionHeaderString, uiCurrentSearchOffsetPos );
 	const std::size_t uiFunctionHeaderEndPos = uiFunctionHeaderBegPos + oFunctionHeaderString.size();
 
 	return oCodeString.find_first_of( '{', uiFunctionHeaderEndPos );
@@ -194,16 +143,17 @@ std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCo
 // ^^x
 // std::size_t CCodeParser::FindFunctionBracketClosePosition
 // 3BGO JIRA-238 02-10-2020
-std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentOffsetPos ) const
+std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentSearchOffsetPos ) const
 {
 	std::size_t uiFunctionBracketLevel{ 1u };
+	std::size_t uiSyntaxCharacterPos = std::string::npos;
 
 	bool bBeginCharacterLiteral{ false };
 	bool bBeginStringLiteral{ false };
 
 	while ( uiFunctionBracketLevel > 0u )
 	{
-		std::size_t uiSyntaxCharacterPos = oCodeString.find_first_of( "{}'\"", uiCurrentOffsetPos );
+		uiSyntaxCharacterPos = oCodeString.find_first_of( "{}'\"", uiCurrentSearchOffsetPos );
 
 		if ( uiSyntaxCharacterPos != std::string::npos )
 		{
@@ -240,7 +190,7 @@ std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oC
 				}
 			}
 			
-			uiCurrentOffsetPos = uiSyntaxCharacterPos + 1u;
+			uiCurrentSearchOffsetPos = uiSyntaxCharacterPos + 1u;
 		}
 		else
 		{
@@ -250,8 +200,18 @@ std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oC
 
 	if ( uiFunctionBracketLevel > 0u )
 	{
-		uiCurrentOffsetPos = std::string::npos;
+		uiCurrentSearchOffsetPos = std::string::npos;
 	}
 
-	return uiCurrentOffsetPos;
+	return uiCurrentSearchOffsetPos;
+}
+
+// ^^x
+// std::string CCodeParser::RetrieveBodyFunction
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RetrieveBodyFunction( const std::string& oCodeString, const std::size_t uiFunctionBracketOpenPos, const std::size_t uiFunctionBracketClosePos ) const
+{
+	const std::size_t uiFunctionBodyLength = uiFunctionBracketClosePos - uiFunctionBracketOpenPos;
+
+	return oCodeString.substr( uiFunctionBracketOpenPos, uiFunctionBodyLength );
 }

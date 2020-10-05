@@ -1,6 +1,5 @@
 #include "MemberFunctionCodeLineRangeModule.h"
 
-#include "CodeParser.h"
 #include "StringHelper.h"
 
 // ^^x
@@ -31,35 +30,38 @@ void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCode
 {
     if ( oCodeFile.GetType() == CCodeFile::EType::eSource )
     {
-        const std::vector<SFindMemberFunctionResult> oFunctionResultVector = m_oCodeParser.FindMemberFunctions( oCodeFile );
+        const std::vector<SMemberFunctionHeaderDataset> oFunctionDatasetVector = oCodeFile.GetMemberFunctionDataset();
 
-        for ( const SFindMemberFunctionResult& oFunctionResult : oFunctionResultVector )
+        for ( const SMemberFunctionHeaderDataset& oFunctionDataset : oFunctionDatasetVector )
         {
-            unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( oFunctionResult.oBodyDataset.oBodyString ).size();
-
-            if ( uiFunctionCodeLineCount > 2u )
+            if ( oFunctionDataset.oBodyString.has_value() )
             {
-                uiFunctionCodeLineCount -= 2u;
+                unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( *oFunctionDataset.oBodyString ).size();
 
-                if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 0u, 20u ) )
+                if ( uiFunctionCodeLineCount > 2u )
                 {
-                    ++GetStatistics( 0u ).uiValue;
-                }
-                else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 21u, 50u ) )
-                {
-                    ++GetStatistics( 1u ).uiValue;
-                }
-                else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 51u, 100u ) )
-                {
-                    ++GetStatistics( 2u ).uiValue;
-                }
-                else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 101u, 300u ) )
-                {
-                    ++GetStatistics( 3u ).uiValue;
-                }
-                else if ( uiFunctionCodeLineCount == std::clamp( uiFunctionCodeLineCount, 301u, std::numeric_limits<unsigned int>::max() ) )
-                {
-                    ++GetStatistics( 4u ).uiValue;
+                    uiFunctionCodeLineCount -= 2u;
+
+                    if ( IsValueContainsInRange( uiFunctionCodeLineCount, 0u, 20u ) )
+                    {
+                        ++GetStatistics( 0u ).uiValue;
+                    }
+                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 21u, 50u ) )
+                    {
+                        ++GetStatistics( 1u ).uiValue;
+                    }
+                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 51u, 100u ) )
+                    {
+                        ++GetStatistics( 2u ).uiValue;
+                    }
+                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 101u, 300u ) )
+                    {
+                        ++GetStatistics( 3u ).uiValue;
+                    }
+                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 301u ) )
+                    {
+                        ++GetStatistics( 4u ).uiValue;
+                    }
                 }
             }
         }

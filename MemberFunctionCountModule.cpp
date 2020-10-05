@@ -1,7 +1,5 @@
 #include "MemberFunctionCountModule.h"
 
-#include "CodeParser.h"
-
 // ^^x
 // CMemberFunctionCountModule::CMemberFunctionCountModule
 // 3BGO JIRA-239 01-10-2020
@@ -26,7 +24,7 @@ void CMemberFunctionCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
     if ( oCodeFile.GetType() == CCodeFile::EType::eSource )
     {
-        GetStatistics( 0u ).uiValue += m_oCodeParser.FindMemberFunctionHeaders( oCodeFile ).size();
+        GetStatistics( 0u ).uiValue += oCodeFile.GetMemberFunctionDataset().size();
     }
 }
 

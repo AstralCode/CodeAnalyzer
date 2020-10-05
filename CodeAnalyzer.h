@@ -5,7 +5,6 @@
 #include "ProgramStatusCodes.h"
 #include "StatisticsAnalyzerModule.h"
 #include "CodeParser.h"
-#include "CodeFile.h"
 
 class CCodeAnalyzer final
 {

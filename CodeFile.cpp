@@ -14,6 +14,22 @@ CCodeFile::CCodeFile( const std::filesystem::path& oPath, const std::string& oCo
 }
 
 // ^^x
+// void CCodeFile::SetMemberFunctionDataset
+// 3BGO JIRA-238 24-09-2020
+void CCodeFile::SetMemberFunctionDataset( const std::vector<SMemberFunctionHeaderDataset>& oMemberFunctionDatasetVector )
+{
+	m_oMemberFunctionDatasetVector = oMemberFunctionDatasetVector;
+}
+
+// ^^x
+// const std::vector<SMemberFunctionHeaderDataset>& CCodeFile::GetMemberFunctionDataset
+// 3BGO JIRA-238 24-09-2020
+const std::vector<SMemberFunctionHeaderDataset>& CCodeFile::GetMemberFunctionDataset() const
+{
+	return m_oMemberFunctionDatasetVector;
+}
+
+// ^^x
 // std::filesystem::path CCodeFile::GetPath
 // 3BGO JIRA-238 24-09-2020
 std::filesystem::path CCodeFile::GetPath() const

@@ -1,10 +1,10 @@
 #include "CodeAnalyzer.h"
 
 #include <fstream>
-#include <string>
 #include <algorithm>
 
 #include "ConsoleInterface.h"
+#include "CodeFile.h"
 
 // ^^x
 // CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules
@@ -94,6 +94,7 @@ CCodeFile::EType CCodeAnalyzer::AnalyzeCodeFileType( const std::filesystem::path
 void CCodeAnalyzer::ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const std::filesystem::path& oPath, const std::string& oContentString, const CCodeFile::EType eType )
 {
     CCodeFile oCodeFile{ oPath, oContentString, eType };
+    oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oContentString ) );
 
     oAnalyzerModule.PreProcessCodeFile( oCodeFile );
     oAnalyzerModule.ProcessCodeFile( oCodeFile );
