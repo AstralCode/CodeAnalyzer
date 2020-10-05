@@ -6,7 +6,7 @@
 #include "StringHelper.h"
 
 constexpr const char* FIND_MEMBER_FUNCTION_HEADER_REGEX_STR =
-R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{2,3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]+)?\s*\)\s*(const)?[ \t]*$)";
+R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{2,3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t \-:<>,*&\/='";\n]+)?\s*\)\s*(const)?[ \t]*$)";
 
 constexpr const char* FIND_SINGLELINE_COMMENTS_REGEX_STR =
 R"((?:\/\/.*))";
@@ -93,7 +93,8 @@ std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctions( cons
 
 	for ( SMemberFunctionHeaderDataset& oFunctionHeaderResult : oFunctionHeaderDatasetVector )
 	{
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oFunctionHeaderResult.oHeaderString, uiCurrentSearchOffsetPos );
+		const std::string oMemberFunctionString = oFunctionHeaderResult.oClassNameString + "::" + oFunctionHeaderResult.oNameString;
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oMemberFunctionString, uiCurrentSearchOffsetPos );
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiCurrentSearchOffsetPos = uiFunctionBracketOpenPos + 1u;
