@@ -77,7 +77,7 @@ std::vector<SFindMemberFunctionHeaderDetailResult> CCodeParser::FindMemberFuncti
 		oResult.oHeaderDataset.oClassNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
 		oResult.oHeaderDataset.oNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
 		oResult.oHeaderDataset.oArgumentsString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oResult.oHeaderDataset.oModifierString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
+		oResult.oHeaderDataset.oModifierString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt ), '\n', ' ' );
 
 		oResultVector.push_back( oResult );
 	}
