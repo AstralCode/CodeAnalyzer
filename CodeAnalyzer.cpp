@@ -94,7 +94,7 @@ CCodeFile::EType CCodeAnalyzer::AnalyzeCodeFileType( const std::filesystem::path
 void CCodeAnalyzer::ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const std::filesystem::path& oPath, const std::string& oContentString, const CCodeFile::EType eType )
 {
     CCodeFile oCodeFile{ oPath, oContentString, eType };
-    oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oContentString ) );
+    oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oContentString, true ) );
 
     oAnalyzerModule.PreProcessCodeFile( oCodeFile );
     oAnalyzerModule.ProcessCodeFile( oCodeFile );
