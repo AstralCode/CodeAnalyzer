@@ -36,6 +36,8 @@ private:
 
 	unsigned int CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
 
+	void PrintProgress( const unsigned int uiFileNumber, const unsigned int uiFileCount ) const;
+
 	CCodeParser m_oCodePareser;
 	std::filesystem::path m_oInputDirectoryPath;
 	std::vector<std::unique_ptr<CStatisticsAnalyzerModule>> m_oStatisticsAnalyzerModuleVector;

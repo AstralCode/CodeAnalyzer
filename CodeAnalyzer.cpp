@@ -51,11 +51,13 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 
                 for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
                 {
+                    PrintProgress( uiProcessCodeFileNumber, uiProcessCodeFileCount );
+                    /*
                     const std::string oProcessCodeFileNumber = std::to_string( uiProcessCodeFileNumber );
                     const std::string oProcessCodeFileCount = std::to_string( uiProcessCodeFileCount );
 
                     CConsoleInterface::Print( "File(" + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + "): " + oFilePath.string() );
-                    
+                    */
                     ProcessCodeFile( *upoStatisticsAnalyzerModule, oFilePath, oFileContentString, oFileType );
                 }
             }
@@ -99,8 +101,6 @@ void CCodeAnalyzer::ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule,
     oAnalyzerModule.PreProcessCodeFile( oCodeFile );
     oAnalyzerModule.ProcessCodeFile( oCodeFile );
     oAnalyzerModule.PostProcessCodeFile( oCodeFile );
-
-    CConsoleInterface::ClearLine();
 }
 
 // ^^x
@@ -143,4 +143,21 @@ unsigned int CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& o
                           {
                               return AnalyzeCodeFileType( oFilePath ) != CCodeFile::EType::eUnknown;
                           } );
+}
+
+// ^^x
+// void CCodeAnalyzer::PrintProgress
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsigned int uiFileCount ) const
+{
+    const unsigned int uiCurrentProgressPos = uiFileNumber * 100u / uiFileCount;
+
+    std::string oProgressBarString( 50u, static_cast<char>( 176 ) );
+
+    for ( unsigned int uiProgressPosition = 0u; uiProgressPosition < uiCurrentProgressPos / 2u; ++uiProgressPosition )
+    {
+        oProgressBarString[uiProgressPosition] = static_cast<char>( 219 );
+    }
+
+    CConsoleInterface::Print( "  " + oProgressBarString + " " + std::to_string( uiCurrentProgressPos ) + "%\r" );
 }

@@ -28,8 +28,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 	}
 	else
 	{
-		CConsoleInterface::PrintLine( "Input directory: \"" + oInputDirectoryPath.string() + "\"");
-		CConsoleInterface::PrintLine( "Output directory: \"" + oOutputDirectoryPath.string() + "\"" );
+		CConsoleInterface::PrintLine( "Output report directory: \"" + oOutputDirectoryPath.string() + "\"" );
 
 		oCodeAnalyzer.AddModule<CCodeFileLineCountModule>();
 		oCodeAnalyzer.AddModule<CMemberFunctionCountModule>();
@@ -42,6 +41,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
+			CConsoleInterface::ClearLine();
 			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Analysis Complete!" );
 
 			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
