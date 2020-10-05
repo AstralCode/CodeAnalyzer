@@ -28,15 +28,18 @@ public:
 	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath );
 
 private:
-	static CCodeFile::EType AnalyzeCodeFileType( const std::filesystem::path& oFilePath );
+	static CCodeFile::EType AnalyzeFileType( const std::filesystem::path& oFilePath );
 
 	void ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const std::filesystem::path& oPath, const std::string& oContentString, const CCodeFile::EType eType );
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
 	void PreProcessFileContent( std::string& oFileContentString ) const;
 
 	unsigned int CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
+	std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
 
 	void PrintProgress( const unsigned int uiFileNumber, const unsigned int uiFileCount ) const;
+
+	bool IsCodeFile( const std::filesystem::path& oFilePath ) const;
 
 	CCodeParser m_oCodePareser;
 	std::filesystem::path m_oInputDirectoryPath;

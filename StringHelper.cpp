@@ -12,9 +12,9 @@ std::string CStringHelper::SimplifyString( const std::string& oInputString )
 	std::string oResultString{};
 
 	std::unique_copy( oInputString.cbegin(), oInputString.cend(), std::back_inserter( oResultString ), []( char cFirst, char cSecond )
-					  {
-						  return std::isspace( cFirst ) && std::isspace( cSecond );
-					  } );
+	{
+		return std::isspace( cFirst ) && std::isspace( cSecond );
+	} );
 
 	return oResultString;
 }
@@ -38,7 +38,7 @@ std::vector<std::string> CStringHelper::SplitLines( const std::string& oInputStr
 {
 	std::vector<std::string> oLineVector{};
 
-	std::istringstream oStringStream{oInputString};
+	std::istringstream oStringStream{ oInputString };
 	std::string oLineString{};
 
 	while ( std::getline( oStringStream, oLineString ) )
