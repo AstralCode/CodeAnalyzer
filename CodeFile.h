@@ -25,16 +25,19 @@ public:
 
 	std::filesystem::path GetPath() const;
 
-	const std::string& GetContent() const;
+	const std::string& GetCode() const;
+
 	std::vector<std::string> GetCodeLines() const;
 
 	EType GetType() const;
 
+	unsigned int GetCodeLineCount() const;
+
 private:
 	std::filesystem::path m_oPath;
 	std::string m_oContentString;
-
 	EType m_eType;
+	unsigned int m_uiCodeLineCount;
 
 	std::vector<SMemberFunctionHeaderDataset> m_oMemberFunctionDatasetVector;
 };

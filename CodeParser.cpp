@@ -5,11 +5,8 @@
 #include "CodeFile.h"
 #include "StringHelper.h"
 
-constexpr const char* FIND_MEMBER_FUNCTION_HEADERS_REGEX_STR =
-R"(^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]*)\s*\)\s*((?:const)?)[ \t]*$)";
-
-constexpr const char* FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR =
-R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]*)\s*\)\s*((?:const)?)[ \t]*$)";
+constexpr const char* FIND_MEMBER_FUNCTION_HEADER_REGEX_STR =
+R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{2,3})\s+([a-zA-Z0-9\_\-\.\(\) \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?^[ \t]*((?:signed|unsigned[\s+])?[\w\d\_\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t :<>,*&\/='";\n]+)?\s*\)\s*(const)?[ \t]*$)";
 
 constexpr const char* FIND_SINGLELINE_COMMENTS_REGEX_STR =
 R"((?:\/\/.*))";
@@ -21,28 +18,6 @@ R"((?:\/\*.*?\*\/))";
 // std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeaders
 // 3BGO JIRA-238 02-10-2020
 std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeaders( const std::string oCodeString ) const
-{
-	const std::regex oRegexPattern{ FIND_MEMBER_FUNCTION_HEADERS_REGEX_STR };
-
-	std::vector<SMemberFunctionHeaderDataset> oDatasetVector{};
-
-	const std::sregex_token_iterator oRegexEndIt{};
-	for ( std::sregex_token_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
-	{
-		SMemberFunctionHeaderDataset oDataset{};
-
-		oDataset.oHeaderString = *oRegexBeginIt;
-
-		oDatasetVector.push_back( oDataset );
-	}
-
-	return oDatasetVector;
-}
-
-// ^^x
-// std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeadersDetails
-// 3BGO JIRA-238 02-10-2020
-std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeadersDetails( const std::string oCodeString ) const
 {
 	enum EMatchGroups
 	{
@@ -60,7 +35,7 @@ std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeaders
 
 	const int aiMatchGroups[] = { eEntireMatch, eAuthor, eInfo, eReturnType, eClassName, eName, eArgList, eModifier };
 
-	const std::regex oRegexPattern{ FIND_MEMBER_FUNCTION_HEADER_DETAILS_REGEX_STR };
+	const std::regex oRegexPattern{ FIND_MEMBER_FUNCTION_HEADER_REGEX_STR };
 
 	const std::sregex_token_iterator oRegexEndIt{};
 	for ( std::sregex_token_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern, aiMatchGroups }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
@@ -68,14 +43,37 @@ std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeaders
 		SMemberFunctionHeaderDataset oDataset{};
 
 		oDataset.oHeaderString = *oRegexBeginIt++;
-		oDataset.oAuthorString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oDataset.oInformationString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oDataset.oReturnTypeString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oDataset.oClassNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oDataset.oNameString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oDataset.oArgumentsString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt++ ), '\n', ' ' );
-		oDataset.oModifierString = CStringHelper::Replace( CStringHelper::SimplifyString( *oRegexBeginIt ), '\n', ' ' );
 
+		if ( oRegexBeginIt->matched )
+		{
+			oDataset.oAuthorString = SimplifyCode( *oRegexBeginIt );
+		}
+
+		++oRegexBeginIt;
+
+		if ( oRegexBeginIt->matched )
+		{
+			oDataset.oInformationString = SimplifyCode( *oRegexBeginIt );
+		}
+
+		++oRegexBeginIt;
+
+		oDataset.oReturnTypeString = SimplifyCode( *oRegexBeginIt++ );
+		oDataset.oClassNameString = SimplifyCode( *oRegexBeginIt++ );
+		oDataset.oNameString = SimplifyCode( *oRegexBeginIt++ );
+		
+		if ( oRegexBeginIt->matched )
+		{
+			oDataset.oArgumentsString = SimplifyCode( *oRegexBeginIt );
+		}
+
+		++oRegexBeginIt;
+		
+		if ( oRegexBeginIt->matched )
+		{
+			oDataset.oModifierString = SimplifyCode( *oRegexBeginIt );
+		}
+		
 		oDatasetVector.push_back( oDataset );
 	}
 
@@ -85,9 +83,9 @@ std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctionHeaders
 // ^^x
 // std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctions
 // 3BGO JIRA-238 02-10-2020
-std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctions( const std::string oCodeString, const bool bFindHeaderDetails/* = false*/ ) const
+std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctions( const std::string oCodeString ) const
 {
-	std::vector<SMemberFunctionHeaderDataset> oFunctionHeaderDatasetVector = ( bFindHeaderDetails ? FindMemberFunctionHeadersDetails( oCodeString ) : FindMemberFunctionHeaders( oCodeString ) );
+	std::vector<SMemberFunctionHeaderDataset> oFunctionHeaderDatasetVector = FindMemberFunctionHeaders( oCodeString );
 	
 	const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
 
@@ -214,4 +212,12 @@ std::string CCodeParser::RetrieveBodyFunction( const std::string& oCodeString, c
 	const std::size_t uiFunctionBodyLength = uiFunctionBracketClosePos - uiFunctionBracketOpenPos;
 
 	return oCodeString.substr( uiFunctionBracketOpenPos, uiFunctionBodyLength );
+}
+
+// ^^x
+// std::string CCodeParser::SimplifyCode
+// 3BGO JIRA-238 05-10-2020
+std::string CCodeParser::SimplifyCode( const std::string& oCodeString ) const
+{
+	return CStringHelper::Replace( CStringHelper::SimplifyString( oCodeString ), '\n', ' ' );
 }

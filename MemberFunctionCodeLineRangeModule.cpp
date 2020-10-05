@@ -35,40 +35,38 @@ void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCode
 
         for ( const SMemberFunctionHeaderDataset& oFunctionDataset : oFunctionDatasetVector )
         {
-            if ( oFunctionDataset.oBodyString.has_value() )
+            unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( oFunctionDataset.oBodyString ).size();
+
+            if ( uiFunctionCodeLineCount > 2u )
             {
-                unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( *oFunctionDataset.oBodyString ).size();
+                uiFunctionCodeLineCount -= 2u;
 
-                if ( uiFunctionCodeLineCount > 2u )
+                if ( IsValueContainsInRange( uiFunctionCodeLineCount, 0u, 20u ) )
                 {
-                    uiFunctionCodeLineCount -= 2u;
-
-                    if ( IsValueContainsInRange( uiFunctionCodeLineCount, 0u, 20u ) )
-                    {
-                        ++GetStatistics( 0u ).uiValue;
-                    }
-                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 21u, 50u ) )
-                    {
-                        ++GetStatistics( 1u ).uiValue;
-                    }
-                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 51u, 100u ) )
-                    {
-                        ++GetStatistics( 2u ).uiValue;
-                    }
-                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 101u, 300u ) )
-                    {
-                        ++GetStatistics( 3u ).uiValue;
-                    }
-                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 301u, 500u ) )
-                    {
-                        ++GetStatistics( 4u ).uiValue;
-                    }
-                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 501u ) )
-                    {
-                        ++GetStatistics( 5u ).uiValue;
-                    }
+                    ++GetStatistics( 0u ).uiValue;
+                }
+                else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 21u, 50u ) )
+                {
+                    ++GetStatistics( 1u ).uiValue;
+                }
+                else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 51u, 100u ) )
+                {
+                    ++GetStatistics( 2u ).uiValue;
+                }
+                else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 101u, 300u ) )
+                {
+                    ++GetStatistics( 3u ).uiValue;
+                }
+                else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 301u, 500u ) )
+                {
+                    ++GetStatistics( 4u ).uiValue;
+                }
+                else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 501u ) )
+                {
+                    ++GetStatistics( 5u ).uiValue;
                 }
             }
+            
         }
     }
 }

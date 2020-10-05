@@ -30,7 +30,7 @@ public:
 private:
 	static CCodeFile::EType AnalyzeFileType( const std::filesystem::path& oFilePath );
 
-	void ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const std::filesystem::path& oPath, const std::string& oContentString, const CCodeFile::EType eType );
+	void ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const CCodeFile& oCodeFile ) const;
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
 	void PreProcessFileContent( std::string& oFileContentString ) const;
 

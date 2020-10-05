@@ -44,9 +44,12 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
         const CCodeFile::EType oFileType = AnalyzeFileType( oFilePath );
+
         if ( oFileType != CCodeFile::EType::eUnknown )
         {
             ++uiProcessCodeFileNumber;
+
+            PrintProgress( uiProcessCodeFileNumber, uiProcessCodeFileCount );
 
             eStatus = ReadFileContent( oFilePath, oFileContentString );
 
@@ -54,10 +57,16 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
             {
                 PreProcessFileContent( oFileContentString );
 
+                CCodeFile oCodeFile{ oFilePath, oFileContentString, oFileType };
+
+                if ( oFileType == CCodeFile::EType::eSource )
+                {
+                    oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oCodeFile.GetCode() ) );
+                }
+
                 for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
                 {
-                    PrintProgress( uiProcessCodeFileNumber, uiProcessCodeFileCount );
-                    ProcessCodeFile( *upoStatisticsAnalyzerModule, oFilePath, oFileContentString, oFileType );
+                    ProcessCodeFile( *upoStatisticsAnalyzerModule, oCodeFile );
                 }
             }
         }
@@ -92,15 +101,8 @@ CCodeFile::EType CCodeAnalyzer::AnalyzeFileType( const std::filesystem::path& oF
 // ^^x
 // void CCodeAnalyzer::ProcessCodeFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const std::filesystem::path& oPath, const std::string& oContentString, const CCodeFile::EType eType )
+void CCodeAnalyzer::ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const CCodeFile& oCodeFile ) const
 {
-    CCodeFile oCodeFile{ oPath, oContentString, eType };
-
-    if ( eType == CCodeFile::EType::eSource )
-    {
-        oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oContentString, true ) );
-    }
-
     oAnalyzerModule.PreProcessCodeFile( oCodeFile );
     oAnalyzerModule.ProcessCodeFile( oCodeFile );
     oAnalyzerModule.PostProcessCodeFile( oCodeFile );
@@ -180,6 +182,7 @@ void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsign
     const std::string oProcessCodeFileCount = std::to_string( uiFileCount );
 
     CConsoleInterface::Print( "  Processing " + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + " file | " + oProgressBarString + " " + std::to_string( uiCurrentProgressPos ) + "%\r" );
+    CConsoleInterface::Flush();
 }
 
 bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath ) const

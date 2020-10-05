@@ -24,7 +24,7 @@ void CCodeFileLineCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
 {
     if ( oCodeFile.GetType() == CCodeFile::EType::eHeader || oCodeFile.GetType() == CCodeFile::EType::eSource )
     {
-        GetStatistics( 0u ).uiValue += oCodeFile.GetCodeLines().size();
+        GetStatistics( 0u ).uiValue += oCodeFile.GetCodeLineCount();
     }
 }
 

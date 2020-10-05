@@ -13,6 +13,8 @@ public:
 
 	static void NewLine();
 	static void ClearLine();
+
+	static void Flush();
 };
 
 // ^^x
@@ -48,4 +50,12 @@ inline void CConsoleInterface::NewLine()
 inline void CConsoleInterface::ClearLine()
 {
 	printf( "\r                                                                                                                \r" );
+}
+
+// ^^x
+// void CConsoleInterface::Flush
+// 3BGO JIRA-238 01-10-2020
+inline void CConsoleInterface::Flush()
+{
+	std::cout << std::flush;
 }

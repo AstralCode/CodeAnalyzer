@@ -13,8 +13,7 @@ public:
 	CCodeParser& operator=( const CCodeParser& ) = delete;
 
 	std::vector<SMemberFunctionHeaderDataset> FindMemberFunctionHeaders( const std::string oCodeString ) const;
-	std::vector<SMemberFunctionHeaderDataset> FindMemberFunctionHeadersDetails( const std::string oCodeString ) const;
-	std::vector<SMemberFunctionHeaderDataset> FindMemberFunctions( const std::string oCodeString, const bool bFindHeaderDetails = false ) const;
+	std::vector<SMemberFunctionHeaderDataset> FindMemberFunctions( const std::string oCodeString ) const;
 
 	std::string RemoveSingleLineComments( const std::string& oCodeString ) const;
 	std::string RemoveMultilineComments( const std::string& oCodeString ) const;
@@ -24,4 +23,6 @@ private:
 	std::size_t FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentSearchOffsetPos ) const;
 
 	std::string RetrieveBodyFunction( const std::string& oCodeString, const std::size_t uiFunctionBracketOpenPos, const std::size_t uiFunctionBracketClosePos ) const;
+
+	std::string SimplifyCode( const std::string& oCodeString ) const;
 };
