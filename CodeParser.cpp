@@ -148,7 +148,7 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
-			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( RemoveMultilineComments( oCodeNonSinglelineString ), uiFindCurrentOffsetPos );
+			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeNonSinglelineString, uiFindCurrentOffsetPos );
 
 			if ( uiFindCurrentOffsetPos != std::string::npos )
 			{
