@@ -66,7 +66,6 @@ void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCode
                     ++GetStatistics( 5u ).uiValue;
                 }
             }
-            
         }
     }
 }
