@@ -91,7 +91,7 @@ std::vector<SMemberFunctionHeaderDataset> CCodeParser::FindMemberFunctions( cons
 	
 	const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
 
-	std::size_t uiCurrentSearchOffsetPos = 0u;
+	std::size_t uiCurrentSearchOffsetPos{ 0u };
 
 	for ( SMemberFunctionHeaderDataset& oFunctionHeaderResult : oFunctionHeaderDatasetVector )
 	{
@@ -146,7 +146,7 @@ std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCo
 std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentSearchOffsetPos ) const
 {
 	std::size_t uiFunctionBracketLevel{ 1u };
-	std::size_t uiSyntaxCharacterPos = std::string::npos;
+	std::size_t uiSyntaxCharacterPos{ std::string::npos };
 
 	bool bBeginCharacterLiteral{ false };
 	bool bBeginStringLiteral{ false };

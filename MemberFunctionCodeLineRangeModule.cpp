@@ -12,7 +12,8 @@ CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule( CCodePar
     CreateStatistics( "Function Code Line Range[21-50]" );
     CreateStatistics( "Function Code Line Range[51-100]" );
     CreateStatistics( "Function Code Line Range[101-300]" );
-    CreateStatistics( "Function Code Line Range[301-more]" );
+    CreateStatistics( "Function Code Line Range[301-500]" );
+    CreateStatistics( "Function Code Line Range[501-more]" );
 }
 
 // ^^x
@@ -58,9 +59,13 @@ void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCode
                     {
                         ++GetStatistics( 3u ).uiValue;
                     }
-                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 301u ) )
+                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 301u, 500u ) )
                     {
                         ++GetStatistics( 4u ).uiValue;
+                    }
+                    else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 501u ) )
+                    {
+                        ++GetStatistics( 5u ).uiValue;
                     }
                 }
             }

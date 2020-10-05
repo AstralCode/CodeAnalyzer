@@ -26,12 +26,12 @@ CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() c
 // 3BGO JIRA-238 24-09-2020
 EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath )
 {
-    EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
+    EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
     const unsigned int uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
 
     std::string oFileContentString{};
-    unsigned int uiProcessCodeFileNumber = 0u;
+    unsigned int uiProcessCodeFileNumber{ 0u };
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     
@@ -70,7 +70,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 // 3BGO JIRA-238 24-09-2020
 CCodeFile::EType CCodeAnalyzer::AnalyzeCodeFileType( const std::filesystem::path& oFilePath )
 {
-    CCodeFile::EType eType = CCodeFile::EType::eUnknown;
+    CCodeFile::EType eType{ CCodeFile::EType::eUnknown };
 
     if ( std::filesystem::is_regular_file( oFilePath ) && oFilePath.has_extension() )
     {
@@ -108,7 +108,7 @@ void CCodeAnalyzer::ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule,
 // 3BGO JIRA-238 24-09-2020
 EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const
 {
-    EProgramStatusCodes eStatus = EProgramStatusCodes::eSuccess;
+    EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
     std::ifstream oFileStream{ oFilePath.string(), std::fstream::in };
 

@@ -5,7 +5,7 @@
 // 3BGO JIRA-238 24-09-2020
 CCommandLineHandler::CCommandLineHandler( int iArgumentCount, char* apcArguments[] )
 {
-    for ( int iArgIndex = 1; iArgIndex < iArgumentCount; ++iArgIndex )
+	for ( int iArgIndex{ 1 }; iArgIndex < iArgumentCount; ++iArgIndex )
     {
         m_oArgumentVector.push_back( apcArguments[iArgIndex] );
     }
