@@ -94,7 +94,7 @@ std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const C
 
 	const std::string oCodeString = oCodeFile.GetContent();
 	const std::vector<SFindMemberFunctionHeaderResult> oFindFunctionHeaderResultVector = FindMemberFunctionHeaders( oCodeFile );
-	const std::string oCodeNonSinglelineString = RemoveSinglelineComments( oCodeString );
+	const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
 
 	std::size_t uiFindCurrentOffsetPos = 0u;
 
@@ -103,18 +103,18 @@ std::vector<SFindMemberFunctionResult> CCodeParser::FindMemberFunctions( const C
 		SFindMemberFunctionResult oResult{};
 		oResult.oHeaderResult = oFunctionHeaderResult;
 
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeNonSinglelineString, oFunctionHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oFunctionHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
 
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
-			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeNonSinglelineString, uiFindCurrentOffsetPos );
+			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeWithoutCommentsString, uiFindCurrentOffsetPos );
 
 			if ( uiFindCurrentOffsetPos != std::string::npos )
 			{
 				const std::size_t uiFunctionBracketClosePos = uiFindCurrentOffsetPos - uiFunctionBracketOpenPos;
 
-				oResult.oBodyDataset.oBodyString = oCodeNonSinglelineString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
+				oResult.oBodyDataset.oBodyString = oCodeWithoutCommentsString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
 
 				oResultVector.push_back( oResult );
 			}
@@ -133,7 +133,7 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 
 	const std::string oCodeString = oCodeFile.GetContent();
 	const std::vector<SFindMemberFunctionHeaderDetailResult> oFindFunctionHeaderDetailResultVector = FindMemberFunctionHeadersDetails( oCodeFile );
-	const std::string oCodeNonSinglelineString = RemoveSinglelineComments( oCodeString );
+	const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
 
 	std::size_t uiFindCurrentOffsetPos = 0u;
 
@@ -143,18 +143,18 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 		oResult.oHeaderResult = oFunctionHeaderDetailResult.oHeaderResult;
 		oResult.oHeaderDataset = oFunctionHeaderDetailResult.oHeaderDataset;
 
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeNonSinglelineString, oFunctionHeaderDetailResult.oHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oFunctionHeaderDetailResult.oHeaderResult.oHeaderString, uiFindCurrentOffsetPos );
 
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiFindCurrentOffsetPos = uiFunctionBracketOpenPos + 1u;
-			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeNonSinglelineString, uiFindCurrentOffsetPos );
+			uiFindCurrentOffsetPos = FindFunctionBracketClosePosition( oCodeWithoutCommentsString, uiFindCurrentOffsetPos );
 
 			if ( uiFindCurrentOffsetPos != std::string::npos )
 			{
 				const std::size_t uiFunctionBracketClosePos = uiFindCurrentOffsetPos - uiFunctionBracketOpenPos;
 
-				oResult.oBodyDataset.oBodyString = oCodeNonSinglelineString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
+				oResult.oBodyDataset.oBodyString = oCodeWithoutCommentsString.substr( uiFunctionBracketOpenPos, uiFunctionBracketClosePos );
 
 				oResultVector.push_back( oResult );
 			}
@@ -165,9 +165,9 @@ std::vector<SFindMemberFunctionDetailResult> CCodeParser::FindMemberFunctionsDet
 }
 
 // ^^x
-// std::string CCodeParser::RemoveSinglelineComments
+// std::string CCodeParser::RemoveSingleLineComments
 // 3BGO JIRA-238 02-10-2020
-std::string CCodeParser::RemoveSinglelineComments( const std::string& oCodeString ) const
+std::string CCodeParser::RemoveSingleLineComments( const std::string& oCodeString ) const
 {
 	return std::regex_replace( oCodeString, std::regex{ FIND_SINGLELINE_COMMENTS_REGEX_STR }, "" );
 }
