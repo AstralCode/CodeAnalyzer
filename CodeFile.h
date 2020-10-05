@@ -20,7 +20,7 @@ public:
 	CCodeFile( const CCodeFile& ) = delete;
 	CCodeFile& operator=( const CCodeFile& ) = delete;
 
-	void SetMemberFunctionDataset( const std::vector<SMemberFunctionHeaderDataset>& oMemberFunctionDatasetVector );
+	void SetMemberFunctionDataset( std::vector<SMemberFunctionHeaderDataset>&& oMemberFunctionDatasetVector );
 	const std::vector<SMemberFunctionHeaderDataset>& GetMemberFunctionDataset() const;
 
 	std::filesystem::path GetPath() const;
