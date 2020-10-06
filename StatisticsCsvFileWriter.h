@@ -7,7 +7,7 @@
 class CStatisticsCsvFileWriter
 {
 public:
-	EProgramStatusCodes WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const std::filesystem::path& oOutputDirectoryPath, const char cDataSeparator = ';' );
+	EProgramStatusCodes WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset );
 
 	CStatisticsCsvFileWriter( const CStatisticsCsvFileWriter& ) = delete;
 	CStatisticsCsvFileWriter& operator=( const CStatisticsCsvFileWriter& ) = delete;
@@ -16,5 +16,5 @@ private:
 	void WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const char cDataSeparator ) const;
 	void WriteStatisticsValues( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const char cDataSeparator ) const;
 
-	std::filesystem::path PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath ) const;
+	std::filesystem::path PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const;
 };

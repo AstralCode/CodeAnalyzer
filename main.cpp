@@ -43,7 +43,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 			CConsoleInterface::ClearLine();
 			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Analysis Complete!" );
 
-			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oCommandLineArgumentDataset.oOutputDirectoryPath );
+			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oCommandLineArgumentDataset );
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{

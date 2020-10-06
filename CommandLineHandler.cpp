@@ -11,7 +11,7 @@ CCommandLineHandler::CCommandLineHandler( int iArgumentCount, char* apcArguments
 {
 	for ( int iArgIndex{ 1 }; iArgIndex < iArgumentCount; ++iArgIndex )
     {
-		m_oArgumentVector.push_back( CStringHelper::ToLowerCase( apcArguments[iArgIndex] ) );
+		m_oArgumentVector.push_back( apcArguments[iArgIndex] );
     }
 }
 
@@ -45,7 +45,11 @@ EProgramStatusCodes CCommandLineHandler::HandleArguments( SCommandLineArgumentDa
 // 3BGO JIRA-238 24-09-2020
 std::string CCommandLineHandler::GetUsageMessage() const
 {
-	return { "usage:" "\n\t" "codeanalyzer.exe <input_directory_path> <output_directory_path> [--dev developer_name]" };
+	return {
+		"usage:" "\n\t"
+			"codeanalyzer.exe <input_directory_path> <output_directory_path>" "\n\n"
+		"optional options:" "\n\t"
+			"[--dev] [--raport-prefix] [--raport-separator]" };
 }
 
 // ^^x
@@ -93,7 +97,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 
 		std::smatch oMatchRegex{};
 		
-		if ( std::regex_match( oInputString, oMatchRegex, std::regex{ R"(\-\-(\w+)\s(\w+))" } ) )
+		if ( std::regex_match( oInputString, oMatchRegex, std::regex{ R"(\-\-(\w+(?:\-\w+)*)\s+(.+))" } ) )
 		{
 			HandleOptionalArgument( oArgumentDataset, oMatchRegex[1u], oMatchRegex[2u] );
 		}
@@ -109,11 +113,27 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	if ( oOptionString == "dev" )
+	const std::string oOptionLowerCaseString = CStringHelper::ToLowerCase( oOptionString );
+
+	if ( oOptionLowerCaseString == "dev" )
 	{
 		if ( !oArgumentDataset.oDeveloperString.has_value() )
 		{
 			oArgumentDataset.oDeveloperString = oArgumentString;
+		}
+	}
+	else if ( oOptionLowerCaseString == "raport-prefix" )
+	{
+		if ( !oArgumentDataset.oReportPrefixNameString.has_value() )
+		{
+			oArgumentDataset.oReportPrefixNameString = oArgumentString;
+		}
+	}
+	else if ( oOptionLowerCaseString == "raport-separator" )
+	{
+		if ( !oArgumentDataset.oReportPrefixNameString.has_value() )
+		{
+			oArgumentDataset.oReportDataSeparatorString = oArgumentString;
 		}
 	}
 	else

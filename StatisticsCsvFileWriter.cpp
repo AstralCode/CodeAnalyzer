@@ -9,15 +9,25 @@
 // ^^x
 // EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules, const std::filesystem::path& oOutputDirectoryPath, const char cDataSeparator/* = ';'*/ )
+EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules, const SCommandLineArgumentDataset& oCommandLineArgumentDataset )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	const std::filesystem::path oFilenameString = PrepareOutputFilePath( oOutputDirectoryPath );
-	std::ofstream oFileStream{ oFilenameString.string(), std::fstream::out | std::fstream::app };
+	const std::filesystem::path oFilePathString = PrepareOutputFilePath( oCommandLineArgumentDataset.oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString );
+	std::ofstream oFileStream{ oFilePathString.string(), std::fstream::out };
 
 	if ( oFileStream.is_open() )
 	{
+		char cDataSeparator{ ';' };
+
+		if ( oCommandLineArgumentDataset.oReportDataSeparatorString.has_value() )
+		{
+			if ( oCommandLineArgumentDataset.oReportDataSeparatorString->size() == 1u )
+			{
+				cDataSeparator = ( *oCommandLineArgumentDataset.oReportDataSeparatorString )[0u];
+			}
+		}
+
 		WriteStatisticsHeaders( oFileStream, oStatisticsAnalyzerModules, cDataSeparator );
 		WriteStatisticsValues( oFileStream, oStatisticsAnalyzerModules, cDataSeparator );
 	}
@@ -80,10 +90,17 @@ void CStatisticsCsvFileWriter::WriteStatisticsValues( std::ofstream& oFileStream
 // ^^x
 // std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath
 // 3BGO JIRA-238 24-09-2020
-std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath ) const
+std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const
 {
 	const std::string oCurrentDateString = CDateTimeHelper::CurrentDate();
 	const std::string oCurrentTimeString = CStringHelper::Replace( CDateTimeHelper::CurrentTime(), ':', '-' );
 
-	return { oOutputDirectoryPath / ( "CodeAnalyzerStat--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" ) };
+	std::string oFilenameString{ "CodeAnalyzerStat--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" };
+
+	if ( oReportPrefixNameString.has_value() )
+	{
+		oFilenameString = *oReportPrefixNameString + "--" + oFilenameString;
+	}
+
+	return oOutputDirectoryPath / oFilenameString;
 };

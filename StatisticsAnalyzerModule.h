@@ -4,7 +4,7 @@
 
 struct SStatisticsResult
 {
-	std::string oHeaderString{};
+	std::string oHeaderString;
 	unsigned int uiValue{ 0u };
 };
 
