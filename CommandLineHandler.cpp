@@ -49,7 +49,7 @@ std::string CCommandLineHandler::GetUsageMessage() const
 		"usage:" "\n\t"
 			"codeanalyzer.exe <input_directory_path> <output_directory_path>" "\n\n"
 		"optional options:" "\n\t"
-			"codeanalyzer.exe [--dev] [--raport-prefix] [--raport-separator]" };
+			"[--dev] [--raport-prefix] [--raport-separator]" };
 }
 
 // ^^x
