@@ -49,7 +49,7 @@ std::string CCommandLineHandler::GetUsageMessage() const
 		"usage:" "\n\t"
 			"codeanalyzer.exe <input_directory_path> <output_directory_path>" "\n\n"
 		"optional options:" "\n\t"
-			"[--dev] [--raport-prefix] [--raport-separator]" };
+			"[--raport-prefix] [--raport-separator]" };
 }
 
 // ^^x
@@ -115,14 +115,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 
 	const std::string oOptionLowerCaseString = CStringHelper::ToLowerCase( oOptionString );
 
-	if ( oOptionLowerCaseString == "dev" )
-	{
-		if ( !oArgumentDataset.oDeveloperString.has_value() )
-		{
-			oArgumentDataset.oDeveloperString = oArgumentString;
-		}
-	}
-	else if ( oOptionLowerCaseString == "raport-prefix" )
+	if ( oOptionLowerCaseString == "raport-prefix" )
 	{
 		if ( !oArgumentDataset.oReportPrefixNameString.has_value() )
 		{

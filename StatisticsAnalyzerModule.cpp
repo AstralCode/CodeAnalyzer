@@ -1,15 +1,6 @@
 #include "StatisticsAnalyzerModule.h"
 
 // ^^x
-// CStatisticsAnalyzerModule::CStatisticsAnalyzerModule
-// 3BGO JIRA-238 02-10-2020
-CStatisticsAnalyzerModule::CStatisticsAnalyzerModule( CCodeParser& oCodeParser ) :
-	m_oCodeParser{ oCodeParser }
-{
-
-}
-
-// ^^x
 // std::vector<SStatisticsResult> CStatisticsAnalyzerModule::GetStatisticsResults
 // 3BGO JIRA-238 02-10-2020
 std::vector<SStatisticsResult> CStatisticsAnalyzerModule::GetStatisticsResults() const

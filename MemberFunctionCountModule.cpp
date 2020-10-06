@@ -1,30 +1,27 @@
 #include "MemberFunctionCountModule.h"
 
+#include "SourceFile.h"
+
 // ^^x
 // CMemberFunctionCountModule::CMemberFunctionCountModule
 // 3BGO JIRA-239 01-10-2020
-CMemberFunctionCountModule::CMemberFunctionCountModule( CCodeParser& oCodeParser ) :
-    CStatisticsAnalyzerModule{ oCodeParser }
+CMemberFunctionCountModule::CMemberFunctionCountModule()
 {
     CreateStatistics( "Function Count" );
 }
 
 // ^^x
-// void CMemberFunctionCountModule::ProcessCodeFile
+// void CMemberFunctionCountModule::ProcessHeaderFile
 // 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
+void CMemberFunctionCountModule::ProcessHeaderFile( const CHeaderFile& )
 {
-    if ( oCodeFile.GetType() == CCodeFile::EType::eSource )
-    {
-        GetStatistics( 0u ).uiValue += oCodeFile.GetMemberFunctionDataset().size();
-    }
+
 }
 
 // ^^x
-// std::string CMemberFunctionCountModule::GetModuleName
-// 3BGO JIRA-238 01-10-2020
-std::string CMemberFunctionCountModule::GetModuleName() const
+// void CMemberFunctionCountModule::ProcessSourceFile
+// 3BGO JIRA-238 24-09-2020
+void CMemberFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    return "Function Counter";
+    GetStatistics( 0u ).uiValue += oSourceFile.GetMemberFunctions().size();
 }
-

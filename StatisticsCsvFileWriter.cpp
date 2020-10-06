@@ -9,7 +9,7 @@
 // ^^x
 // EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModules, const SCommandLineArgumentDataset& oCommandLineArgumentDataset )
+EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
@@ -28,8 +28,8 @@ EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::Co
 			}
 		}
 
-		WriteStatisticsHeaders( oFileStream, oStatisticsAnalyzerModules, cDataSeparator );
-		WriteStatisticsValues( oFileStream, oStatisticsAnalyzerModules, cDataSeparator );
+		WriteStatisticsHeaders( oFileStream, oAnalyzerModuleVector, cDataSeparator );
+		WriteStatisticsValues( oFileStream, oAnalyzerModuleVector, cDataSeparator );
 	}
 	else
 	{
@@ -42,48 +42,48 @@ EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::Co
 // ^^x
 // void CStatisticsCsvFileWriter::WriteStatisticsHeaders
 // 3BGO JIRA-238 24-09-2020
-void CStatisticsCsvFileWriter::WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const char cDataSeparator ) const
+void CStatisticsCsvFileWriter::WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const
 {
-	for ( unsigned int uiModuleIndex{ 0u }; uiModuleIndex < oStatisticsAnalyzerModuleVector.size(); ++uiModuleIndex )
+	for ( unsigned int uiModuleIndex{ 0u }; uiModuleIndex < oAnalyzerModuleVector.size(); ++uiModuleIndex )
 	{
-		const CStatisticsAnalyzerModule& oModule = oStatisticsAnalyzerModuleVector[uiModuleIndex].get();
-		const std::vector<SStatisticsResult> oStatisticsResultsVector = oModule.GetStatisticsResults();
+		const CStatisticsAnalyzerModule& oAnalyzerModule = oAnalyzerModuleVector[uiModuleIndex].get();
+		const std::vector<SStatisticsResult> oStatisticsResultVector = oAnalyzerModule.GetStatisticsResults();
 
-		for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultsVector.size(); ++uiResultIndex )
+		for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultVector.size(); ++uiResultIndex )
 		{
-			oFileStream << oStatisticsResultsVector[uiResultIndex].oHeaderString;
+			oFileStream << oStatisticsResultVector[uiResultIndex].oHeaderString;
 			
-			if ( uiResultIndex + 1 < oStatisticsResultsVector.size() )
+			if ( uiResultIndex + 1 < oStatisticsResultVector.size() )
 			{
 				oFileStream << cDataSeparator;
 			}
 		}
 
-		oFileStream << ( ( uiModuleIndex + 1 < oStatisticsAnalyzerModuleVector.size() ) ? cDataSeparator : '\n' );
+		oFileStream << ( ( uiModuleIndex + 1 < oAnalyzerModuleVector.size() ) ? cDataSeparator : '\n' );
 	}
 }
 
 // ^^x
 // void CStatisticsCsvFileWriter::WriteStatisticsValues
 // 3BGO JIRA-238 24-09-2020
-void CStatisticsCsvFileWriter::WriteStatisticsValues( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oStatisticsAnalyzerModuleVector, const char cDataSeparator ) const
+void CStatisticsCsvFileWriter::WriteStatisticsValues( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const
 {
-	for ( unsigned int uiModuleIndex{ 0u }; uiModuleIndex < oStatisticsAnalyzerModuleVector.size(); ++uiModuleIndex )
+	for ( unsigned int uiModuleIndex{ 0u }; uiModuleIndex < oAnalyzerModuleVector.size(); ++uiModuleIndex )
 	{
-		const CStatisticsAnalyzerModule& oModule = oStatisticsAnalyzerModuleVector[uiModuleIndex].get();
-		const std::vector<SStatisticsResult> oStatisticsResultsVector = oModule.GetStatisticsResults();
+		const CStatisticsAnalyzerModule& oAnalyzerModule = oAnalyzerModuleVector[uiModuleIndex].get();
+		const std::vector<SStatisticsResult> oStatisticsResultVector = oAnalyzerModule.GetStatisticsResults();
 
-		for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultsVector.size(); ++uiResultIndex )
+		for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultVector.size(); ++uiResultIndex )
 		{
-			oFileStream << oStatisticsResultsVector[uiResultIndex].uiValue;
+			oFileStream << oStatisticsResultVector[uiResultIndex].uiValue;
 
-			if ( uiResultIndex + 1 < oStatisticsResultsVector.size() )
+			if ( uiResultIndex + 1 < oStatisticsResultVector.size() )
 			{
 				oFileStream << cDataSeparator;
 			}
 		}
 
-		oFileStream << ( ( uiModuleIndex + 1 < oStatisticsAnalyzerModuleVector.size() ) ? cDataSeparator : '\n' );
+		oFileStream << ( ( uiModuleIndex + 1 < oAnalyzerModuleVector.size() ) ? cDataSeparator : '\n' );
 	}
 }
 

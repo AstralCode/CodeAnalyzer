@@ -3,7 +3,7 @@
 #include <string>
 #include <optional>
 
-struct SMemberFunctionHeaderDataset
+struct SMemberFunctionDataset
 {
 	std::optional<std::string> oAuthorString;
 	std::optional<std::string> oInformationString;

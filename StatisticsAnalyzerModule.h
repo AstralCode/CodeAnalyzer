@@ -1,33 +1,28 @@
 #pragma once
 
-#include "CodeFile.h"
+#include <string>
+#include <vector>
 
-struct SStatisticsResult
-{
-	std::string oHeaderString;
-	unsigned int uiValue{ 0u };
-};
+#include "StatisticsResult.h"
 
-class CCodeParser;
+class CHeaderFile;
+class CSourceFile;
 
 class CStatisticsAnalyzerModule
 {
 public:
-	CStatisticsAnalyzerModule( CCodeParser& oCodeParser );
+	CStatisticsAnalyzerModule() = default;
 	virtual ~CStatisticsAnalyzerModule() = default;
 
 	CStatisticsAnalyzerModule( const CStatisticsAnalyzerModule& ) = delete;
 	CStatisticsAnalyzerModule& operator=( const CStatisticsAnalyzerModule& ) = delete;
 
-	virtual void ProcessCodeFile( const CCodeFile& oCodeFile ) = 0;
-
-	virtual std::string GetModuleName() const = 0;
+	virtual void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) = 0;
+	virtual void ProcessSourceFile( const CSourceFile& oSourceFile ) = 0;
 
 	std::vector<SStatisticsResult> GetStatisticsResults() const;
 
 protected:
-	CCodeParser& m_oCodeParser;
-
 	void CreateStatistics( const std::string& oHeaderString );
 	SStatisticsResult& GetStatistics( const unsigned int uiIndex );
 

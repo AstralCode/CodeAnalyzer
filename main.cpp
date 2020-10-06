@@ -29,9 +29,9 @@ int main( int iArgumentCount, char* apcArguments[] )
 	{
 		CConsoleInterface::PrintLine( "Output report directory: \"" + oCommandLineArgumentDataset.oOutputDirectoryPath.string() + "\"" );
 
-		oCodeAnalyzer.AddModule<CCodeFileLineCountModule>();
-		oCodeAnalyzer.AddModule<CMemberFunctionCountModule>();
-		oCodeAnalyzer.AddModule<CMemberFunctionCodeLineRangeModule>();
+		oCodeAnalyzer.AddAnalyzerModule<CCodeFileLineCountModule>();
+		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCountModule>();
+		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCodeLineRangeModule>();
 
 		CConsoleInterface::NewLine();
 		CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Code analysis in progress..." );
@@ -43,7 +43,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 			CConsoleInterface::ClearLine();
 			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Analysis Complete!" );
 
-			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oCommandLineArgumentDataset );
+			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetAnalyzerModules(), oCommandLineArgumentDataset );
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{

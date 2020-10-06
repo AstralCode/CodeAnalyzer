@@ -4,21 +4,22 @@
 #include <algorithm>
 
 #include "ConsoleInterface.h"
-#include "CodeFile.h"
+#include "SourceFile.h"
+#include "HeaderFile.h"
 
 // ^^x
-// CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules
+// CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetAnalyzerModules
 // 3BGO JIRA-238 24-09-2020
-CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() const
+CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetAnalyzerModules() const
 {
-    ConstStatisticsAnalyzerModuleVector oStatisticsAnalyzerModules{};
+    ConstStatisticsAnalyzerModuleVector oAnalyzerModuleVector{};
 
-    std::for_each( m_oStatisticsAnalyzerModuleVector.cbegin(), m_oStatisticsAnalyzerModuleVector.cend(), [&oStatisticsAnalyzerModules]( const std::unique_ptr<CStatisticsAnalyzerModule>& upoModule )
+    std::for_each( m_oAnalyzerModuleVector.cbegin(), m_oAnalyzerModuleVector.cend(), [&oAnalyzerModuleVector]( const std::unique_ptr<CStatisticsAnalyzerModule>& upoModule )
     {
-        oStatisticsAnalyzerModules.emplace_back( std::cref( *upoModule ) );
+        oAnalyzerModuleVector.emplace_back( std::cref( *upoModule ) );
     });
 
-    return oStatisticsAnalyzerModules;
+    return oAnalyzerModuleVector;
 }
 
 // ^^x
@@ -39,9 +40,9 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
     
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
-        const CCodeFile::EType oFileType = AnalyzeFileType( oFilePath );
+        const ECodeFileType eFileType = CheckFileType( oFilePath );
 
-        if ( oFileType != CCodeFile::EType::eUnknown )
+        if ( eFileType != ECodeFileType::eUnknown )
         {
             ++uiProcessCodeFileNumber;
 
@@ -53,14 +54,21 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
             {
                 PreProcessFileContent( oFileContentString );
 
-                CCodeFile oCodeFile{ oFilePath, oFileContentString, oFileType };
-
-                if ( oFileType == CCodeFile::EType::eSource )
+                switch ( eFileType )
                 {
-                    oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oCodeFile.GetCode(), oCommandLineArgumentDataset.oDeveloperString ) );
+                case ECodeFileType::eHeader:
+                {
+                    ProcessHeaderFile( oFilePath, oFileContentString );
+                    break;
                 }
-
-                ProcessCodeFile( oCodeFile );
+                case ECodeFileType::eSource:
+                {
+                    ProcessSourceFile( oFilePath, oFileContentString );
+                    break;
+                }
+                default:
+                    break;
+                }
             }
         }
     }
@@ -69,22 +77,22 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
 }
 
 // ^^x
-// CCodeFile::EType CCodeAnalyzer::AnalyzeFileType
+// ECodeFileType CCodeAnalyzer::CheckFileType
 // 3BGO JIRA-238 24-09-2020
-CCodeFile::EType CCodeAnalyzer::AnalyzeFileType( const std::filesystem::path& oFilePath )
+ECodeFileType CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePath )
 {
-    CCodeFile::EType eType{ CCodeFile::EType::eUnknown };
+    ECodeFileType eType{ ECodeFileType::eUnknown };
 
     if ( std::filesystem::is_regular_file( oFilePath ) && oFilePath.has_extension() )
     {
         if ( oFilePath.extension() == ".h" )
         {
-            eType = CCodeFile::EType::eHeader;
+            eType = ECodeFileType::eHeader;
         }
 
         if ( oFilePath.extension() == ".cpp" )
         {
-            eType = CCodeFile::EType::eSource;
+            eType = ECodeFileType::eSource;
         }
     }
 
@@ -121,13 +129,31 @@ void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) con
 }
 
 // ^^x
-// void CCodeAnalyzer::ProcessCodeFile
+// void CCodeAnalyzer::ProcessHeaderFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::ProcessCodeFile( const CCodeFile& oCodeFile )
+void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString )
 {
-    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
+    CHeaderFile oHeaderFile{ oFilePath };
+    oHeaderFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
+
+    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
-        upoStatisticsAnalyzerModule->ProcessCodeFile( oCodeFile );
+        upoAnalyzerModule->ProcessHeaderFile( oHeaderFile );
+    }
+}
+
+// ^^x
+// void CCodeAnalyzer::ProcessSourceFile
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString )
+{
+    CSourceFile oSourceFile{ oFilePath };
+    oSourceFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
+    oSourceFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oFileContentString ) );
+
+    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
+    {
+        upoAnalyzerModule->ProcessSourceFile( oSourceFile );
     }
 }
 
@@ -184,5 +210,5 @@ void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsign
 // 3BGO JIRA-238 06-10-2020
 bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath ) const
 {
-    return AnalyzeFileType( oFilePath ) != CCodeFile::EType::eUnknown;
+    return CheckFileType( oFilePath ) != ECodeFileType::eUnknown;
 }

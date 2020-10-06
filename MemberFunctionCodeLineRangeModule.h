@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <algorithm>
 
 #include "StatisticsAnalyzerModule.h"
 
@@ -17,11 +17,10 @@
 class CMemberFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CMemberFunctionCodeLineRangeModule( CCodeParser& oCodeParser );
+	CMemberFunctionCodeLineRangeModule();
 
-	void ProcessCodeFile( const CCodeFile& oCodeFile ) override;
-
-	std::string GetModuleName() const override;
+	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
+	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
 
 private:
 	template<typename T>

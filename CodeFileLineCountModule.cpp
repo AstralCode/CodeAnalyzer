@@ -1,29 +1,28 @@
 #include "CodeFileLineCountModule.h"
 
+#include "HeaderFile.h"
+#include "SourceFile.h"
+
 // ^^x
 // CCodeFileLineCountModule::CCodeFileLineCountModule
 // 3BGO JIRA-238 24-09-2020
-CCodeFileLineCountModule::CCodeFileLineCountModule( CCodeParser& oCodeParser ) :
-    CStatisticsAnalyzerModule{ oCodeParser }
+CCodeFileLineCountModule::CCodeFileLineCountModule()
 {
     CreateStatistics( "Code Line Count" );
 }
 
 // ^^x
-// void CCodeFileLineCountModule::ProcessCodeFile
+// void CCodeFileLineCountModule::ProcessHeaderFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeFileLineCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
+void CCodeFileLineCountModule::ProcessHeaderFile( const CHeaderFile& oHeaderFile )
 {
-    if ( oCodeFile.GetType() == CCodeFile::EType::eHeader || oCodeFile.GetType() == CCodeFile::EType::eSource )
-    {
-        GetStatistics( 0u ).uiValue += oCodeFile.GetCodeLineCount();
-    }
+    GetStatistics( 0u ).uiValue += oHeaderFile.GetCodeLineCount();
 }
 
 // ^^x
-// std::string CCodeFileLineCountModule::GetModuleName
-// 3BGO JIRA-238 01-10-2020
-std::string CCodeFileLineCountModule::GetModuleName() const
+// void CCodeFileLineCountModule::ProcessSourceFile
+// 3BGO JIRA-238 24-09-2020
+void CCodeFileLineCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    return "Code Line Counter";
+    GetStatistics( 0u ).uiValue += oSourceFile.GetCodeLineCount();
 }
