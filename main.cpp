@@ -27,13 +27,10 @@ int main( int iArgumentCount, char* apcArguments[] )
 	}
 	else
 	{
-		CConsoleInterface::PrintLine( "Output report directory: \"" + oCommandLineArgumentDataset.oOutputDirectoryPath.string() + "\"" );
-
 		oCodeAnalyzer.AddAnalyzerModule<CCodeFileLineCountModule>();
 		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCountModule>();
 		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCodeLineRangeModule>();
 
-		CConsoleInterface::NewLine();
 		CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Code analysis in progress..." );
 
 		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset );
@@ -41,13 +38,15 @@ int main( int iArgumentCount, char* apcArguments[] )
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
 			CConsoleInterface::ClearLine();
-			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Analysis Complete!" );
+			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Analysis complete!" );
 
-			eStatus = oStatisticsReportWriter.CreateReport( oCodeAnalyzer.GetAnalyzerModules(), oCommandLineArgumentDataset );
+			std::filesystem::path oOutputReportPath{};
+
+			eStatus = oStatisticsReportWriter.CreateReport( oCodeAnalyzer.GetAnalyzerModules(), oCommandLineArgumentDataset, oOutputReportPath );
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{
-				CConsoleInterface::PrintLine( "Report has been created." );
+				CConsoleInterface::PrintLine( "Report created at: \"" + oOutputReportPath.string() + "\"" );
 			}
 		}
 	}

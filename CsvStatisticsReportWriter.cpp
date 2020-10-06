@@ -9,24 +9,18 @@
 // ^^x
 // EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset )
+EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset, std::filesystem::path& oOutputReportPath )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	const std::filesystem::path oFilePathString = PrepareOutputFilePath( oCommandLineArgumentDataset.oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString );
-	std::ofstream oFileStream{ oFilePathString.string(), std::fstream::out };
+	oOutputReportPath = PrepareOutputReportPath( oCommandLineArgumentDataset.oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString );
+	
+	std::ofstream oFileStream{ oOutputReportPath.string(), std::fstream::out };
+	char cDataSeparator{};
 
 	if ( oFileStream.is_open() )
 	{
-		char cDataSeparator{ ';' };
-
-		if ( oCommandLineArgumentDataset.oReportDataSeparatorString.has_value() )
-		{
-			if ( oCommandLineArgumentDataset.oReportDataSeparatorString->size() == 1u )
-			{
-				cDataSeparator = ( *oCommandLineArgumentDataset.oReportDataSeparatorString )[0u];
-			}
-		}
+		eStatus = AssignDataSeparator( oCommandLineArgumentDataset, cDataSeparator );
 
 		WriteStatisticsHeaders( oFileStream, oAnalyzerModuleVector, cDataSeparator );
 		WriteStatisticsValues( oFileStream, oAnalyzerModuleVector, cDataSeparator );
@@ -34,6 +28,32 @@ EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CCodeAnalyze
 	else
 	{
 		eStatus = EProgramStatusCodes::eOpenOutputFileError;
+
+		oOutputReportPath.clear();
+	}
+
+	return eStatus;
+}
+
+// ^^x
+// EProgramStatusCodes CCsvStatisticsReportWriter::AssignDataSeparator
+// 3BGO JIRA-238 24-09-2020
+EProgramStatusCodes CCsvStatisticsReportWriter::AssignDataSeparator( const SCommandLineArgumentDataset& oCommandLineArgumentDataset, char& cDataSeparator ) const
+{
+	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
+
+	cDataSeparator = ';';
+
+	if ( oCommandLineArgumentDataset.oReportDataSeparatorString.has_value() )
+	{
+		if ( oCommandLineArgumentDataset.oReportDataSeparatorString->size() == 1u )
+		{
+			cDataSeparator = ( *oCommandLineArgumentDataset.oReportDataSeparatorString )[0u];
+		}
+		else
+		{
+			eStatus = EProgramStatusCodes::eIncorrectDataSeparatorArgument;
+		}
 	}
 
 	return eStatus;
@@ -88,14 +108,14 @@ void CCsvStatisticsReportWriter::WriteStatisticsValues( std::ofstream& oFileStre
 }
 
 // ^^x
-// std::filesystem::path CCsvStatisticsReportWriter::PrepareOutputFilePath
+// std::filesystem::path CCsvStatisticsReportWriter::PrepareOutputReportPath
 // 3BGO JIRA-238 24-09-2020
-std::filesystem::path CCsvStatisticsReportWriter::PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const
+std::filesystem::path CCsvStatisticsReportWriter::PrepareOutputReportPath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const
 {
 	const std::string oCurrentDateString = CDateTimeHelper::CurrentDate();
 	const std::string oCurrentTimeString = CStringHelper::Replace( CDateTimeHelper::CurrentTime(), ':', '-' );
 
-	std::string oFilenameString{ "CodeAnalyzerRaport--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" };
+	std::string oFilenameString{ "CodeAnalyzerReport--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" };
 
 	if ( oReportPrefixNameString.has_value() )
 	{
