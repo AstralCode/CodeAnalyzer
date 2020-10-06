@@ -55,7 +55,7 @@ std::string CStringHelper::ToLowerCase( const std::string& oInputString )
 {
 	std::string oResultString{ oInputString };
 
-	std::transform( oInputString.cbegin(), oInputString.cend(), oResultString.begin(), ::tolower );
+	std::transform( oInputString.cbegin(), oInputString.cend(), oResultString.begin(), std::tolower );
 
 	return oResultString;
 }
