@@ -4,7 +4,8 @@ enum class EProgramStatusCodes
 {
 	eSuccess,
 	eIncorrectArgumentCount,
-	eIncorrectArgument,
+	eInputDirectoryNotExists,
+	eOutputDirectoryNotExists,
 	eOpenInputFileError,
 	eOpenOutputFileError,
 	eProcessHeaderCodeFileError,

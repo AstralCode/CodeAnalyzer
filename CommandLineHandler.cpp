@@ -25,14 +25,14 @@ EProgramStatusCodes CCommandLineHandler::HandleArguments( std::filesystem::path&
 
 	if ( !std::filesystem::exists( oInputDirectoryPath ) )
 	{
-		return EProgramStatusCodes::eIncorrectArgument;
+		return EProgramStatusCodes::eInputDirectoryNotExists;
 	}
 
 	oOutputDirectoryPath = m_oArgumentVector[1u];
 
 	if ( !std::filesystem::exists( oOutputDirectoryPath ) )
 	{
-		return EProgramStatusCodes::eIncorrectArgument;
+		return EProgramStatusCodes::eOutputDirectoryNotExists;
 	}
 
     return EProgramStatusCodes::eSuccess;
