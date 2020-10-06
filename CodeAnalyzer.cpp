@@ -24,22 +24,18 @@ CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetModules() c
 // ^^x
 // EProgramStatusCodes CCodeAnalyzer::Execute
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath )
+EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& oCommandLineArgumentDataset )
 {
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
     CConsoleInterface::Print( "  Calculating the number of files. Please wait..." );
-    const unsigned int uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
+    const unsigned int uiProcessCodeFileCount = CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath );
     CConsoleInterface::Print( "\r" );
-/*
-    CConsoleInterface::Print( "  Calculating the size of files. Please wait..." );
-    const std::uintmax_t uiProcessCodeFilesSize = CountSizeCodeFiles( oInputDirectoryPath );
-    CConsoleInterface::Print( "\r" );
-*/
+
     std::string oFileContentString{};
     unsigned int uiProcessCodeFileNumber{ 0u };
 
-    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
+    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oCommandLineArgumentDataset.oInputDirectoryPath };
     
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
@@ -61,7 +57,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 
                 if ( oFileType == CCodeFile::EType::eSource )
                 {
-                    oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oCodeFile.GetCode() ) );
+                    oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oCodeFile.GetCode(), oCommandLineArgumentDataset.oDeveloperString ) );
                 }
 
                 for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
@@ -185,6 +181,9 @@ void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsign
     CConsoleInterface::Flush();
 }
 
+// ^^x
+// bool CCodeAnalyzer::IsCodeFile
+// 3BGO JIRA-238 06-10-2020
 bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath ) const
 {
     return AnalyzeFileType( oFilePath ) != CCodeFile::EType::eUnknown;

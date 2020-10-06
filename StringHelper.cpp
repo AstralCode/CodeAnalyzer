@@ -32,6 +32,35 @@ std::string CStringHelper::Replace( const std::string& oInputString, const char 
 }
 
 // ^^x
+// std::string CStringHelper::Replace
+// 3BGO JIRA-238 02-10-2020
+std::string CStringHelper::Replace( const std::string& oInputString, const std::string& oOldString, const std::string& oNewString )
+{
+	std::string oResultString{ oInputString };
+
+	const std::size_t uiOldStringPos = oResultString.find( oOldString );
+
+	if ( uiOldStringPos != std::string::npos )
+	{
+		oResultString.replace( uiOldStringPos, oOldString.length(), oNewString );
+	}
+
+	return oResultString;
+}
+
+// ^^x
+// std::string CStringHelper::ToLowerCase
+// 3BGO JIRA-238 06-10-2020
+std::string CStringHelper::ToLowerCase( const std::string& oInputString )
+{
+	std::string oResultString{ oInputString };
+
+	std::transform( oInputString.cbegin(), oInputString.cend(), oResultString.begin(), ::tolower );
+
+	return oResultString;
+}
+
+// ^^x
 // std::vector<std::string> CStringHelper::SplitLines
 // 3BGO JIRA-238 02-10-2020
 std::vector<std::string> CStringHelper::SplitLines( const std::string& oInputString )

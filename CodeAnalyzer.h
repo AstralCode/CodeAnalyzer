@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "ProgramStatusCodes.h"
+#include "CommandLineArgumentDataset.h"
 #include "StatisticsAnalyzerModule.h"
 #include "CodeParser.h"
 
@@ -25,7 +26,7 @@ public:
 
 	ConstStatisticsAnalyzerModuleVector GetModules() const;
 
-	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath );
+	EProgramStatusCodes Execute( const SCommandLineArgumentDataset& oCommandLineArgumentDataset );
 
 private:
 	static CCodeFile::EType AnalyzeFileType( const std::filesystem::path& oFilePath );

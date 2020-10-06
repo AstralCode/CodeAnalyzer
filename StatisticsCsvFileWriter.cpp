@@ -4,6 +4,7 @@
 
 #include "ProgramStatusCodes.h"
 #include "DateTimeHelper.h"
+#include "StringHelper.h"
 
 // ^^x
 // EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile
@@ -82,9 +83,7 @@ void CStatisticsCsvFileWriter::WriteStatisticsValues( std::ofstream& oFileStream
 std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath ) const
 {
 	const std::string oCurrentDateString = CDateTimeHelper::CurrentDate();
-
-	std::string oCurrentTimeString = CDateTimeHelper::CurrentTime();
-	std::replace( oCurrentTimeString.begin(), oCurrentTimeString.end(), ':', '-' );
+	const std::string oCurrentTimeString = CStringHelper::Replace( CDateTimeHelper::CurrentTime(), ':', '-' );
 
 	return { oOutputDirectoryPath / ( "CodeAnalyzerStat--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" ) };
 };

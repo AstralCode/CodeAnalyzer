@@ -13,14 +13,13 @@
 // 3BGO JIRA-239 30-09-2020
 int main( int iArgumentCount, char* apcArguments[] )
 {
-	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
 	CCodeAnalyzer oCodeAnalyzer{};
 	CStatisticsCsvFileWriter oStatisticsFileWriter{};
 
-	std::filesystem::path oInputDirectoryPath{};
-	std::filesystem::path oOutputDirectoryPath{};
+	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
 
-	EProgramStatusCodes eStatus = oCommandLineHandler.HandleArguments( oInputDirectoryPath, oOutputDirectoryPath );
+	SCommandLineArgumentDataset oCommandLineArgumentDataset{};
+	EProgramStatusCodes eStatus = oCommandLineHandler.HandleArguments( oCommandLineArgumentDataset );
 
 	if ( eStatus != EProgramStatusCodes::eSuccess )
 	{
@@ -28,7 +27,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 	}
 	else
 	{
-		CConsoleInterface::PrintLine( "Output report directory: \"" + oOutputDirectoryPath.string() + "\"" );
+		CConsoleInterface::PrintLine( "Output report directory: \"" + oCommandLineArgumentDataset.oOutputDirectoryPath.string() + "\"" );
 
 		oCodeAnalyzer.AddModule<CCodeFileLineCountModule>();
 		oCodeAnalyzer.AddModule<CMemberFunctionCountModule>();
@@ -37,14 +36,14 @@ int main( int iArgumentCount, char* apcArguments[] )
 		CConsoleInterface::NewLine();
 		CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Code analysis in progress..." );
 
-		eStatus = oCodeAnalyzer.Execute( oInputDirectoryPath );
+		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset );
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
 			CConsoleInterface::ClearLine();
 			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Analysis Complete!" );
 
-			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oOutputDirectoryPath );
+			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetModules(), oCommandLineArgumentDataset.oOutputDirectoryPath );
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{
