@@ -1,7 +1,7 @@
 #include "ConsoleInterface.h"
 #include "CommandLineHandler.h"
 #include "CodeAnalyzer.h"
-#include "StatisticsCsvFileWriter.h"
+#include "CsvStatisticsReportWriter.h"
 #include "CodeFileLineCountModule.h"
 #include "MemberFunctionCountModule.h"
 #include "MemberFunctionCodeLineRangeModule.h"
@@ -14,7 +14,7 @@
 int main( int iArgumentCount, char* apcArguments[] )
 {
 	CCodeAnalyzer oCodeAnalyzer{};
-	CStatisticsCsvFileWriter oStatisticsFileWriter{};
+	CCsvStatisticsReportWriter oStatisticsReportWriter{};
 
 	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
 
@@ -43,7 +43,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 			CConsoleInterface::ClearLine();
 			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Analysis Complete!" );
 
-			eStatus = oStatisticsFileWriter.WriteFile( oCodeAnalyzer.GetAnalyzerModules(), oCommandLineArgumentDataset );
+			eStatus = oStatisticsReportWriter.CreateReport( oCodeAnalyzer.GetAnalyzerModules(), oCommandLineArgumentDataset );
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{

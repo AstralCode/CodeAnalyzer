@@ -4,13 +4,13 @@
 
 #include "CodeAnalyzer.h"
 
-class CStatisticsCsvFileWriter
+class CCsvStatisticsReportWriter
 {
 public:
-	EProgramStatusCodes WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset );
+	EProgramStatusCodes CreateReport( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset );
 
-	CStatisticsCsvFileWriter( const CStatisticsCsvFileWriter& ) = delete;
-	CStatisticsCsvFileWriter& operator=( const CStatisticsCsvFileWriter& ) = delete;
+	CCsvStatisticsReportWriter( const CCsvStatisticsReportWriter& ) = delete;
+	CCsvStatisticsReportWriter& operator=( const CCsvStatisticsReportWriter& ) = delete;
 
 private:
 	void WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const;

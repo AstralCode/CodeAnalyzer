@@ -1,4 +1,4 @@
-#include "StatisticsCsvFileWriter.h"
+#include "CsvStatisticsReportWriter.h"
 
 #include <fstream>
 
@@ -7,9 +7,9 @@
 #include "StringHelper.h"
 
 // ^^x
-// EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile
+// EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset )
+EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
@@ -40,9 +40,9 @@ EProgramStatusCodes CStatisticsCsvFileWriter::WriteFile( const CCodeAnalyzer::Co
 }
 
 // ^^x
-// void CStatisticsCsvFileWriter::WriteStatisticsHeaders
+// void CCsvStatisticsReportWriter::WriteStatisticsHeaders
 // 3BGO JIRA-238 24-09-2020
-void CStatisticsCsvFileWriter::WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const
+void CCsvStatisticsReportWriter::WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const
 {
 	for ( unsigned int uiModuleIndex{ 0u }; uiModuleIndex < oAnalyzerModuleVector.size(); ++uiModuleIndex )
 	{
@@ -64,9 +64,9 @@ void CStatisticsCsvFileWriter::WriteStatisticsHeaders( std::ofstream& oFileStrea
 }
 
 // ^^x
-// void CStatisticsCsvFileWriter::WriteStatisticsValues
+// void CCsvStatisticsReportWriter::WriteStatisticsValues
 // 3BGO JIRA-238 24-09-2020
-void CStatisticsCsvFileWriter::WriteStatisticsValues( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const
+void CCsvStatisticsReportWriter::WriteStatisticsValues( std::ofstream& oFileStream, const CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const
 {
 	for ( unsigned int uiModuleIndex{ 0u }; uiModuleIndex < oAnalyzerModuleVector.size(); ++uiModuleIndex )
 	{
@@ -88,14 +88,14 @@ void CStatisticsCsvFileWriter::WriteStatisticsValues( std::ofstream& oFileStream
 }
 
 // ^^x
-// std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath
+// std::filesystem::path CCsvStatisticsReportWriter::PrepareOutputFilePath
 // 3BGO JIRA-238 24-09-2020
-std::filesystem::path CStatisticsCsvFileWriter::PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const
+std::filesystem::path CCsvStatisticsReportWriter::PrepareOutputFilePath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const
 {
 	const std::string oCurrentDateString = CDateTimeHelper::CurrentDate();
 	const std::string oCurrentTimeString = CStringHelper::Replace( CDateTimeHelper::CurrentTime(), ':', '-' );
 
-	std::string oFilenameString{ "CodeAnalyzerStat--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" };
+	std::string oFilenameString{ "CodeAnalyzerRaport--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" };
 
 	if ( oReportPrefixNameString.has_value() )
 	{
