@@ -12,9 +12,7 @@ class CMemberFunctionCountModule final : public CStatisticsAnalyzerModule
 public:
 	CMemberFunctionCountModule( CCodeParser& oCodeParser );
 
-	void PreProcessCodeFile( const CCodeFile& oCodeFile ) override;
 	void ProcessCodeFile( const CCodeFile& oCodeFile ) override;
-	void PostProcessCodeFile( const CCodeFile& oCodeFile ) override;
 
 	std::string GetModuleName() const override;
 };

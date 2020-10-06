@@ -10,14 +10,6 @@ CMemberFunctionCountModule::CMemberFunctionCountModule( CCodeParser& oCodeParser
 }
 
 // ^^x
-// void CMemberFunctionCountModule::PreProcessCodeFile
-// 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::PreProcessCodeFile( const CCodeFile& )
-{
-
-}
-
-// ^^x
 // void CMemberFunctionCountModule::ProcessCodeFile
 // 3BGO JIRA-239 01-10-2020
 void CMemberFunctionCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
@@ -26,14 +18,6 @@ void CMemberFunctionCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
     {
         GetStatistics( 0u ).uiValue += oCodeFile.GetMemberFunctionDataset().size();
     }
-}
-
-// ^^x
-// void CMemberFunctionCountModule::PostProcessCodeFile
-// 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::PostProcessCodeFile( const CCodeFile& )
-{
-
 }
 
 // ^^x

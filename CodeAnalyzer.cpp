@@ -60,10 +60,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
                     oCodeFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oCodeFile.GetCode(), oCommandLineArgumentDataset.oDeveloperString ) );
                 }
 
-                for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
-                {
-                    ProcessCodeFile( *upoStatisticsAnalyzerModule, oCodeFile );
-                }
+                ProcessCodeFile( oCodeFile );
             }
         }
     }
@@ -95,16 +92,6 @@ CCodeFile::EType CCodeAnalyzer::AnalyzeFileType( const std::filesystem::path& oF
 }
 
 // ^^x
-// void CCodeAnalyzer::ProcessCodeFile
-// 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::ProcessCodeFile( CStatisticsAnalyzerModule& oAnalyzerModule, const CCodeFile& oCodeFile ) const
-{
-    oAnalyzerModule.PreProcessCodeFile( oCodeFile );
-    oAnalyzerModule.ProcessCodeFile( oCodeFile );
-    oAnalyzerModule.PostProcessCodeFile( oCodeFile );
-}
-
-// ^^x
 // EProgramStatusCodes CCodeAnalyzer::ReadFileContent
 // 3BGO JIRA-238 24-09-2020
 EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const
@@ -131,6 +118,17 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
 void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) const
 {
     oFileContentString = m_oCodePareser.RemoveMultilineComments( oFileContentString );
+}
+
+// ^^x
+// void CCodeAnalyzer::ProcessCodeFile
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzer::ProcessCodeFile( const CCodeFile& oCodeFile )
+{
+    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoStatisticsAnalyzerModule : m_oStatisticsAnalyzerModuleVector )
+    {
+        upoStatisticsAnalyzerModule->ProcessCodeFile( oCodeFile );
+    }
 }
 
 // ^^x

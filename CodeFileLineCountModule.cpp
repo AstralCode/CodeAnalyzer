@@ -10,14 +10,6 @@ CCodeFileLineCountModule::CCodeFileLineCountModule( CCodeParser& oCodeParser ) :
 }
 
 // ^^x
-// void CCodeFileLineCountModule::PreProcessCodeFile
-// 3BGO JIRA-238 24-09-2020
-void CCodeFileLineCountModule::PreProcessCodeFile( const CCodeFile& )
-{
-
-}
-
-// ^^x
 // void CCodeFileLineCountModule::ProcessCodeFile
 // 3BGO JIRA-238 24-09-2020
 void CCodeFileLineCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
@@ -26,14 +18,6 @@ void CCodeFileLineCountModule::ProcessCodeFile( const CCodeFile& oCodeFile )
     {
         GetStatistics( 0u ).uiValue += oCodeFile.GetCodeLineCount();
     }
-}
-
-// ^^x
-// void CCodeFileLineCountModule::PostProcessCodeFile
-// 3BGO JIRA-238 24-09-2020
-void CCodeFileLineCountModule::PostProcessCodeFile( const CCodeFile& )
-{
-
 }
 
 // ^^x

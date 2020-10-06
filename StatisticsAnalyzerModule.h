@@ -19,9 +19,7 @@ public:
 	CStatisticsAnalyzerModule( const CStatisticsAnalyzerModule& ) = delete;
 	CStatisticsAnalyzerModule& operator=( const CStatisticsAnalyzerModule& ) = delete;
 
-	virtual void PreProcessCodeFile( const CCodeFile& oCodeFile ) = 0;
 	virtual void ProcessCodeFile( const CCodeFile& oCodeFile ) = 0;
-	virtual void PostProcessCodeFile( const CCodeFile& oCodeFile ) = 0;
 
 	virtual std::string GetModuleName() const = 0;
 

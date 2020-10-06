@@ -19,9 +19,7 @@ class CMemberFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModul
 public:
 	CMemberFunctionCodeLineRangeModule( CCodeParser& oCodeParser );
 
-	void PreProcessCodeFile( const CCodeFile& oCodeFile ) override;
 	void ProcessCodeFile( const CCodeFile& oCodeFile ) override;
-	void PostProcessCodeFile( const CCodeFile& oCodeFile ) override;
 
 	std::string GetModuleName() const override;
 

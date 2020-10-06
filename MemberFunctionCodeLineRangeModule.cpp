@@ -17,14 +17,6 @@ CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule( CCodePar
 }
 
 // ^^x
-// void CMemberFunctionCodeLineRangeModule::PreProcessCodeFile
-// 3BGO JIRA-239 30-09-2020
-void CMemberFunctionCodeLineRangeModule::PreProcessCodeFile( const CCodeFile& )
-{
-
-}
-
-// ^^x
 // void CMemberFunctionCodeLineRangeModule::ProcessCodeFile
 // 3BGO JIRA-239 30-09-2020
 void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCodeFile )
@@ -68,14 +60,6 @@ void CMemberFunctionCodeLineRangeModule::ProcessCodeFile( const CCodeFile& oCode
             }
         }
     }
-}
-
-// ^^x
-// void CMemberFunctionCodeLineRangeModule::PostProcessCodeFile
-// 3BGO JIRA-239 30-09-2020
-void CMemberFunctionCodeLineRangeModule::PostProcessCodeFile( const CCodeFile& )
-{
-
 }
 
 // ^^x
