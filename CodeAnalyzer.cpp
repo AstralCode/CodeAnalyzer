@@ -201,7 +201,7 @@ void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsign
     const std::string oProcessCodeFileNumber = std::to_string( uiFileNumber );
     const std::string oProcessCodeFileCount = std::to_string( uiFileCount );
 
-    CConsoleInterface::Print( "  Processing " + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + " file | " + oProgressBarString + " " + std::to_string( uiCurrentProgressPos ) + "%\r" );
+    CConsoleInterface::Print( "  Processing " + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + " file " + oProgressBarString + " " + std::to_string( uiCurrentProgressPos ) + "%\r" );
     CConsoleInterface::Flush();
 }
 

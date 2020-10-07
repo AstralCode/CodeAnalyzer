@@ -46,7 +46,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{
-				CConsoleInterface::PrintLine( "Report created at: \"" + oOutputReportPath.string() + "\"" );
+				CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Report created at: \"" + oOutputReportPath.string() + "\"" );
 			}
 		}
 	}
