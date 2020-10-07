@@ -35,7 +35,7 @@ void CMemberFunctionCodeLineRangeModule::ProcessSourceFile( const CSourceFile& o
     {
         unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( oFunctionDataset.oBodyString ).size();
 
-        if ( uiFunctionCodeLineCount > 2u )
+        if ( uiFunctionCodeLineCount >= 2u )
         {
             uiFunctionCodeLineCount -= 2u;
 
