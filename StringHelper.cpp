@@ -67,7 +67,7 @@ std::vector<std::string> CStringHelper::SplitLines( const std::string_view& oInp
 {
 	std::vector<std::string> oLineVector{};
 
-	std::istringstream oStringStream{ oInputString };
+	std::istringstream oStringStream{ oInputString.data() };
 	std::string oLineString{};
 
 	while ( std::getline( oStringStream, oLineString ) )

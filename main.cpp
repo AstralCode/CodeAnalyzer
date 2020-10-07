@@ -32,7 +32,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
 			CConsoleInterface::ClearLine();
-			CConsoleInterface::PrintLine( "Analysis complete!", true );
+			CConsoleInterface::PrintLine( "Analysis complete!", true, CConsoleInterface::EForegroundColor::eGreen );
 
 			std::filesystem::path oOutputReportPath{};
 
