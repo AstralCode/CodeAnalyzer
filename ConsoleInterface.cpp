@@ -1,7 +1,6 @@
 #include "ConsoleInterface.h"
 
 #include <iostream>
-#include <iomanip>
 
 #include "DateTimeHelper.h"
 
@@ -23,7 +22,7 @@ void CConsoleInterface::PrintLine( std::string_view oMessageString, const bool b
 		std::cout << "\033[" << static_cast<int>( eForegroundColor ) << "m" << "<" + CDateTimeHelper::CurrentTime() + "> ";
 	}
 
-	std::cout << oMessageString << '\n';
+	std::cout << "\033[" << oMessageString << '\n';
 }
 
 // ^^x
