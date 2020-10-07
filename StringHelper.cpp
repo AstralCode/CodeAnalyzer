@@ -7,7 +7,7 @@
 // ^^x
 // std::string CStringHelper::SimplifyString
 // 3BGO JIRA-238 30-09-2020
-std::string CStringHelper::SimplifyString( const std::string& oInputString )
+std::string CStringHelper::SimplifyString( const std::string_view& oInputString )
 {
 	std::string oResultString{};
 
@@ -22,7 +22,7 @@ std::string CStringHelper::SimplifyString( const std::string& oInputString )
 // ^^x
 // std::string CStringHelper::Replace
 // 3BGO JIRA-238 02-10-2020
-std::string CStringHelper::Replace( const std::string& oInputString, const char cOld, const char cNew )
+std::string CStringHelper::Replace( const std::string_view& oInputString, const char cOld, const char cNew )
 {
 	std::string oResultString{ oInputString };
 
@@ -34,7 +34,7 @@ std::string CStringHelper::Replace( const std::string& oInputString, const char 
 // ^^x
 // std::string CStringHelper::Replace
 // 3BGO JIRA-238 02-10-2020
-std::string CStringHelper::Replace( const std::string& oInputString, const std::string& oOldString, const std::string& oNewString )
+std::string CStringHelper::Replace( const std::string_view& oInputString, const std::string_view& oOldString, const std::string_view& oNewString )
 {
 	std::string oResultString{ oInputString };
 
@@ -51,7 +51,7 @@ std::string CStringHelper::Replace( const std::string& oInputString, const std::
 // ^^x
 // std::string CStringHelper::ToLowerCase
 // 3BGO JIRA-238 06-10-2020
-std::string CStringHelper::ToLowerCase( const std::string& oInputString )
+std::string CStringHelper::ToLowerCase( const std::string_view& oInputString )
 {
 	std::string oResultString{ oInputString };
 
@@ -63,7 +63,7 @@ std::string CStringHelper::ToLowerCase( const std::string& oInputString )
 // ^^x
 // std::vector<std::string> CStringHelper::SplitLines
 // 3BGO JIRA-238 02-10-2020
-std::vector<std::string> CStringHelper::SplitLines( const std::string& oInputString )
+std::vector<std::string> CStringHelper::SplitLines( const std::string_view& oInputString )
 {
 	std::vector<std::string> oLineVector{};
 

@@ -5,7 +5,6 @@
 #include "CodeFileLineCountModule.h"
 #include "MemberFunctionCountModule.h"
 #include "MemberFunctionCodeLineRangeModule.h"
-#include "DateTimeHelper.h"
 
 // ^^x
 // int main
@@ -13,32 +12,27 @@
 // 3BGO JIRA-239 30-09-2020
 int main( int iArgumentCount, char* apcArguments[] )
 {
+	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
 	CCodeAnalyzer oCodeAnalyzer{};
 	CCsvStatisticsReportWriter oStatisticsReportWriter{};
-
-	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
 
 	SCommandLineArgumentDataset oCommandLineArgumentDataset{};
 	EProgramStatusCodes eStatus = oCommandLineHandler.HandleArguments( oCommandLineArgumentDataset );
 
-	if ( eStatus != EProgramStatusCodes::eSuccess )
-	{
-		CConsoleInterface::PrintLine( oCommandLineHandler.GetUsageMessage() );
-	}
-	else
+	if ( eStatus == EProgramStatusCodes::eSuccess )
 	{
 		oCodeAnalyzer.AddAnalyzerModule<CCodeFileLineCountModule>();
 		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCountModule>();
 		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCodeLineRangeModule>();
 
-		CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Code analysis in progress..." );
+		CConsoleInterface::PrintLine( "Code analysis in progress...", true );
 
 		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset );
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
 			CConsoleInterface::ClearLine();
-			CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Analysis complete!" );
+			CConsoleInterface::PrintLine( "Analysis complete!", true );
 
 			std::filesystem::path oOutputReportPath{};
 
@@ -46,9 +40,13 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{
-				CConsoleInterface::PrintLine( "[" + CDateTimeHelper::CurrentTime() + "]: Report created at: \"" + oOutputReportPath.string() + "\"" );
+				CConsoleInterface::PrintLine( "Report created at: \"" + oOutputReportPath.string() + "\"", true );
 			}
 		}
+	}
+	else
+	{
+		CConsoleInterface::PrintLine( oCommandLineHandler.GetUsageMessage() );
 	}
 
 	return static_cast<int>( eStatus );

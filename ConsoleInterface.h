@@ -1,61 +1,37 @@
 #pragma once
 
 #include <string>
-#include <iostream>
 
 class CConsoleInterface final
 {
 public:
-	template <typename T>
-	static void Print( T&& oOutputT );
-	template <typename T>
-	static void PrintLine( T&& oOutputT );
+	enum class EForegroundColor
+	{
+		eBlack = 30,
+		eRed = 31,
+		eGreen = 32,
+		eYellow = 33,
+		eBlue = 34,
+		eMagenta = 35,
+		eCyan = 36,
+		eWhite = 37
+	};
+
+	enum class EBackgroundColor
+	{
+		eBlack = 40,
+		eRed = 41,
+		eGreen = 42,
+		eYellow = 43,
+		eBlue = 44,
+		eMagenta = 45,
+		eCyan = 46,
+		eWhite = 47,
+	};
+
+	static void Print( const std::string& oMessageString, const EForegroundColor eForegroundColor = EForegroundColor::eWhite );
+	static void PrintLine( const std::string& oMessageString, const bool bPrintTime = false, const EForegroundColor eForegroundColor = EForegroundColor::eWhite );
 
 	static void NewLine();
 	static void ClearLine();
-
-	static void Flush();
 };
-
-// ^^x
-// void CConsoleInterface::Print
-// 3BGO JIRA-238 01-10-2020
-template <typename T>
-inline void CConsoleInterface::Print( T&& oOutputT )
-{
-	std::cout << std::forward<T>( oOutputT );
-}
-
-// ^^x
-// void CConsoleInterface::ProcessHeaderFile
-// 3BGO JIRA-238 01-10-2020
-template <typename T>
-inline void CConsoleInterface::PrintLine( T&& oOutputT )
-{
-	Print( std::forward<T>( oOutputT ) );
-	Print( '\n' );
-}
-
-// ^^x
-// void CConsoleInterface::NewLine
-// 3BGO JIRA-238 01-10-2020
-inline void CConsoleInterface::NewLine()
-{
-	Print( '\n' );
-}
-
-// ^^x
-// void CConsoleInterface::ClearLine
-// 3BGO JIRA-238 01-10-2020
-inline void CConsoleInterface::ClearLine()
-{
-	printf( "\r                                                                                                                \r" );
-}
-
-// ^^x
-// void CConsoleInterface::Flush
-// 3BGO JIRA-238 01-10-2020
-inline void CConsoleInterface::Flush()
-{
-	std::cout << std::flush;
-}
