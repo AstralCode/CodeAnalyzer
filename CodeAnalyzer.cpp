@@ -90,16 +90,19 @@ ECodeFileType CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePa
 {
     ECodeFileType eType{ ECodeFileType::eUnknown };
 
-    if ( std::filesystem::is_regular_file( oFilePath ) && oFilePath.has_extension() )
+    if ( std::filesystem::is_regular_file( oFilePath ) )
     {
-        if ( oFilePath.extension() == ".h" )
+        if ( oFilePath.has_extension() )
         {
-            eType = ECodeFileType::eHeader;
-        }
+            if ( oFilePath.extension() == ".h" )
+            {
+                eType = ECodeFileType::eHeader;
+            }
 
-        if ( oFilePath.extension() == ".cpp" )
-        {
-            eType = ECodeFileType::eSource;
+            if ( oFilePath.extension() == ".cpp" )
+            {
+                eType = ECodeFileType::eSource;
+            }
         }
     }
 
