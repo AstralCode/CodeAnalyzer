@@ -23,7 +23,7 @@ public:
 	std::vector<SStatisticsResult> GetStatisticsResults() const;
 
 protected:
-	void CreateStatistics( const std::string& oHeaderString );
+	void CreateStatistics( std::string_view oHeaderString );
 	SStatisticsResult& GetStatistics( const unsigned int uiIndex );
 
 private:

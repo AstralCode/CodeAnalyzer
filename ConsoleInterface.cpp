@@ -8,7 +8,7 @@
 // ^^x
 // void CConsoleInterface::Print
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::Print( const std::string& oMessageString, const EForegroundColor eForegroundColor )
+void CConsoleInterface::Print( std::string_view oMessageString, const EForegroundColor eForegroundColor )
 {
 	std::cout << "\033[" << static_cast<int>( eForegroundColor ) << "m" << oMessageString;
 }
@@ -16,7 +16,7 @@ void CConsoleInterface::Print( const std::string& oMessageString, const EForegro
 // ^^x
 // void CConsoleInterface::PrintLine
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::PrintLine( const std::string& oMessageString, const bool bPrintTime, const EForegroundColor eForegroundColor )
+void CConsoleInterface::PrintLine( std::string_view oMessageString, const bool bPrintTime, const EForegroundColor eForegroundColor )
 {
 	if ( bPrintTime )
 	{

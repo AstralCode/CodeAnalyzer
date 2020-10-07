@@ -12,21 +12,21 @@ public:
 	CCodeParser( const CCodeParser& ) = delete;
 	CCodeParser& operator=( const CCodeParser& ) = delete;
 
-	unsigned int CountLines( const std::string& oCodeString ) const;
+	unsigned int CountLines( std::string_view oCodeString ) const;
 
-	std::vector<SMemberFunctionDataset> FindMemberFunctionHeaders( const std::string& oCodeString ) const;
-	std::vector<SMemberFunctionDataset> FindMemberFunctions( const std::string& oCodeString ) const;
+	std::vector<SMemberFunctionDataset> FindMemberFunctionHeaders( std::string_view oCodeString ) const;
+	std::vector<SMemberFunctionDataset> FindMemberFunctions( std::string_view oCodeString ) const;
 
-	std::string RemoveSingleLineComments( const std::string& oCodeString ) const;
-	std::string RemoveMultilineComments( const std::string& oCodeString ) const;
+	std::string RemoveSingleLineComments( std::string_view oCodeString ) const;
+	std::string RemoveMultilineComments( std::string_view oCodeString ) const;
 
 private:
 	std::string PrepareFindMemberFunctionRegexString() const;
 
-	std::size_t FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionHeaderString, const std::size_t uiCurrentSearchOffsetPos ) const;
-	std::size_t FindFunctionBracketClosePosition( const std::string& oCodeString, std::size_t uiCurrentSearchOffsetPos ) const;
+	std::size_t FindFunctionBracketOpenPosition( std::string_view oCodeString, std::string_view oFunctionHeaderString, const std::size_t uiCurrentSearchOffsetPos ) const;
+	std::size_t FindFunctionBracketClosePosition( std::string_view oCodeString, std::size_t uiCurrentSearchOffsetPos ) const;
 
-	std::string RetrieveBodyFunction( const std::string& oCodeString, const std::size_t uiFunctionBracketOpenPos, const std::size_t uiFunctionBracketClosePos ) const;
+	std::string_view RetrieveBodyFunction( std::string_view oCodeString, const std::size_t uiFunctionBracketOpenPos, const std::size_t uiFunctionBracketClosePos ) const;
 
-	std::string SimplifyCode( const std::string& oCodeString ) const;
+	std::string SimplifyCode( std::string_view oCodeString ) const;
 };

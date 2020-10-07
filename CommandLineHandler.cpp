@@ -99,7 +99,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 		
 		if ( std::regex_match( oInputString, oMatchRegex, std::regex{ R"(\-\-(\w+(?:\-\w+)*)\s+(.+))" } ) )
 		{
-			HandleOptionalArgument( oArgumentDataset, oMatchRegex[1u], oMatchRegex[2u] );
+			HandleOptionalArgument( oArgumentDataset, oMatchRegex[1u].str(), oMatchRegex[2u].str() );
 		}
 	}
 
@@ -109,7 +109,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 // ^^x
 // EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument
 // 3BGO JIRA-238 06-10-2020
-EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArgumentDataset& oArgumentDataset, const std::string& oOptionString, const std::string& oArgumentString ) const
+EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArgumentDataset& oArgumentDataset, std::string_view oOptionString, std::string_view oArgumentString ) const
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
