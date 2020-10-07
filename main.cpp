@@ -25,22 +25,17 @@ int main( int iArgumentCount, char* apcArguments[] )
 		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCountModule>();
 		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCodeLineRangeModule>();
 
-		CConsoleInterface::PrintLine( "Code analysis in progress...", true );
-
 		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset );
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
-			CConsoleInterface::ClearLine();
-			CConsoleInterface::PrintLine( "Analysis complete!", true, CConsoleInterface::EForegroundColor::eGreen );
-
 			std::filesystem::path oOutputReportPath{};
 
 			eStatus = oStatisticsReportWriter.CreateReport( oCodeAnalyzer.GetAnalyzerModules(), oCommandLineArgumentDataset, oOutputReportPath );
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{
-				CConsoleInterface::PrintLine( "Report created at: \"" + oOutputReportPath.string() + "\"", true );
+				CConsoleInterface::PrintLineTime( "Report created at: \"" + oOutputReportPath.string() + "\"" );
 			}
 		}
 	}

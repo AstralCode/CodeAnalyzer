@@ -29,9 +29,10 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
 {
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-    CConsoleInterface::Print( "  Calculating the number of files. Please wait..." );
+    CConsoleInterface::PrintLineTime( "Code analysis in progress..." );
+    CConsoleInterface::Print( "\tCalculating the number of files. Please wait...\r" );
+   
     const unsigned int uiProcessCodeFileCount = CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath );
-    CConsoleInterface::Print( "\r" );
 
     std::string oFileContentString{};
     unsigned int uiProcessCodeFileNumber{ 0u };
@@ -71,6 +72,12 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
                 }
             }
         }
+    }
+
+    if ( eStatus == EProgramStatusCodes::eSuccess )
+    {
+        CConsoleInterface::ClearLine();
+        CConsoleInterface::PrintLineTime( "Analysis complete!", CConsoleInterface::EForegroundColor::eGreen );
     }
 
     return eStatus;
@@ -201,7 +208,7 @@ void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsign
     const std::string oProcessCodeFileNumber = std::to_string( uiFileNumber );
     const std::string oProcessCodeFileCount = std::to_string( uiFileCount );
 
-    CConsoleInterface::Print( "  Processing " + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + " file " + oProgressBarString + " " + std::to_string( uiCurrentProgressPos ) + "%\r", CConsoleInterface::EForegroundColor::eGreen );
+    CConsoleInterface::Print( "\tProcessing " + oProcessCodeFileNumber + "/" + oProcessCodeFileCount + " file " + oProgressBarString + " " + std::to_string( uiCurrentProgressPos ) + "%\r", CConsoleInterface::EForegroundColor::eGreen );
 }
 
 // ^^x

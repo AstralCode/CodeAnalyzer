@@ -30,7 +30,8 @@ public:
 	};
 
 	static void Print( std::string_view oMessageString, const EForegroundColor eForegroundColor = EForegroundColor::eWhite );
-	static void PrintLine( std::string_view oMessageString, const bool bPrintTime = false, const EForegroundColor eForegroundColor = EForegroundColor::eWhite );
+	static void PrintLine( std::string_view oMessageString, const EForegroundColor eForegroundColor = EForegroundColor::eWhite );
+	static void PrintLineTime( std::string_view oMessageString, const EForegroundColor eForegroundColor = EForegroundColor::eWhite );
 
 	static void NewLine();
 	static void ClearLine();

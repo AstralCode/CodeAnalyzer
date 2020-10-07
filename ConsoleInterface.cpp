@@ -15,14 +15,17 @@ void CConsoleInterface::Print( std::string_view oMessageString, const EForegroun
 // ^^x
 // void CConsoleInterface::PrintLine
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::PrintLine( std::string_view oMessageString, const bool bPrintTime, const EForegroundColor eForegroundColor )
+void CConsoleInterface::PrintLine( std::string_view oMessageString, const EForegroundColor eForegroundColor )
 {
-	if ( bPrintTime )
-	{
-		std::cout << "\033[" << static_cast<int>( eForegroundColor ) << "m" << "<" + CDateTimeHelper::CurrentTime() + "> ";
-	}
+	std::cout << "\033[" << static_cast<int>( eForegroundColor ) << "m" << oMessageString;
+}
 
-	std::cout << "\033[" << oMessageString << '\n';
+// ^^x
+// void CConsoleInterface::PrintLineTime
+// 3BGO JIRA-238 01-10-2020
+void CConsoleInterface::PrintLineTime( std::string_view oMessageString, const EForegroundColor eForegroundColor )
+{
+	std::cout << "\033[" << static_cast<int>( eForegroundColor ) << "m<" + CDateTimeHelper::CurrentTime() + "> " << oMessageString << '\n';
 }
 
 // ^^x
