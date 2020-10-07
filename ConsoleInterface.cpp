@@ -1,31 +1,32 @@
 #include "ConsoleInterface.h"
 
 #include <iostream>
+#include <iomanip>
 
 #include "DateTimeHelper.h"
 
 // ^^x
 // void CConsoleInterface::Print
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::Print( std::string_view oMessageString, const EForegroundColor eForegroundColor )
+void CConsoleInterface::Print( std::string_view oMessageString )
 {
-	std::cout << "\033[" << static_cast<int>( eForegroundColor ) << "m" << oMessageString;
+	std::cout << oMessageString;
 }
 
 // ^^x
 // void CConsoleInterface::PrintLine
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::PrintLine( std::string_view oMessageString, const EForegroundColor eForegroundColor )
+void CConsoleInterface::PrintLine( std::string_view oMessageString )
 {
-	std::cout << "\033[" << static_cast<int>( eForegroundColor ) << "m" << oMessageString;
+	std::cout << oMessageString << '\n';
 }
 
 // ^^x
 // void CConsoleInterface::PrintLineTime
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::PrintLineTime( std::string_view oMessageString, const EForegroundColor eForegroundColor )
+void CConsoleInterface::PrintLineTime( std::string_view oMessageString )
 {
-	std::cout << "\033[" << static_cast<int>( eForegroundColor ) << "m<" + CDateTimeHelper::CurrentTime() + "> " << oMessageString << '\n';
+	std::cout << "<" + CDateTimeHelper::CurrentTime() + "> " << oMessageString << '\n';
 }
 
 // ^^x
@@ -41,5 +42,5 @@ void CConsoleInterface::NewLine()
 // 3BGO JIRA-238 01-10-2020
 void CConsoleInterface::ClearLine()
 {
-	std::cout << "\033[2K";
+	std::cout << '\r' << std::setw( 100 ) << ' ' << '\r';
 }
