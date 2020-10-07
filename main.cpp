@@ -9,7 +9,6 @@
 // ^^x
 // int main
 // 3BGO JIRA-238 24-09-2020
-// 3BGO JIRA-239 30-09-2020
 int main( int iArgumentCount, char* apcArguments[] )
 {
 	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
