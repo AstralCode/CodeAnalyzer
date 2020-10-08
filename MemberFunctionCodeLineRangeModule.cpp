@@ -8,12 +8,12 @@
 // 3BGO JIRA-239 30-09-2020
 CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule()
 {
-    CreateStatistics( "Function Code Line Range[0-20]" );
-    CreateStatistics( "Function Code Line Range[21-50]" );
-    CreateStatistics( "Function Code Line Range[51-100]" );
-    CreateStatistics( "Function Code Line Range[101-300]" );
-    CreateStatistics( "Function Code Line Range[301-500]" );
-    CreateStatistics( "Function Code Line Range[501-more]" );
+    CreateStatistics( "Function Length QP [0-16]" );
+    CreateStatistics( "Function Length HP [17-32]" );
+    CreateStatistics( "Function Length 1P [33-62]" );
+    CreateStatistics( "Function Length 2P [63-124]" );
+    CreateStatistics( "Function Length 4P [125-248]" );
+    CreateStatistics( "Function Length 4P+ [249-more]" );
 }
 
 // ^^x
@@ -39,27 +39,27 @@ void CMemberFunctionCodeLineRangeModule::ProcessSourceFile( const CSourceFile& o
         {
             uiFunctionCodeLineCount -= 2u;
 
-            if ( IsValueContainsInRange( uiFunctionCodeLineCount, 0u, 20u ) )
+            if ( IsValueContainsInRange( uiFunctionCodeLineCount, 0u, 16u ) )
             {
                 ++GetStatistics( 0u ).uiValue;
             }
-            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 21u, 50u ) )
+            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 17u, 32u ) )
             {
                 ++GetStatistics( 1u ).uiValue;
             }
-            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 51u, 100u ) )
+            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 33u, 62u ) )
             {
                 ++GetStatistics( 2u ).uiValue;
             }
-            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 101u, 300u ) )
+            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 63u, 124u ) )
             {
                 ++GetStatistics( 3u ).uiValue;
             }
-            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 301u, 500u ) )
+            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 125u, 248u ) )
             {
                 ++GetStatistics( 4u ).uiValue;
             }
-            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 501u ) )
+            else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 249u ) )
             {
                 ++GetStatistics( 5u ).uiValue;
             }
