@@ -12,6 +12,5 @@ struct SMemberFunctionDataset
 	std::string oClassNameString;
 	std::string oNameString;
 	std::optional<std::string> oArgumentsString;
-	std::optional<std::string> oModifierString;
 	std::string oBodyString;
 };

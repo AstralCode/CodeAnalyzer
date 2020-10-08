@@ -13,15 +13,14 @@ enum EFindMemberFunctionRegexMatchGroups
 	eFunctionReturnTypeGroup,
 	eFunctionClassNameGroup,
 	eFunctionNameGroup,
-	eFunctionArgumentsGroup,
-	eFunctionModifierGroup
+	eFunctionArgumentsGroup
 };
 
 constexpr const char* FIND_MEMBER_FUNCTION_HEADER_INFORMATION_REGEX_STR =
 R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{2,3})\s+([a-zA-Z0-9\_\-\. \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?)";
 
 constexpr const char* FIND_MEMBER_FUNCTION_HEADER_REGEX_STR =
-R"(^[ \t]*([\w\d\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t \-:<>,*&\/='";\n]+)?\s*\)\s*(const)?[ \t]*$)";
+R"(^[ \t]*([\w\d\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t \-:<>,*&\/='";\n]+)?\s*\)\s*(?:const)?[ \t]*$)";
 
 constexpr const char* FIND_SINGLELINE_COMMENTS_REGEX_STR =
 R"((?:\/\/.*))";
@@ -71,11 +70,6 @@ std::vector<SMemberFunctionDataset> CCodeParser::FindMemberFunctionHeaders( std:
 		if ( oRegexMatchGroups[eFunctionArgumentsGroup].matched )
 		{
 			oDataset.oArgumentsString = SimplifyCode( oRegexMatchGroups[eFunctionArgumentsGroup].str() );
-		}
-
-		if ( oRegexMatchGroups[eFunctionModifierGroup].matched )
-		{
-			oDataset.oModifierString = SimplifyCode( oRegexMatchGroups[eFunctionModifierGroup].str() );
 		}
 
 		oDatasetVector.push_back( oDataset );
