@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iterator>
 #include <sstream>
+#include <locale>
 
 // ^^x
 // std::string CStringHelper::SimplifyString
@@ -54,8 +55,12 @@ std::string CStringHelper::Replace( std::string_view oInputString, std::string_v
 std::string CStringHelper::ToLowerCase( std::string_view oInputString )
 {
 	std::string oResultString{ oInputString };
+	std::locale oLocale{};
 
-	std::transform( oInputString.cbegin(), oInputString.cend(), oResultString.begin(), std::tolower );
+	std::transform( oInputString.cbegin(), oInputString.cend(), oResultString.begin(), [oLocale]( const unsigned char cCharacter )
+	{
+		return std::tolower( cCharacter, oLocale );
+	} );
 
 	return oResultString;
 }
