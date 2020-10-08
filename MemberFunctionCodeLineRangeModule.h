@@ -12,7 +12,8 @@
 	[1] ->  21 - 50,
 	[2] ->  51 - 100,
 	[3] -> 101 - 300,
-	[4] -> 301 - more
+	[4] -> 301 - 500,
+	[5] -> 500 - more
 */
 class CMemberFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModule
 {
