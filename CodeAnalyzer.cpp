@@ -84,6 +84,36 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
 }
 
 // ^^x
+// unsigned int CCodeAnalyzer::CountNumberCodeFiles
+// 3BGO JIRA-238 24-09-2020
+unsigned int CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath )
+{
+    return std::count_if( std::filesystem::recursive_directory_iterator{ oDirectoryPath },
+                          std::filesystem::recursive_directory_iterator{},
+                          []( const std::filesystem::path& oFilePath ) { return IsCodeFile( oFilePath ); } );
+}
+
+// ^^x
+// std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles
+// 3BGO JIRA-238 24-09-2020
+std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath )
+{
+    std::uintmax_t ullFileCodeSizes = 0u;
+
+    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oDirectoryPath };
+
+    for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
+    {
+        if ( IsCodeFile( oFilePath ) )
+        {
+            ullFileCodeSizes += std::filesystem::file_size( oFilePath );
+        }
+    }
+
+    return ullFileCodeSizes;
+}
+
+// ^^x
 // ECodeFileType CCodeAnalyzer::CheckFileType
 // 3BGO JIRA-238 24-09-2020
 ECodeFileType CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePath )
@@ -107,6 +137,14 @@ ECodeFileType CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePa
     }
 
     return eType;
+}
+
+// ^^x
+// bool CCodeAnalyzer::IsCodeFile
+// 3BGO JIRA-238 06-10-2020
+bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath )
+{
+    return CheckFileType( oFilePath ) != ECodeFileType::eUnknown;
 }
 
 // ^^x
@@ -168,36 +206,6 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
 }
 
 // ^^x
-// unsigned int CCodeAnalyzer::CountNumberCodeFiles
-// 3BGO JIRA-238 24-09-2020
-unsigned int CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const
-{
-    return std::count_if( std::filesystem::recursive_directory_iterator{ oDirectoryPath },
-                          std::filesystem::recursive_directory_iterator{},
-                          [this]( const std::filesystem::path& oFilePath ) { return IsCodeFile( oFilePath ); } );
-}
-
-// ^^x
-// std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles
-// 3BGO JIRA-238 24-09-2020
-std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath ) const
-{
-    std::uintmax_t ullFileCodeSizes = 0u;
-
-    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oDirectoryPath };
-
-    for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
-    {
-        if ( IsCodeFile( oFilePath ) )
-        {
-            ullFileCodeSizes += std::filesystem::file_size( oFilePath );
-        }
-    }
-
-    return ullFileCodeSizes;
-}
-
-// ^^x
 // void CCodeAnalyzer::PrintProgress
 // 3BGO JIRA-238 24-09-2020
 void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsigned int uiFileCount ) const
@@ -213,12 +221,4 @@ void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsign
     const std::string oCurrentProgressPosString = std::to_string( uiCurrentProgressPos );
 
     CConsoleInterface::Print( "  Processing " + oProcessCodeFileNumberString + "/" + oProcessCodeFileCountString + " file " + oProgressBarString + " " + oCurrentProgressPosString + "%\r" );
-}
-
-// ^^x
-// bool CCodeAnalyzer::IsCodeFile
-// 3BGO JIRA-238 06-10-2020
-bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath ) const
-{
-    return CheckFileType( oFilePath ) != ECodeFileType::eUnknown;
 }

@@ -29,21 +29,20 @@ public:
 
 	EProgramStatusCodes Execute( const SCommandLineArgumentDataset& oCommandLineArgumentDataset );
 
-private:
-	static ECodeFileType CheckFileType( const std::filesystem::path& oFilePath );
+	static unsigned int CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath );
+	static std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath );
 
+	static ECodeFileType CheckFileType( const std::filesystem::path& oFilePath );
+	static bool IsCodeFile( const std::filesystem::path& oFilePath );
+
+private:
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
 	void PreProcessFileContent( std::string& oFileContentString ) const;
 
 	void ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
 	void ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
 
-	unsigned int CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
-	std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
-
 	void PrintProgress( const unsigned int uiFileNumber, const unsigned int uiFileCount ) const;
-
-	bool IsCodeFile( const std::filesystem::path& oFilePath ) const;
 
 	CCodeParser m_oCodePareser;
 	std::filesystem::path m_oInputDirectoryPath;

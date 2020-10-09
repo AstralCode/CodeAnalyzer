@@ -23,7 +23,8 @@ int main( int iArgumentCount, char* apcArguments[] )
 	{
 		if ( oCommandLineArgumentDataset.oDeveloperString.has_value() )
 		{
-			oCodeAnalyzer.AddAnalyzerModule<CDeveloperAnalyzerModule>( *oCommandLineArgumentDataset.oDeveloperString );
+			const unsigned int uiCodeFileCount = CCodeAnalyzer::CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath );
+			oCodeAnalyzer.AddAnalyzerModule<CDeveloperAnalyzerModule>( *oCommandLineArgumentDataset.oDeveloperString, uiCodeFileCount );
 		}
 		else
 		{

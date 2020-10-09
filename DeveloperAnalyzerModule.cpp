@@ -6,17 +6,21 @@
 // ^^x
 // CDeveloperAnalyzerModule::CDeveloperAnalyzerModule
 // 3BGO JIRA-238 24-09-2020
-CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( std::string_view oDeveloperString ) :
+CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( std::string_view oDeveloperString, const unsigned int uiCodeFileCount ) :
     m_oDeveloperString{ oDeveloperString }
 {
+    CreateStatistics( "Files" );
+    CreateStatistics( "Unable Parse Functions" );
+    CreateStatistics( "Anonymous Functions" );
     CreateStatistics( "Functions" );
-    CreateStatistics( "Empty Functions" );
     CreateStatistics( "Function Length QP [0-16]" );
     CreateStatistics( "Function Length HP [17-32]" );
     CreateStatistics( "Function Length 1P [33-62]" );
     CreateStatistics( "Function Length 2P [63-124]" );
     CreateStatistics( "Function Length 4P [125-248]" );
     CreateStatistics( "Function Length 4P+ [249-more]" );
+
+    GetStatistics( EStatisticsId::eFiles ).uiValue = uiCodeFileCount;
 }
 
 // ^^x
@@ -75,8 +79,12 @@ void CDeveloperAnalyzerModule::ProcessSourceFile( const CSourceFile& oSourceFile
                 }
                 else
                 {
-                    ++GetStatistics( EStatisticsId::eFunctionEmpty ).uiValue;
+                    ++GetStatistics( EStatisticsId::eUnableParseFunctions ).uiValue;
                 }
+            }
+            else
+            {
+                ++GetStatistics( EStatisticsId::eAnonymousFunctions ).uiValue;
             }
         }
     }

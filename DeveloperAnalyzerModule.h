@@ -11,7 +11,7 @@
 class CDeveloperAnalyzerModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CDeveloperAnalyzerModule( std::string_view oDeveloperString );
+	CDeveloperAnalyzerModule( std::string_view oDeveloperString, const unsigned int uiCodeFileCount );
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
@@ -19,14 +19,16 @@ public:
 private:
 	enum EStatisticsId
 	{
+		eFiles,
+		eUnableParseFunctions,
+		eAnonymousFunctions,
 		eFunctions,
-		eFunctionEmpty,
 		eFunctionQPLength,
 		eFunctionHPLength,
 		eFunction1PLength,
 		eFunction2PLength,
 		eFunction4PLength,
-		eFunction4PMoreLength
+		eFunction4PMoreLength,
 	};
 
 	template<typename T>
