@@ -2,7 +2,6 @@
 
 #include "StringHelper.h"
 #include "SourceFile.h"
-#include "Function.h"
 
 // ^^x
 // CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule
