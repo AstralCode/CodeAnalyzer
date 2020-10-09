@@ -23,7 +23,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 	{
 		if ( oCommandLineArgumentDataset.oDeveloperString.has_value() )
 		{
-			oCodeAnalyzer.AddAnalyzerModule<CDeveloperAnalyzerModule>( oCommandLineArgumentDataset.oDeveloperString );
+			oCodeAnalyzer.AddAnalyzerModule<CDeveloperAnalyzerModule>( *oCommandLineArgumentDataset.oDeveloperString );
 		}
 		else
 		{

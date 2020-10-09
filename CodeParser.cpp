@@ -90,7 +90,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( std::s
 
 	for ( SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
 	{
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oMemberFunction.oRegexMatchString, uiCurrentSearchOffsetPos );
+		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oMemberFunction.oData.GetName(), uiCurrentSearchOffsetPos );
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
 			uiCurrentSearchOffsetPos = uiFunctionBracketOpenPos + 1u;

@@ -41,27 +41,27 @@ void CMemberFunctionCodeLineRangeModule::ProcessSourceFile( const CSourceFile& o
 
             if ( IsValueContainsInRange( uiFunctionCodeLineCount, 0u, 16u ) )
             {
-                ++GetStatistics( 0u ).uiValue;
+                ++GetStatistics( EStatisticsId::eFunctionQPLength ).uiValue;
             }
             else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 17u, 32u ) )
             {
-                ++GetStatistics( 1u ).uiValue;
+                ++GetStatistics( EStatisticsId::eFunctionHPLength ).uiValue;
             }
             else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 33u, 62u ) )
             {
-                ++GetStatistics( 2u ).uiValue;
+                ++GetStatistics( EStatisticsId::eFunction1PLength ).uiValue;
             }
             else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 63u, 124u ) )
             {
-                ++GetStatistics( 3u ).uiValue;
+                ++GetStatistics( EStatisticsId::eFunction2PLength ).uiValue;
             }
             else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 125u, 248u ) )
             {
-                ++GetStatistics( 4u ).uiValue;
+                ++GetStatistics( EStatisticsId::eFunction4PLength ).uiValue;
             }
             else if ( IsValueContainsInRange( uiFunctionCodeLineCount, 249u ) )
             {
-                ++GetStatistics( 5u ).uiValue;
+                ++GetStatistics( EStatisticsId::eFunction4PMoreLength ).uiValue;
             }
         }
     }

@@ -30,6 +30,16 @@ public:
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
 
 private:
+	enum EStatisticsId
+	{
+		eFunctionQPLength,
+		eFunctionHPLength,
+		eFunction1PLength,
+		eFunction2PLength,
+		eFunction4PLength,
+		eFunction4PMoreLength
+	};
+
 	template<typename T>
 	bool IsValueContainsInRange( const T uiValue, const T uiMin, const T uiMax = std::numeric_limits<T>::max() ) const;
 };
