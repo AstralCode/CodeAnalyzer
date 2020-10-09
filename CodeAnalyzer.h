@@ -58,5 +58,5 @@ inline void CCodeAnalyzer::AddAnalyzerModule( TArguments&&... oArguments )
 {
 	static_assert(std::is_base_of<CStatisticsAnalyzerModule, TDerivedStatisticsAnalyzerModule>::value, "TDerivedStatisticsAnalyzerModule class must derived from CStatisticsAnalyzerModule base class");
 
-	m_oAnalyzerModuleVector.push_back(std::make_unique<TDerivedStatisticsAnalyzerModule>( std::forward<TArguments&&>( oArguments )... );
+	m_oAnalyzerModuleVector.push_back(std::make_unique<TDerivedStatisticsAnalyzerModule>( std::forward<TArguments&&>( oArguments )... ) );
 }
