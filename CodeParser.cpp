@@ -12,6 +12,7 @@ enum EFindMemberFunctionRegexMatchGroups
 	eFunctionProjectGroup,
 	eFunctionReturnTypeGroup,
 	eFunctionClassNameGroup,
+	eFunctionDestructorGroup,
 	eFunctionNameGroup,
 	eFunctionArgumentListGroup
 };
@@ -20,7 +21,7 @@ constexpr const char* FIND_MEMBER_FUNCTION_HEADER_INFORMATION_REGEX_STR =
 R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{2,3})\s+([a-zA-Z0-9\_\-\. \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?)";
 
 constexpr const char* FIND_MEMBER_FUNCTION_HEADER_REGEX_STR =
-R"(^[ \t]*([\w\d\t :<>,*&\n]+)\s+([\w\d\_:]+)::([\w\d\_]+)\(\s*([\w\d\_\t \-:<>,*&\/='";\n]+)?\s*\)\s*(?:const)?[ \t]*$)";
+R"(^[ \t]*(?:([\w\d\t :<>,*&\n]+)\s+)?([\w\d\_:]+)::(\~)?([\w\d\_]+)\(\s*([\w\d\_\t \-:<>,*&\/='";\n]+)?\s*\)\s*(?:\:)?(?:const)?[ \t]*$)";
 
 constexpr const char* FIND_SINGLELINE_COMMENTS_REGEX_STR =
 R"((?:\/\/.*))";
@@ -53,8 +54,17 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 		{
 			CFunction oMemberFunction{};
 			oMemberFunction.SetName( oRegexMatchGroups[eFunctionNameGroup].str() );
-			oMemberFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup].str() );
 			oMemberFunction.SetClassName( SimplifyCode( oRegexMatchGroups[eFunctionClassNameGroup].str() ) );
+
+			if ( oRegexMatchGroups[eFunctionReturnTypeGroup].matched )
+			{
+				oMemberFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup].str() );
+			}
+
+			if ( oRegexMatchGroups[eFunctionDestructorGroup].matched )
+			{
+				oMemberFunction.SetReturnType( oRegexMatchGroups[eFunctionDestructorGroup].str() );
+			}
 
 			if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
 			{

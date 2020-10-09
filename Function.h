@@ -15,8 +15,11 @@ public:
 	void SetName( std::string_view oNameString );
 	std::string GetName() const;
 
+	void SetDestructor( std::string_view oDestructorString );
+	std::optional<std::string> GetDestructor() const;
+
 	void SetReturnType( std::string_view oReturnTypeString );
-	std::string GetReturnType() const;
+	std::optional<std::string> GetReturnType() const;
 
 	void SetClassName( std::string_view oClassNameString );
 	std::optional<std::string> GetClassName() const;
@@ -30,11 +33,15 @@ public:
 	void SetInformation( const SFunctionInformation& oInformation );
 	std::optional<SFunctionInformation> GetInformation() const;
 
+	bool IsConstructor() const;
+	bool IsDestructor() const;
+
 	bool IsMember() const;
 
 private:
 	std::string m_oNameString;
-	std::string m_oReturnTypeString;
+	std::optional<std::string> m_oDestructorString;
+	std::optional<std::string> m_oReturnTypeString;
 	std::optional<std::string> m_oClassNameString;
 	std::optional<std::string> m_oArgumentListString;
 	std::optional<std::string> m_oBodyString;
