@@ -1,7 +1,7 @@
 #include "MemberFunctionCodeLineRangeModule.h"
 
-#include "StringHelper.h"
 #include "SourceFile.h"
+#include "StringHelper.h"
 
 // ^^x
 // CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule
