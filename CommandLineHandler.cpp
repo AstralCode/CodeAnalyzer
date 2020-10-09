@@ -117,17 +117,15 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 
 	if ( oOptionLowerCaseString == "report-prefix" )
 	{
-		if ( !oArgumentDataset.oReportPrefixNameString.has_value() )
-		{
-			oArgumentDataset.oReportPrefixNameString = oArgumentString;
-		}
+		AssignOptionalArgument( oArgumentDataset.oReportPrefixNameString, oArgumentString );
 	}
 	else if ( oOptionLowerCaseString == "report-separator" )
 	{
-		if ( !oArgumentDataset.oReportPrefixNameString.has_value() )
-		{
-			oArgumentDataset.oReportDataSeparatorString = oArgumentString;
-		}
+		AssignOptionalArgument( oArgumentDataset.oReportDataSeparatorString, oArgumentString );
+	}
+	else if ( oOptionLowerCaseString == "dev" )
+	{
+		AssignOptionalArgument( oArgumentDataset.oDeveloperString, oArgumentString );
 	}
 	else
 	{
@@ -135,4 +133,15 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 	}
 
 	return eStatus;
+}
+
+// ^^x
+// void CCommandLineHandler::AssignOptionalArgument
+// 3BGO JIRA-238 09-10-2020
+void CCommandLineHandler::AssignOptionalArgument( std::optional<std::string>& oOutputString, std::string_view oArgumentString ) const
+{
+	if ( !oOutputString.has_value() )
+	{
+		oOutputString = oArgumentString;
+	}
 }

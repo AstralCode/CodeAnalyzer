@@ -23,5 +23,7 @@ private:
 
 	EProgramStatusCodes HandleOptionalArgument( SCommandLineArgumentDataset& oArgumentDataset, std::string_view oOptionString, std::string_view oArgumentString ) const;
 
+	void AssignOptionalArgument( std::optional<std::string>& oOutputString, std::string_view oArgumentString ) const;
+
 	std::vector<std::string> m_oArgumentVector;
 };
