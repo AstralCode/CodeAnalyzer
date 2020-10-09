@@ -5,6 +5,7 @@
 #include "CodeFileLineCountModule.h"
 #include "MemberFunctionCountModule.h"
 #include "MemberFunctionCodeLineRangeModule.h"
+#include "DeveloperAnalyzerModule.h"
 
 // ^^x
 // int main
@@ -20,9 +21,16 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 	if ( eStatus == EProgramStatusCodes::eSuccess )
 	{
-		oCodeAnalyzer.AddAnalyzerModule<CCodeFileLineCountModule>();
-		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCountModule>();
-		oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCodeLineRangeModule>();
+		if ( oCommandLineArgumentDataset.oDeveloperString.has_value() )
+		{
+			oCodeAnalyzer.AddAnalyzerModule<CDeveloperAnalyzerModule>( oCommandLineArgumentDataset.oDeveloperString );
+		}
+		else
+		{
+			oCodeAnalyzer.AddAnalyzerModule<CCodeFileLineCountModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCountModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCodeLineRangeModule>();
+		}
 
 		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset );
 

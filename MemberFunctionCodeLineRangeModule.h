@@ -35,10 +35,10 @@ private:
 };
 
 // ^^x
-// bool CMemberFunctionCodeLineRangeModule::IsValueContainsInRange
+// inline bool CMemberFunctionCodeLineRangeModule::IsValueContainsInRange
 // 3BGO JIRA-238 05-10-2020
 template<typename T>
-bool CMemberFunctionCodeLineRangeModule::IsValueContainsInRange( const T uiValue, const T uiMin, const T uiMax ) const
+inline bool CMemberFunctionCodeLineRangeModule::IsValueContainsInRange( const T uiValue, const T uiMin, const T uiMax ) const
 {
 	return std::clamp( uiValue, uiMin, uiMax ) == uiValue;
 }

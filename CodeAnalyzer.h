@@ -22,8 +22,8 @@ public:
 	CCodeAnalyzer( const CCodeAnalyzer& ) = delete;
 	CCodeAnalyzer& operator=( const CCodeAnalyzer& ) = delete;
 
-	template<typename TDerivedStatisticsAnalyzerModule>
-	void AddAnalyzerModule();
+	template<typename TDerivedStatisticsAnalyzerModule, typename... TArguments>
+	void AddAnalyzerModule( TArguments&&... oArguments );
 
 	ConstStatisticsAnalyzerModuleVector GetAnalyzerModules() const;
 
@@ -53,10 +53,10 @@ private:
 // ^^x
 // void CCodeAnalyzer::AddAnalyzerModule
 // 3BGO JIRA-238 24-09-2020
-template<typename TDerivedStatisticsAnalyzerModule>
-inline void CCodeAnalyzer::AddAnalyzerModule()
+template<typename TDerivedStatisticsAnalyzerModule, typename... TArguments>
+inline void CCodeAnalyzer::AddAnalyzerModule( TArguments&&... oArguments )
 {
 	static_assert(std::is_base_of<CStatisticsAnalyzerModule, TDerivedStatisticsAnalyzerModule>::value, "TDerivedStatisticsAnalyzerModule class must derived from CStatisticsAnalyzerModule base class");
 
-	m_oAnalyzerModuleVector.push_back(std::make_unique<TDerivedStatisticsAnalyzerModule>());
+	m_oAnalyzerModuleVector.push_back(std::make_unique<TDerivedStatisticsAnalyzerModule>( std::forward<TArguments&&>( oArguments )... );
 }
