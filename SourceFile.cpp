@@ -10,18 +10,18 @@ CSourceFile::CSourceFile( const std::filesystem::path& oPath ) :
 }
 
 // ^^x
-// void CSourceFile::SetMemberFunctionDataset
+// void CSourceFile::SetMemberFunctions
 // 3BGO JIRA-238 24-09-2020
-void CSourceFile::SetMemberFunctionDataset( std::vector<SMemberFunctionDataset>&& oMemberFunctionDatasetVector )
+void CSourceFile::SetMemberFunctions( std::vector<SFindDataResult<CFunction>>&& oMemberFunctionDatasetVector )
 {
 	m_oMemberFunctionDatasetVector = std::move( oMemberFunctionDatasetVector );
 }
 
 
 // ^^x
-// const std::vector<SMemberFunctionDataset>& CSourceFile::GetMemberFunctions
+// const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetMemberFunctions
 // 3BGO JIRA-238 24-09-2020
-const std::vector<SMemberFunctionDataset>& CSourceFile::GetMemberFunctions() const
+const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetMemberFunctions() const
 {
 	return m_oMemberFunctionDatasetVector;
 }

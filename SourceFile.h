@@ -3,16 +3,17 @@
 #include <vector>
 
 #include "CodeFile.h"
-#include "MemberFunctionDataset.h"
+#include "Function.h"
+#include "FindDataResult.h"
 
 class CSourceFile final : public CCodeFile
 {
 public:
 	CSourceFile( const std::filesystem::path& oPath );
 
-	void SetMemberFunctionDataset( std::vector<SMemberFunctionDataset>&& oMemberFunctionDatasetVector );
-	const std::vector<SMemberFunctionDataset>& GetMemberFunctions() const;
+	void SetMemberFunctions( std::vector<SFindDataResult<CFunction>>&& oMemberFunctionDatasetVector );
+	const std::vector<SFindDataResult<CFunction>>& GetMemberFunctions() const;
 
 private:
-	std::vector<SMemberFunctionDataset> m_oMemberFunctionDatasetVector;
+	std::vector<SFindDataResult<CFunction>> m_oMemberFunctionDatasetVector;
 };

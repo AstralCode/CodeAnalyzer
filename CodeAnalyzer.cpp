@@ -159,7 +159,7 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
 {
     CSourceFile oSourceFile{ oFilePath };
     oSourceFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
-    oSourceFile.SetMemberFunctionDataset( m_oCodePareser.FindMemberFunctions( oFileContentString ) );
+    oSourceFile.SetMemberFunctions( m_oCodePareser.FindMemberFunctions( oFileContentString ) );
 
     for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {

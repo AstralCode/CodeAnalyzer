@@ -2,7 +2,8 @@
 
 #include <vector>
 
-#include "MemberFunctionDataset.h"
+#include "Function.h"
+#include "FindDataResult.h"
 
 class CCodeParser final
 {
@@ -14,8 +15,8 @@ public:
 
 	unsigned int CountLines( std::string_view oCodeString ) const;
 
-	std::vector<SMemberFunctionDataset> FindMemberFunctionHeaders( std::string_view oCodeString ) const;
-	std::vector<SMemberFunctionDataset> FindMemberFunctions( std::string_view oCodeString ) const;
+	std::vector<SFindDataResult<CFunction>> FindMemberFunctionHeaders( std::string_view oCodeString ) const;
+	std::vector<SFindDataResult<CFunction>> FindMemberFunctions( std::string_view oCodeString ) const;
 
 	std::string RemoveSingleLineComments( std::string_view oCodeString ) const;
 	std::string RemoveMultilineComments( std::string_view oCodeString ) const;

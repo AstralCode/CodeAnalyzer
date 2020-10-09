@@ -2,6 +2,7 @@
 
 #include "StringHelper.h"
 #include "SourceFile.h"
+#include "Function.h"
 
 // ^^x
 // CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule
@@ -29,11 +30,11 @@ void CMemberFunctionCodeLineRangeModule::ProcessHeaderFile( const CHeaderFile& )
 // 3BGO JIRA-238 24-09-2020
 void CMemberFunctionCodeLineRangeModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    const std::vector<SMemberFunctionDataset> oFunctionDatasetVector = oSourceFile.GetMemberFunctions();
+    const std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = oSourceFile.GetMemberFunctions();
 
-    for ( const SMemberFunctionDataset& oFunctionDataset : oFunctionDatasetVector )
+    for ( const SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
     {
-        unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( oFunctionDataset.oBodyString ).size();
+        unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( *oMemberFunction.oData.GetBody() ).size();
 
         if ( uiFunctionCodeLineCount >= 2u )
         {
