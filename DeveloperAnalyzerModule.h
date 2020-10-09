@@ -20,8 +20,6 @@ private:
 	enum EStatisticsId
 	{
 		eFiles,
-		eUnableParseFunctions,
-		eAnonymousFunctions,
 		eFunctions,
 		eFunctionQPLength,
 		eFunctionHPLength,
@@ -29,6 +27,7 @@ private:
 		eFunction2PLength,
 		eFunction4PLength,
 		eFunction4PMoreLength,
+		eFunctionsParseError
 	};
 
 	template<typename T>

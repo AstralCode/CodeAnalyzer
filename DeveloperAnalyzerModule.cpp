@@ -10,8 +10,6 @@ CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( std::string_view oDeveloperS
     m_oDeveloperString{ oDeveloperString }
 {
     CreateStatistics( "Files" );
-    CreateStatistics( "Unable Parse Functions" );
-    CreateStatistics( "Anonymous Functions" );
     CreateStatistics( "Functions" );
     CreateStatistics( "Function Length QP [0-16]" );
     CreateStatistics( "Function Length HP [17-32]" );
@@ -19,6 +17,7 @@ CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( std::string_view oDeveloperS
     CreateStatistics( "Function Length 2P [63-124]" );
     CreateStatistics( "Function Length 4P [125-248]" );
     CreateStatistics( "Function Length 4P+ [249-more]" );
+    CreateStatistics( "Functions Parse Error" );
 
     GetStatistics( EStatisticsId::eFiles ).uiValue = uiCodeFileCount;
 }
@@ -79,12 +78,8 @@ void CDeveloperAnalyzerModule::ProcessSourceFile( const CSourceFile& oSourceFile
                 }
                 else
                 {
-                    ++GetStatistics( EStatisticsId::eUnableParseFunctions ).uiValue;
+                    ++GetStatistics( EStatisticsId::eFunctionsParseError ).uiValue;
                 }
-            }
-            else
-            {
-                ++GetStatistics( EStatisticsId::eAnonymousFunctions ).uiValue;
             }
         }
     }
