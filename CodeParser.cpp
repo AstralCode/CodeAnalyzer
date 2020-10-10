@@ -110,6 +110,8 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( std::s
 				uiCurrentSearchOffsetPos = uiFunctionBracketClosePos;
 
 				oMemberFunction.oData.SetBody( RetrieveBodyFunction( oCodeWithoutCommentsString, uiFunctionBracketOpenPos, uiFunctionBracketClosePos ) );
+
+				++uiCurrentSearchOffsetPos;
 			}
 		}
 	}
