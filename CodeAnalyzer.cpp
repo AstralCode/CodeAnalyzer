@@ -43,9 +43,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
 
         if ( eFileType != ECodeFileType::eUnknown )
         {
-            ++uiProcessCodeFileNumber;
-
-            PrintProgress( uiProcessCodeFileNumber, CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath ) );
+            PrintProgress( ++uiProcessCodeFileNumber, CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath ) );
 
             eStatus = ReadFileContent( oFilePath, oFileContentString );
 
