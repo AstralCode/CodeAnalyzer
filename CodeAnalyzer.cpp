@@ -32,8 +32,6 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
     CConsoleInterface::PrintLineTime( "Code analysis in progress..." );
     CConsoleInterface::Print( "  Calculating the number of files. Please wait...\r" );
    
-    const unsigned int uiProcessCodeFileCount = CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath );
-
     std::string oFileContentString{};
     unsigned int uiProcessCodeFileNumber{ 0u };
 
@@ -47,7 +45,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
         {
             ++uiProcessCodeFileNumber;
 
-            PrintProgress( uiProcessCodeFileNumber, uiProcessCodeFileCount );
+            PrintProgress( uiProcessCodeFileNumber, CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath ) );
 
             eStatus = ReadFileContent( oFilePath, oFileContentString );
 

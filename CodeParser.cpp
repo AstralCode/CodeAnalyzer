@@ -30,7 +30,7 @@ constexpr const char* FIND_MULTILINE_COMMENTS_REGEX_STR =
 R"((?:\/\*.*?\*\/))";
 
 constexpr const char* FIND_MEMBER_DATA_LIST_INITIALIZATION =
-R"(\:(?:\s+(?:(?:m_)?\w+\{.*\}(?:\,)?)*)+)";
+R"(\:(?:\s+(?:\w+(?:[\{\(]).*(?:[\}\)])(?:\,)?)*)+)";
 
 // ^^x
 // unsigned int CCodeParser::CountLines
