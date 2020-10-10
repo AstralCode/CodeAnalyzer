@@ -63,7 +63,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 
 			if ( oRegexMatchGroups[eFunctionDestructorGroup].matched )
 			{
-				oMemberFunction.SetReturnType( oRegexMatchGroups[eFunctionDestructorGroup].str() );
+				oMemberFunction.SetDestructor( oRegexMatchGroups[eFunctionDestructorGroup].str() );
 			}
 
 			if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
