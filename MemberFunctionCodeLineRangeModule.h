@@ -15,10 +15,6 @@
 	[4] -> <125-248>	[4P]  -> 4 page
 	[5] -> <249-more>	[4P+] -> 4 and more pages
 
-	Note: constructors and destructors are not included in the calculation,
-	because they are not detected by regular expressions and therefore are not
-	in the vector that stores all member functions
-
 	Global functions (not members) are also not taken by regular expressions.
 */
 class CMemberFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModule
