@@ -94,12 +94,11 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( std::s
 {
 	std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = FindMemberFunctionHeaders( oCodeString );
 	
-	const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
-
 	std::size_t uiCurrentSearchOffsetPos{ 0u };
 
 	for ( SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
 	{
+		const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
 		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oMemberFunction.oData.GetName(), uiCurrentSearchOffsetPos );
 		if ( uiFunctionBracketOpenPos != std::string::npos )
 		{
