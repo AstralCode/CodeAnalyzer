@@ -21,6 +21,8 @@ public:
 	std::string RemoveSingleLineComments( std::string_view oCodeString ) const;
 	std::string RemoveMultilineComments( std::string_view oCodeString ) const;
 
+	std::string RemoveMemberDataListInitialization( std::string_view oCodeString ) const;
+
 private:
 	std::string PrepareFindMemberFunctionRegexString() const;
 

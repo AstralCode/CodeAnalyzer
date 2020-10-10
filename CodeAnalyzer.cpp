@@ -174,6 +174,7 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
 void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) const
 {
     oFileContentString = m_oCodePareser.RemoveMultilineComments( oFileContentString );
+    oFileContentString = m_oCodePareser.RemoveMemberDataListInitialization( oFileContentString );
 }
 
 // ^^x

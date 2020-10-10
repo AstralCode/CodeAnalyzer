@@ -29,6 +29,9 @@ R"((?:\/\/.*))";
 constexpr const char* FIND_MULTILINE_COMMENTS_REGEX_STR =
 R"((?:\/\*.*?\*\/))";
 
+constexpr const char* FIND_MEMBER_DATA_LIST_INITIALIZATION =
+R"(\:(?:\s+(?:(?:m_)?\w+\{.*\}(?:\,)?)*)+)";
+
 // ^^x
 // unsigned int CCodeParser::CountLines
 // 3BGO JIRA-238 02-10-2020
@@ -133,6 +136,14 @@ std::string CCodeParser::RemoveSingleLineComments( std::string_view oCodeString 
 std::string CCodeParser::RemoveMultilineComments( std::string_view oCodeString ) const
 {
 	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MULTILINE_COMMENTS_REGEX_STR }, "" );
+}
+
+// ^^x
+// std::string CCodeParser::RemoveMemberDataListInitialization
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RemoveMemberDataListInitialization( std::string_view oCodeString ) const
+{
+	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MEMBER_DATA_LIST_INITIALIZATION }, "\n" );
 }
 
 // ^^x
