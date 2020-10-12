@@ -4,13 +4,13 @@
 
 /*
 	### Module Description ####
-	This module calculates the total number of member function
+	This module calculates the total number of global and member functions
 	in the source files.
 */
-class CMemberFunctionCountModule final : public CStatisticsAnalyzerModule
+class CFunctionCountModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CMemberFunctionCountModule();
+	CFunctionCountModule();
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;

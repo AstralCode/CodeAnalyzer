@@ -3,7 +3,7 @@
 // ^^x
 // void CFunction::SetName
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetName( std::string_view oNameString )
+void CFunction::SetName( const std::string& oNameString )
 {
     m_oNameString = oNameString;
 }
@@ -19,7 +19,7 @@ std::string CFunction::GetName() const
 // ^^x
 // std::optional<std::string> CFunction::SetDestructor
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetDestructor( std::string_view oDestructorString )
+void CFunction::SetDestructor( const std::string& oDestructorString )
 {
     m_oDestructorString = oDestructorString;
 }
@@ -35,7 +35,7 @@ std::optional<std::string> CFunction::GetDestructor() const
 // ^^x
 // void CFunction::SetReturnType
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetReturnType( std::string_view oReturnTypeString )
+void CFunction::SetReturnType( const std::string& oReturnTypeString )
 {
     m_oReturnTypeString = oReturnTypeString;
 }
@@ -51,7 +51,7 @@ std::optional<std::string> CFunction::GetReturnType() const
 // ^^x
 // void CFunction::SetClassName
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetClassName( std::string_view oClassNameString )
+void CFunction::SetClassName( const std::string& oClassNameString )
 {
     m_oClassNameString = oClassNameString;
 }
@@ -67,7 +67,7 @@ std::optional<std::string> CFunction::GetClassName() const
 // ^^x
 // void CFunction::SetArgumentList
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetArgumentList( std::string_view oArgumentListString )
+void CFunction::SetArgumentList( const std::string& oArgumentListString )
 {
     m_oArgumentListString = oArgumentListString;
 }
@@ -83,7 +83,7 @@ std::optional<std::string> CFunction::GetArgumentList() const
 // ^^x
 // void CFunction::SetBody
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetBody( std::string_view oBodyString )
+void CFunction::SetBody( const std::string& oBodyString )
 {
     m_oBodyString = oBodyString;
 }

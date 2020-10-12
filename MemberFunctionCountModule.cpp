@@ -3,25 +3,26 @@
 #include "SourceFile.h"
 
 // ^^x
-// CMemberFunctionCountModule::CMemberFunctionCountModule
+// CFunctionCountModule::CFunctionCountModule
 // 3BGO JIRA-239 01-10-2020
-CMemberFunctionCountModule::CMemberFunctionCountModule()
+CFunctionCountModule::CFunctionCountModule()
 {
     CreateStatistics( "Function Count" );
 }
 
 // ^^x
-// void CMemberFunctionCountModule::ProcessHeaderFile
+// void CFunctionCountModule::ProcessHeaderFile
 // 3BGO JIRA-239 01-10-2020
-void CMemberFunctionCountModule::ProcessHeaderFile( const CHeaderFile& )
+void CFunctionCountModule::ProcessHeaderFile( const CHeaderFile& )
 {
 
 }
 
 // ^^x
-// void CMemberFunctionCountModule::ProcessSourceFile
+// void CFunctionCountModule::ProcessSourceFile
 // 3BGO JIRA-238 24-09-2020
-void CMemberFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
+void CFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
+    GetStatistics( 0u ).uiValue += oSourceFile.GetGlobalFunctions().size();
     GetStatistics( 0u ).uiValue += oSourceFile.GetMemberFunctions().size();
 }

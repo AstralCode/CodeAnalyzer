@@ -3,7 +3,7 @@
 // ^^x
 // void CVariable::SetName
 // 3BGO JIRA-238 09-10-2020
-void CVariable::SetName( std::string_view oNameString )
+void CVariable::SetName( const std::string& oNameString )
 {
     m_oNameString = oNameString;
 }
@@ -19,7 +19,7 @@ std::string CVariable::GetName() const
 // ^^x
 // void CVariable::SetReturnType
 // 3BGO JIRA-238 09-10-2020
-void CVariable::SetReturnType( std::string_view oTypeString )
+void CVariable::SetReturnType( const std::string& oTypeString )
 {
     m_oReturnTypeString = oTypeString;
 }
@@ -35,7 +35,7 @@ std::string CVariable::GetReturnType() const
 // ^^x
 // void CVariable::SetClassName
 // 3BGO JIRA-238 09-10-2020
-void CVariable::SetClassName( std::string_view oClassNameString )
+void CVariable::SetClassName( const std::string& oClassNameString )
 {
     m_oClassNameString = oClassNameString;
 }

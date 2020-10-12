@@ -6,7 +6,7 @@
 // ^^x
 // CDeveloperAnalyzerModule::CDeveloperAnalyzerModule
 // 3BGO JIRA-238 24-09-2020
-CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( std::string_view oDeveloperString, const unsigned int uiCodeFileCount ) :
+CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( const std::string& oDeveloperString, const unsigned int uiCodeFileCount ) :
     m_oDeveloperString{ oDeveloperString }
 {
     CreateStatistics( "Files" );

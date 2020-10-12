@@ -12,22 +12,22 @@ struct SFunctionInformation
 class CFunction final
 {
 public:
-	void SetName( std::string_view oNameString );
+	void SetName( const std::string& oNameString );
 	std::string GetName() const;
 
-	void SetDestructor( std::string_view oDestructorString );
+	void SetDestructor( const std::string& oDestructorString );
 	std::optional<std::string> GetDestructor() const;
 
-	void SetReturnType( std::string_view oReturnTypeString );
+	void SetReturnType( const std::string& oReturnTypeString );
 	std::optional<std::string> GetReturnType() const;
 
-	void SetClassName( std::string_view oClassNameString );
+	void SetClassName( const std::string& oClassNameString );
 	std::optional<std::string> GetClassName() const;
 
-	void SetArgumentList( std::string_view oArgumentListString );
+	void SetArgumentList( const std::string& oArgumentListString );
 	std::optional<std::string> GetArgumentList() const;
 
-	void SetBody( std::string_view oBodyString );
+	void SetBody( const std::string& oBodyString );
 	std::optional<std::string> GetBody() const;
 
 	void SetInformation( const SFunctionInformation& oInformation );

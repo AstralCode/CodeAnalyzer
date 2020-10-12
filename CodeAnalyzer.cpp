@@ -171,6 +171,10 @@ void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) con
 {
     oFileContentString = m_oCodePareser.RemoveMultilineComments( oFileContentString );
     oFileContentString = m_oCodePareser.RemoveMemberDataListInitialization( oFileContentString );
+    oFileContentString = m_oCodePareser.RemoveIncludeDirectives( oFileContentString );
+    oFileContentString = m_oCodePareser.RemoveImplementDynamicMacro( oFileContentString );
+    oFileContentString = m_oCodePareser.RemoveImplementDyncreateMacro( oFileContentString );
+    oFileContentString = m_oCodePareser.RemoveMessageMapMacro( oFileContentString );
 }
 
 // ^^x
@@ -194,6 +198,7 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
 {
     CSourceFile oSourceFile{ oFilePath };
     oSourceFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
+    oSourceFile.SetGlobalFunctions( m_oCodePareser.FindGlobalFunctions( oFileContentString ) );
     oSourceFile.SetMemberFunctions( m_oCodePareser.FindMemberFunctions( oFileContentString ) );
 
     for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )

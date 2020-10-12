@@ -8,7 +8,7 @@
 // ^^x
 // void CConsoleInterface::Print
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::Print( std::string_view oMessageString )
+void CConsoleInterface::Print( const std::string& oMessageString )
 {
 	std::cout << oMessageString;
 }
@@ -16,7 +16,7 @@ void CConsoleInterface::Print( std::string_view oMessageString )
 // ^^x
 // void CConsoleInterface::PrintLine
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::PrintLine( std::string_view oMessageString )
+void CConsoleInterface::PrintLine( const std::string& oMessageString )
 {
 	std::cout << oMessageString << '\n';
 }
@@ -24,7 +24,7 @@ void CConsoleInterface::PrintLine( std::string_view oMessageString )
 // ^^x
 // void CConsoleInterface::PrintLineTime
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::PrintLineTime( std::string_view oMessageString )
+void CConsoleInterface::PrintLineTime( const std::string& oMessageString )
 {
 	std::cout << "<" + CDateTimeHelper::CurrentTime() + "> " << oMessageString << '\n';
 }

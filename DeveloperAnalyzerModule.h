@@ -11,7 +11,7 @@
 class CDeveloperAnalyzerModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CDeveloperAnalyzerModule( std::string_view oDeveloperString, const unsigned int uiCodeFileCount );
+	CDeveloperAnalyzerModule( const std::string& oDeveloperString, const unsigned int uiCodeFileCount );
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;

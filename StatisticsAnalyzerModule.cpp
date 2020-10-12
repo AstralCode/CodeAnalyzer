@@ -11,7 +11,7 @@ std::vector<SStatisticsResult> CStatisticsAnalyzerModule::GetStatisticsResults()
 // ^^x
 // void CStatisticsAnalyzerModule::CreateStatistics
 // 3BGO JIRA-238 02-10-2020
-void CStatisticsAnalyzerModule::CreateStatistics( std::string_view oHeaderString )
+void CStatisticsAnalyzerModule::CreateStatistics( const std::string& oHeaderString )
 {
 	m_oResultVector.push_back( { oHeaderString.data(), 0u } );
 }

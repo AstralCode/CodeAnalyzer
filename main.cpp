@@ -29,8 +29,8 @@ int main( int iArgumentCount, char* apcArguments[] )
 		else
 		{
 			oCodeAnalyzer.AddAnalyzerModule<CCodeFileLineCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CMemberFunctionCodeLineRangeModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CFunctionCountModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CFunctionCodeLineRangeModule>();
 		}
 
 		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset );

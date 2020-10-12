@@ -21,9 +21,9 @@ private:
 	EProgramStatusCodes HandleRequiredArguments( SCommandLineArgumentDataset& oArgumentDataset ) const;
 	EProgramStatusCodes HandleOptionalArguments( SCommandLineArgumentDataset& oArgumentDataset ) const;
 
-	EProgramStatusCodes HandleOptionalArgument( SCommandLineArgumentDataset& oArgumentDataset, std::string_view oOptionString, std::string_view oArgumentString ) const;
+	EProgramStatusCodes HandleOptionalArgument( SCommandLineArgumentDataset& oArgumentDataset, const std::string& oOptionString, const std::string& oArgumentString ) const;
 
-	void AssignOptionalArgument( std::optional<std::string>& oOutputString, std::string_view oArgumentString ) const;
+	void AssignOptionalArgument( std::optional<std::string>& oOutputString, const std::string& oArgumentString ) const;
 
 	std::vector<std::string> m_oArgumentVector;
 };

@@ -6,13 +6,13 @@
 class CVariable final
 {
 public:
-	void SetName( std::string_view oNameString );
+	void SetName( const std::string& oNameString );
 	std::string GetName() const;
 
-	void SetReturnType( std::string_view oTypeString );
+	void SetReturnType( const std::string& oTypeString );
 	std::string GetReturnType() const;
 
-	void SetClassName( std::string_view oClassNameString );
+	void SetClassName( const std::string& oClassNameString );
 	std::optional<std::string> GetClassName() const;
 
 	bool IsMember() const;

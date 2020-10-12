@@ -4,9 +4,9 @@
 #include "StringHelper.h"
 
 // ^^x
-// CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule
+// CFunctionCodeLineRangeModule::CFunctionCodeLineRangeModule
 // 3BGO JIRA-239 30-09-2020
-CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule()
+CFunctionCodeLineRangeModule::CFunctionCodeLineRangeModule()
 {
     CreateStatistics( "Function Length QP [0-16]" );
     CreateStatistics( "Function Length HP [17-32]" );
@@ -17,23 +17,30 @@ CMemberFunctionCodeLineRangeModule::CMemberFunctionCodeLineRangeModule()
 }
 
 // ^^x
-// void CMemberFunctionCodeLineRangeModule::ProcessHeaderFile
+// void CFunctionCodeLineRangeModule::ProcessHeaderFile
 // 3BGO JIRA-239 30-09-2020
-void CMemberFunctionCodeLineRangeModule::ProcessHeaderFile( const CHeaderFile& )
+void CFunctionCodeLineRangeModule::ProcessHeaderFile( const CHeaderFile& )
 {
 
 }
 
 // ^^x
-// void CMemberFunctionCodeLineRangeModule::ProcessSourceFile
+// void CFunctionCodeLineRangeModule::ProcessSourceFile
 // 3BGO JIRA-238 24-09-2020
-void CMemberFunctionCodeLineRangeModule::ProcessSourceFile( const CSourceFile& oSourceFile )
+void CFunctionCodeLineRangeModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    const std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = oSourceFile.GetMemberFunctions();
+    CalculateStatistics( oSourceFile.GetGlobalFunctions() );
+    CalculateStatistics( oSourceFile.GetMemberFunctions() );
+}
 
-    for ( const SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
+// ^^x
+// void CFunctionCodeLineRangeModule::CalculateStatistics
+// 3BGO JIRA-238 24-09-2020
+void CFunctionCodeLineRangeModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector )
+{
+    for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {
-        unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( *oMemberFunction.oData.GetBody() ).size();
+        unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( *oFunction.oData.GetBody() ).size();
 
         if ( uiFunctionCodeLineCount >= 2u )
         {

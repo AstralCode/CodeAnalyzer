@@ -109,7 +109,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 // ^^x
 // EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument
 // 3BGO JIRA-238 06-10-2020
-EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArgumentDataset& oArgumentDataset, std::string_view oOptionString, std::string_view oArgumentString ) const
+EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArgumentDataset& oArgumentDataset, const std::string& oOptionString, const std::string& oArgumentString ) const
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
@@ -138,7 +138,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 // ^^x
 // void CCommandLineHandler::AssignOptionalArgument
 // 3BGO JIRA-238 09-10-2020
-void CCommandLineHandler::AssignOptionalArgument( std::optional<std::string>& oOutputString, std::string_view oArgumentString ) const
+void CCommandLineHandler::AssignOptionalArgument( std::optional<std::string>& oOutputString, const std::string& oArgumentString ) const
 {
 	if ( !oOutputString.has_value() )
 	{

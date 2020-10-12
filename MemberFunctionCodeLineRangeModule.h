@@ -3,6 +3,8 @@
 #include <algorithm>
 
 #include "StatisticsAnalyzerModule.h"
+#include "Function.h"
+#include "FindDataResult.h"
 
 /*
 	### Module Description ###
@@ -17,10 +19,10 @@
 
 	Global functions (not members) are also not taken by regular expressions.
 */
-class CMemberFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModule
+class CFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModule
 {
 public:
-	CMemberFunctionCodeLineRangeModule();
+	CFunctionCodeLineRangeModule();
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
@@ -36,15 +38,17 @@ private:
 		eFunction4PMoreLength
 	};
 
+	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector );
+
 	template<typename T>
 	bool IsValueContainsInRange( const T uiValue, const T uiMin, const T uiMax = std::numeric_limits<T>::max() ) const;
 };
 
 // ^^x
-// inline bool CMemberFunctionCodeLineRangeModule::IsValueContainsInRange
+// inline bool CFunctionCodeLineRangeModule::IsValueContainsInRange
 // 3BGO JIRA-238 05-10-2020
 template<typename T>
-inline bool CMemberFunctionCodeLineRangeModule::IsValueContainsInRange( const T uiValue, const T uiMin, const T uiMax ) const
+inline bool CFunctionCodeLineRangeModule::IsValueContainsInRange( const T uiValue, const T uiMin, const T uiMax ) const
 {
 	return std::clamp( uiValue, uiMin, uiMax ) == uiValue;
 }

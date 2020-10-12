@@ -10,11 +10,28 @@ CSourceFile::CSourceFile( const std::filesystem::path& oPath ) :
 }
 
 // ^^x
+// void CSourceFile::SetGlobalFunctions
+// 3BGO JIRA-238 24-09-2020
+void CSourceFile::SetGlobalFunctions( std::vector<SFindDataResult<CFunction>>&& oGlobalFunctionVector )
+{
+	m_oGlobalFunctionVector = std::move( oGlobalFunctionVector );
+}
+
+
+// ^^x
+// const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetGlobalFunctions
+// 3BGO JIRA-238 24-09-2020
+const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetGlobalFunctions() const
+{
+	return m_oGlobalFunctionVector;
+}
+
+// ^^x
 // void CSourceFile::SetMemberFunctions
 // 3BGO JIRA-238 24-09-2020
-void CSourceFile::SetMemberFunctions( std::vector<SFindDataResult<CFunction>>&& oMemberFunctionDatasetVector )
+void CSourceFile::SetMemberFunctions( std::vector<SFindDataResult<CFunction>>&& oMemberFunctionVector )
 {
-	m_oMemberFunctionDatasetVector = std::move( oMemberFunctionDatasetVector );
+	m_oMemberFunctionVector = std::move( oMemberFunctionVector );
 }
 
 
@@ -23,5 +40,5 @@ void CSourceFile::SetMemberFunctions( std::vector<SFindDataResult<CFunction>>&& 
 // 3BGO JIRA-238 24-09-2020
 const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetMemberFunctions() const
 {
-	return m_oMemberFunctionDatasetVector;
+	return m_oMemberFunctionVector;
 }

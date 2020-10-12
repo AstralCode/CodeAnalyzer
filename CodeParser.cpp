@@ -5,23 +5,14 @@
 #include "CodeFile.h"
 #include "StringHelper.h"
 
-enum EFindMemberFunctionRegexMatchGroups
-{
-	eRegexMatch,
-	eFunctionAuthorGroup,
-	eFunctionProjectGroup,
-	eFunctionReturnTypeGroup,
-	eFunctionClassNameGroup,
-	eFunctionDestructorGroup,
-	eFunctionNameGroup,
-	eFunctionArgumentListGroup
-};
-
-constexpr const char* FIND_MEMBER_FUNCTION_HEADER_INFORMATION_REGEX_STR =
+constexpr const char* FIND_FUNCTION_HEADER_INFORMATION_REGEX_STR =
 R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{2,3})\s+([a-zA-Z0-9\_\-\. \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?)";
 
+constexpr const char* FIND_GLOBAL_FUNCTION_HEADER_REGEX_STR =
+R"(^[ \t]*(?:static\s+)?([\w:<>:,*&]{3,})(?:[\s\*\&]+)?(?:CALLBACK|__cdecl)?\s+([\w]+)\s*\(\s*([\w\t \-:<>,*&\/'";\n]+)?\s*\)[\t ]*$)";
+
 constexpr const char* FIND_MEMBER_FUNCTION_HEADER_REGEX_STR =
-R"(^[ \t]*(?:([\w\d\t :<>,*&\n]+)\s+)?([\w\d\_:]+)::(\~)?([\w\d\_]+)\(\s*([\w\d\_\t \-:<>,*&\/='";\n]+)?\s*\)\s*(?:\:)?(?:const)?[ \t]*$)";
+R"(^[ \t]*(?:inline\s+)?(?:([\w:<>,*&]{3,})(?:[\s\*\&]+)?\s+)?(?:__cdecl\s+)?([\w:]+)::(\~)?([\w]+)\s*\(\s*([\w\t \-:<>,*&\/='";\n]+)?\s*\)\s*(?:const)?[ \t]*$)";
 
 constexpr const char* FIND_SINGLELINE_COMMENTS_REGEX_STR =
 R"((?:\/\/.*))";
@@ -29,62 +20,140 @@ R"((?:\/\/.*))";
 constexpr const char* FIND_MULTILINE_COMMENTS_REGEX_STR =
 R"((?:\/\*.*?\*\/))";
 
+constexpr const char* FIND_DIRECTIVE_INCLUDE_REGEX_STR =
+R"(^[\t ]*#include\s+(?:\"|\<)[\w\.]+(?:\"|\>)$)";
+
+constexpr const char* FIND_MACRO_IMPLEMENT_DYNAMIC_REGEX_STR =
+R"(^[\t ]*IMPLEMENT_DYNAMIC\s*\(.*\)$)";
+
+constexpr const char* FIND_MACRO_IMPLEMENT_DYNCREATE_REGEX_STR =
+R"(^[\t ]*IMPLEMENT_DYNCREATE\s*\(.*\)$)";
+
 constexpr const char* FIND_MEMBER_DATA_LIST_INITIALIZATION =
-R"(\:(?:\s+(?:\w+(?:[\{\(]).*(?:[\}\)])(?:\,)?)*)+)";
+R"(\:(?:\s+(?:\w+(?:[\{\(]).*(?:[\}\)])(?:\,)?)+)+)";
 
 // ^^x
 // unsigned int CCodeParser::CountLines
 // 3BGO JIRA-238 02-10-2020
-unsigned int CCodeParser::CountLines( std::string_view oCodeString ) const
+unsigned int CCodeParser::CountLines( const std::string& oCodeString ) const
 {
 	return CStringHelper::SplitLines( oCodeString ).size();
 }
 
 // ^^x
+// std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders
+// 3BGO JIRA-238 02-10-2020
+std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( const std::string& oCodeString ) const
+{
+	enum EGlobalFunctionRegexMatchGroups
+	{
+		eRegexMatch,
+		eFunctionAuthorGroup,
+		eFunctionProjectGroup,
+		eFunctionReturnTypeGroup,
+		eFunctionNameGroup,
+		eFunctionArgumentListGroup
+	};
+
+	std::vector<SFindDataResult<CFunction>> oMemberFunctionVector{};
+	std::regex oRegexPattern{ PrepareFindGlobalFunctionRegexString() };
+
+	const std::sregex_iterator oRegexEndIt{};
+	for ( std::sregex_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
+	{
+		std::smatch oRegexMatchGroups = *oRegexBeginIt;
+
+		CFunction oGlobalFunction{};
+		oGlobalFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
+		oGlobalFunction.SetName( oRegexMatchGroups[eFunctionNameGroup] );
+
+		if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
+		{
+			oGlobalFunction.SetArgumentList( SimplifyCode( oRegexMatchGroups[eFunctionArgumentListGroup] ) );
+		}
+
+		if ( oRegexMatchGroups[eFunctionAuthorGroup].matched && oRegexMatchGroups[eFunctionProjectGroup].matched )
+		{
+			SFunctionInformation oFunctionInformation{};
+			oFunctionInformation.m_oAuthorString = oRegexMatchGroups[eFunctionAuthorGroup];
+			oFunctionInformation.m_oProjectString = oRegexMatchGroups[eFunctionProjectGroup];
+
+			oGlobalFunction.SetInformation( oFunctionInformation );
+		}
+
+		oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oGlobalFunction } );
+	}
+
+	return oMemberFunctionVector;
+}
+
+// ^^x
+// std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctions
+// 3BGO JIRA-238 02-10-2020
+std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctions( const std::string& oCodeString ) const
+{
+	const std::string oCodeWithoutCommentsString = RemoveMemberFunctionBodies( oCodeString );
+
+	std::vector<SFindDataResult<CFunction>> oGlobalFunctionVector = FindGlobalFunctionHeaders( oCodeWithoutCommentsString );
+	RetrieveBodyFunctions( oCodeString, oGlobalFunctionVector );
+
+	return oGlobalFunctionVector;
+}
+
+// ^^x
 // std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders
 // 3BGO JIRA-238 02-10-2020
-std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( std::string_view oCodeString ) const
+std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( const std::string& oCodeString ) const
 {
+	enum EMemberFunctionRegexMatchGroups
+	{
+		eRegexMatch,
+		eFunctionAuthorGroup,
+		eFunctionProjectGroup,
+		eFunctionReturnTypeGroup,
+		eFunctionClassNameGroup,
+		eFunctionDestructorGroup,
+		eFunctionNameGroup,
+		eFunctionArgumentListGroup
+	};
+
 	std::vector<SFindDataResult<CFunction>> oMemberFunctionVector{};
 	std::regex oRegexPattern{ PrepareFindMemberFunctionRegexString(), std::regex_constants::icase };
 
-	const std::regex_iterator<std::string_view::const_iterator> oRegexEndIt{};
-	for ( std::regex_iterator<std::string_view::const_iterator> oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
+	const std::sregex_iterator oRegexEndIt{};
+	for ( std::sregex_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
 	{
-		std::match_results<std::string_view::const_iterator> oRegexMatchGroups = *oRegexBeginIt;
+		std::smatch oRegexMatchGroups = *oRegexBeginIt;
 
-		if ( oRegexMatchGroups[eFunctionClassNameGroup].matched )
+		CFunction oMemberFunction{};
+		oMemberFunction.SetName( oRegexMatchGroups[eFunctionNameGroup] );
+		oMemberFunction.SetClassName( SimplifyCode( oRegexMatchGroups[eFunctionClassNameGroup] ) );
+
+		if ( oRegexMatchGroups[eFunctionReturnTypeGroup].matched )
 		{
-			CFunction oMemberFunction{};
-			oMemberFunction.SetName( oRegexMatchGroups[eFunctionNameGroup].str() );
-			oMemberFunction.SetClassName( SimplifyCode( oRegexMatchGroups[eFunctionClassNameGroup].str() ) );
-
-			if ( oRegexMatchGroups[eFunctionReturnTypeGroup].matched )
-			{
-				oMemberFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup].str() );
-			}
-
-			if ( oRegexMatchGroups[eFunctionDestructorGroup].matched )
-			{
-				oMemberFunction.SetDestructor( oRegexMatchGroups[eFunctionDestructorGroup].str() );
-			}
-
-			if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
-			{
-				oMemberFunction.SetArgumentList( SimplifyCode( oRegexMatchGroups[eFunctionArgumentListGroup].str() ) );
-			}
-
-			if ( oRegexMatchGroups[eFunctionAuthorGroup].matched && oRegexMatchGroups[eFunctionProjectGroup].matched )
-			{
-				SFunctionInformation oFunctionInformation{};
-				oFunctionInformation.m_oAuthorString = SimplifyCode( oRegexMatchGroups[eFunctionAuthorGroup].str() );
-				oFunctionInformation.m_oProjectString = SimplifyCode( oRegexMatchGroups[eFunctionProjectGroup].str() );
-
-				oMemberFunction.SetInformation( oFunctionInformation );
-			}
-
-			oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oMemberFunction } );
+			oMemberFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
 		}
+
+		if ( oRegexMatchGroups[eFunctionDestructorGroup].matched )
+		{
+			oMemberFunction.SetDestructor( oRegexMatchGroups[eFunctionDestructorGroup] );
+		}
+
+		if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
+		{
+			oMemberFunction.SetArgumentList( SimplifyCode( oRegexMatchGroups[eFunctionArgumentListGroup] ) );
+		}
+
+		if ( oRegexMatchGroups[eFunctionAuthorGroup].matched && oRegexMatchGroups[eFunctionProjectGroup].matched )
+		{
+			SFunctionInformation oFunctionInformation{};
+			oFunctionInformation.m_oAuthorString = oRegexMatchGroups[eFunctionAuthorGroup];
+			oFunctionInformation.m_oProjectString = oRegexMatchGroups[eFunctionProjectGroup];
+
+			oMemberFunction.SetInformation( oFunctionInformation );
+		}
+
+		oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oMemberFunction } );
 	}
 
 	return oMemberFunctionVector;
@@ -93,31 +162,10 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 // ^^x
 // std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions
 // 3BGO JIRA-238 02-10-2020
-std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( std::string_view oCodeString ) const
+std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( const std::string& oCodeString ) const
 {
 	std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = FindMemberFunctionHeaders( oCodeString );
-	
-	std::size_t uiCurrentSearchOffsetPos{ 0u };
-
-	for ( SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
-	{
-		const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
-		const std::size_t uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oMemberFunction.oData.GetName(), uiCurrentSearchOffsetPos );
-		if ( uiFunctionBracketOpenPos != std::string::npos )
-		{
-			uiCurrentSearchOffsetPos = uiFunctionBracketOpenPos + 1u;
-
-			const std::size_t uiFunctionBracketClosePos = FindFunctionBracketClosePosition( oCodeWithoutCommentsString, uiCurrentSearchOffsetPos );
-			if ( uiFunctionBracketClosePos != std::string::npos )
-			{
-				uiCurrentSearchOffsetPos = uiFunctionBracketClosePos;
-
-				oMemberFunction.oData.SetBody( RetrieveBodyFunction( oCodeWithoutCommentsString, uiFunctionBracketOpenPos, uiFunctionBracketClosePos ) );
-
-				++uiCurrentSearchOffsetPos;
-			}
-		}
-	}
+	RetrieveBodyFunctions( oCodeString, oMemberFunctionVector );
 
 	return oMemberFunctionVector;
 }
@@ -125,7 +173,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( std::s
 // ^^x
 // std::string CCodeParser::RemoveSingleLineComments
 // 3BGO JIRA-238 02-10-2020
-std::string CCodeParser::RemoveSingleLineComments( std::string_view oCodeString ) const
+std::string CCodeParser::RemoveSingleLineComments( const std::string& oCodeString ) const
 {
 	return std::regex_replace( oCodeString.data(), std::regex{ FIND_SINGLELINE_COMMENTS_REGEX_STR }, "" );
 }
@@ -133,17 +181,108 @@ std::string CCodeParser::RemoveSingleLineComments( std::string_view oCodeString 
 // ^^x
 // std::string CCodeParser::RemoveMultilineComments
 // 3BGO JIRA-238 02-10-2020
-std::string CCodeParser::RemoveMultilineComments( std::string_view oCodeString ) const
+std::string CCodeParser::RemoveMultilineComments( const std::string& oCodeString ) const
 {
 	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MULTILINE_COMMENTS_REGEX_STR }, "" );
 }
 
 // ^^x
+// std::string CCodeParser::RemoveIncludeDirectives
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RemoveIncludeDirectives( const std::string& oCodeString ) const
+{
+	return std::regex_replace( oCodeString.data(), std::regex{ FIND_DIRECTIVE_INCLUDE_REGEX_STR }, "" );
+}
+
+// ^^x
+// std::string CCodeParser::RemoveImplementDynamicMacro
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RemoveImplementDynamicMacro( const std::string& oCodeString ) const
+{
+	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MACRO_IMPLEMENT_DYNAMIC_REGEX_STR }, "" );
+}
+
+// ^^x
+// std::string CCodeParser::RemoveImplementDyncreateMacro
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RemoveImplementDyncreateMacro( const std::string& oCodeString ) const
+{
+	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MACRO_IMPLEMENT_DYNCREATE_REGEX_STR }, "" );
+}
+
+// ^^x
+// std::string CCodeParser::RemoveMessageMapMacro
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RemoveMessageMapMacro( const std::string& oCodeString ) const
+{
+	std::string oResultString{ oCodeString };
+
+	const std::string::size_type uiMessageMapBegPos = oResultString.find( "BEGIN_MESSAGE_MAP" );
+	if ( uiMessageMapBegPos != std::string::npos )
+	{
+		const std::string::size_type uiMessageMapEndPos = oResultString.find( "END_MESSAGE_MAP()" );
+		oResultString.erase( uiMessageMapBegPos, ( uiMessageMapEndPos - uiMessageMapBegPos ) + std::string{ "END_MESSAGE_MAP()" }.size() );
+	}
+
+	return oResultString;
+}
+
+// ^^x
 // std::string CCodeParser::RemoveMemberDataListInitialization
 // 3BGO JIRA-238 02-10-2020
-std::string CCodeParser::RemoveMemberDataListInitialization( std::string_view oCodeString ) const
+std::string CCodeParser::RemoveMemberDataListInitialization( const std::string& oCodeString ) const
 {
 	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MEMBER_DATA_LIST_INITIALIZATION }, "\n" );
+}
+
+// ^^x
+// std::string CCodeParser::RemoveMemberFunctionBodies
+// 3BGO JIRA-238 02-10-2020
+std::string CCodeParser::RemoveMemberFunctionBodies( const std::string& oCodeString ) const
+{
+	std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
+	std::string::size_type uiCurrentCodeOffsetPos{ 0u };
+
+	const std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = FindMemberFunctions( oCodeString );
+	for ( const SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
+	{
+		const std::string::size_type uiMemberFunctionBodyBegPos = oCodeWithoutCommentsString.find( *oMemberFunction.oData.GetBody(), uiCurrentCodeOffsetPos );
+		if ( uiMemberFunctionBodyBegPos != std::string::npos )
+		{
+			oCodeWithoutCommentsString.erase( uiMemberFunctionBodyBegPos, oMemberFunction.oData.GetBody()->size() );
+			uiCurrentCodeOffsetPos = uiMemberFunctionBodyBegPos;
+		}
+	}
+
+	return oCodeWithoutCommentsString;
+}
+
+// ^^x
+// void CCodeParser::RetrieveBodyFunctions
+// 3BGO JIRA-238 05-10-2020
+void CCodeParser::RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oMemberFunctionVector ) const
+{
+	std::string::size_type uiCurrentCodeOffsetPos{ 0u };
+
+	for ( SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
+	{
+		const std::string oMemberFunctionBody = RetrieveBodyFunction( oCodeString, oMemberFunction.oRegexMatchString, uiCurrentCodeOffsetPos );
+		if ( !oMemberFunctionBody.empty() )
+		{
+			oMemberFunction.oData.SetBody( oMemberFunctionBody );
+		}
+	}
+}
+
+// ^^x
+// std::string CCodeParser::PrepareFindGlobalFunctionRegexString
+// 3BGO JIRA-238 06-10-2020
+std::string CCodeParser::PrepareFindGlobalFunctionRegexString() const
+{
+	std::string oRegexPatternString{ FIND_FUNCTION_HEADER_INFORMATION_REGEX_STR };
+	oRegexPatternString += FIND_GLOBAL_FUNCTION_HEADER_REGEX_STR;
+
+	return oRegexPatternString;
 }
 
 // ^^x
@@ -151,7 +290,7 @@ std::string CCodeParser::RemoveMemberDataListInitialization( std::string_view oC
 // 3BGO JIRA-238 06-10-2020
 std::string CCodeParser::PrepareFindMemberFunctionRegexString() const
 {
-	std::string oRegexPatternString{ FIND_MEMBER_FUNCTION_HEADER_INFORMATION_REGEX_STR };
+	std::string oRegexPatternString{ FIND_FUNCTION_HEADER_INFORMATION_REGEX_STR };
 	oRegexPatternString += FIND_MEMBER_FUNCTION_HEADER_REGEX_STR;
 
 	return oRegexPatternString;
@@ -160,10 +299,10 @@ std::string CCodeParser::PrepareFindMemberFunctionRegexString() const
 // ^^x
 // std::size_t CCodeParser::FindFunctionBracketOpenPosition
 // 3BGO JIRA-238 02-10-2020
-std::size_t CCodeParser::FindFunctionBracketOpenPosition( std::string_view oCodeString, std::string_view oFunctionHeaderString, const std::size_t uiCurrentSearchOffsetPos ) const
+std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionNameString, const std::string::size_type uiCurrentCodeOffsetPos ) const
 {
-	const std::size_t uiFunctionHeaderBegPos = oCodeString.find( oFunctionHeaderString, uiCurrentSearchOffsetPos );
-	const std::size_t uiFunctionHeaderEndPos = uiFunctionHeaderBegPos + oFunctionHeaderString.size();
+	const std::string::size_type uiFunctionHeaderBegPos = oCodeString.find( oFunctionNameString, uiCurrentCodeOffsetPos );
+	const std::string::size_type uiFunctionHeaderEndPos = uiFunctionHeaderBegPos + oFunctionNameString.size();
 
 	return oCodeString.find_first_of( '{', uiFunctionHeaderEndPos );
 }
@@ -171,17 +310,17 @@ std::size_t CCodeParser::FindFunctionBracketOpenPosition( std::string_view oCode
 // ^^x
 // std::size_t CCodeParser::FindFunctionBracketClosePosition
 // 3BGO JIRA-238 02-10-2020
-std::size_t CCodeParser::FindFunctionBracketClosePosition( std::string_view oCodeString, std::size_t uiCurrentSearchOffsetPos ) const
+std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oCodeString, std::string::size_type uiCurrentCodeOffsetPos ) const
 {
-	std::size_t uiFunctionBracketLevel{ 1u };
-	std::size_t uiSyntaxCharacterPos{ std::string::npos };
+	std::string::size_type uiFunctionBracketLevel{ 1u };
+	std::string::size_type uiSyntaxCharacterPos{ std::string::npos };
 
 	bool bBeginCharacterLiteral{ false };
 	bool bBeginStringLiteral{ false };
 
 	while ( uiFunctionBracketLevel > 0u )
 	{
-		uiSyntaxCharacterPos = oCodeString.find_first_of( "{}'\"", uiCurrentSearchOffsetPos );
+		uiSyntaxCharacterPos = oCodeString.find_first_of( "{}'\"", uiCurrentCodeOffsetPos );
 
 		if ( uiSyntaxCharacterPos != std::string::npos )
 		{
@@ -218,7 +357,7 @@ std::size_t CCodeParser::FindFunctionBracketClosePosition( std::string_view oCod
 				}
 			}
 			
-			uiCurrentSearchOffsetPos = uiSyntaxCharacterPos + 1u;
+			uiCurrentCodeOffsetPos = uiSyntaxCharacterPos + 1u;
 		}
 		else
 		{
@@ -228,26 +367,46 @@ std::size_t CCodeParser::FindFunctionBracketClosePosition( std::string_view oCod
 
 	if ( uiFunctionBracketLevel > 0u )
 	{
-		uiCurrentSearchOffsetPos = std::string::npos;
+		uiCurrentCodeOffsetPos = std::string::npos;
 	}
 
-	return uiCurrentSearchOffsetPos;
+	return uiCurrentCodeOffsetPos;
 }
 
 // ^^x
-// std::string_view CCodeParser::RetrieveBodyFunction
-// 3BGO JIRA-238 02-10-2020
-std::string_view CCodeParser::RetrieveBodyFunction( std::string_view oCodeString, const std::size_t uiFunctionBracketOpenPos, const std::size_t uiFunctionBracketClosePos ) const
+// std::string CCodeParser::RetrieveBodyFunction
+// 3BGO JIRA-238 10-10-2020
+std::string CCodeParser::RetrieveBodyFunction( const std::string& oCodeString, const std::string& oFunctionHeaderString, std::string::size_type& uiCurrentCodeOffsetPos ) const
 {
-	const std::size_t uiFunctionBodyLength = uiFunctionBracketClosePos - uiFunctionBracketOpenPos;
+	std::string oFunctionBodyString{};
 
-	return oCodeString.substr( uiFunctionBracketOpenPos, uiFunctionBodyLength );
+	const std::string oFunctionHeaderWithoutCommentsString = RemoveSingleLineComments( oFunctionHeaderString );
+	const std::string oCodeWithoutCommentsString = RemoveSingleLineComments( oCodeString );
+	const std::string::size_type uiFunctionBracketOpenPos = FindFunctionBracketOpenPosition( oCodeWithoutCommentsString, oFunctionHeaderWithoutCommentsString, uiCurrentCodeOffsetPos );
+	
+	if ( uiFunctionBracketOpenPos != std::string::npos )
+	{
+		uiCurrentCodeOffsetPos = uiFunctionBracketOpenPos + 1u;
+
+		const std::string::size_type uiFunctionBracketClosePos = FindFunctionBracketClosePosition( oCodeWithoutCommentsString, uiCurrentCodeOffsetPos );
+		if ( uiFunctionBracketClosePos != std::string::npos )
+		{
+			uiCurrentCodeOffsetPos = uiFunctionBracketClosePos;
+
+			const std::string::size_type uiFunctionBodyLength = uiFunctionBracketClosePos - uiFunctionBracketOpenPos;
+			oFunctionBodyString = oCodeWithoutCommentsString.substr( uiFunctionBracketOpenPos, uiFunctionBodyLength );
+
+			++uiCurrentCodeOffsetPos;
+		}
+	}
+
+	return oFunctionBodyString;
 }
 
 // ^^x
 // std::string CCodeParser::SimplifyCode
 // 3BGO JIRA-238 05-10-2020
-std::string CCodeParser::SimplifyCode( std::string_view oCodeString ) const
+std::string CCodeParser::SimplifyCode( const std::string& oCodeString ) const
 {
 	return CStringHelper::Replace( CStringHelper::SimplifyString( oCodeString ), '\n', ' ' );
 }
