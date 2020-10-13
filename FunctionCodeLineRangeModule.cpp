@@ -1,4 +1,4 @@
-#include "MemberFunctionCodeLineRangeModule.h"
+#include "FunctionCodeLineRangeModule.h"
 
 #include "SourceFile.h"
 #include "StringHelper.h"

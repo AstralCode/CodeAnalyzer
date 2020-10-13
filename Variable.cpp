@@ -17,41 +17,17 @@ std::string CVariable::GetName() const
 }
 
 // ^^x
-// void CVariable::SetReturnType
+// void CVariable::SetType
 // 3BGO JIRA-238 09-10-2020
-void CVariable::SetReturnType( const std::string& oTypeString )
+void CVariable::SetType( const std::string& oTypeString )
 {
-    m_oReturnTypeString = oTypeString;
+    m_oTypeString = oTypeString;
 }
 
 // ^^x
-// std::string CVariable::GetReturnType
+// std::string CVariable::GetType
 // 3BGO JIRA-238 09-10-2020
-std::string CVariable::GetReturnType() const
+std::string CVariable::GetType() const
 {
-    return m_oReturnTypeString;
-}
-
-// ^^x
-// void CVariable::SetClassName
-// 3BGO JIRA-238 09-10-2020
-void CVariable::SetClassName( const std::string& oClassNameString )
-{
-    m_oClassNameString = oClassNameString;
-}
-
-// ^^x
-// std::optional<std::string> CVariable::GetClassName
-// 3BGO JIRA-238 09-10-2020
-std::optional<std::string> CVariable::GetClassName() const
-{
-    return m_oClassNameString;
-}
-
-// ^^x
-// bool CVariable::IsMember
-// 3BGO JIRA-238 09-10-2020
-bool CVariable::IsMember() const
-{
-    return m_oClassNameString.has_value();
+    return m_oTypeString;
 }

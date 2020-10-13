@@ -16,8 +16,6 @@
 	[3] -> <63-124>		[2P]  -> 2 page
 	[4] -> <125-248>	[4P]  -> 4 page
 	[5] -> <249-more>	[4P+] -> 4 and more pages
-
-	Global functions (not members) are also not taken by regular expressions.
 */
 class CFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModule
 {

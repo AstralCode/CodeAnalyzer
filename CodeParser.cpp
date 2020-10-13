@@ -32,6 +32,9 @@ R"(^[\t ]*IMPLEMENT_DYNCREATE\s*\(.*\)$)";
 constexpr const char* FIND_MEMBER_DATA_LIST_INITIALIZATION =
 R"(\:(?:\s+(?:\w+(?:[\{\(]).*(?:[\}\)])(?:\,)?)+)+)";
 
+constexpr const char* FIND_VARIABLE_REGEX_STR =
+R"(^[\t ]*((?:static\s+)?(?:const\s+)?(?:\w+::)*(?!return|else)(?:unsigned\s+|signed\s+)?\w{3,})(?:[*&]+)?\s+(\w+)(?:\s*(?:=\s*.*?)|(?:\(.*\)|(?:\[.*\])))?;$)";
+
 // ^^x
 // unsigned int CCodeParser::CountLines
 // 3BGO JIRA-238 02-10-2020
@@ -64,7 +67,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( 
 		std::smatch oRegexMatchGroups = *oRegexBeginIt;
 
 		CFunction oGlobalFunction{};
-		oGlobalFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
+		oGlobalFunction.SetType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
 		oGlobalFunction.SetName( oRegexMatchGroups[eFunctionNameGroup] );
 
 		if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
@@ -81,7 +84,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( 
 			oGlobalFunction.SetInformation( oFunctionInformation );
 		}
 
-		oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oGlobalFunction } );
+		oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oGlobalFunction } );
 	}
 
 	return oMemberFunctionVector;
@@ -96,6 +99,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctions( const 
 
 	std::vector<SFindDataResult<CFunction>> oGlobalFunctionVector = FindGlobalFunctionHeaders( oCodeWithoutCommentsString );
 	RetrieveBodyFunctions( oCodeString, oGlobalFunctionVector );
+	FindLocalVariables( oGlobalFunctionVector );
 
 	return oGlobalFunctionVector;
 }
@@ -131,7 +135,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 
 		if ( oRegexMatchGroups[eFunctionReturnTypeGroup].matched )
 		{
-			oMemberFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
+			oMemberFunction.SetType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
 		}
 
 		if ( oRegexMatchGroups[eFunctionDestructorGroup].matched )
@@ -153,7 +157,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 			oMemberFunction.SetInformation( oFunctionInformation );
 		}
 
-		oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oMemberFunction } );
+		oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oMemberFunction } );
 	}
 
 	return oMemberFunctionVector;
@@ -166,8 +170,54 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( const 
 {
 	std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = FindMemberFunctionHeaders( oCodeString );
 	RetrieveBodyFunctions( oCodeString, oMemberFunctionVector );
+	FindLocalVariables( oMemberFunctionVector );
 
 	return oMemberFunctionVector;
+}
+
+// ^^x
+// std::vector<SFindDataResult<CVariable>> CSourceFile::FindGlobalVariables
+// 3BGO JIRA-238 12-10-2020
+std::vector<SFindDataResult<CVariable>> CCodeParser::FindGlobalVariables( const std::string& oCodeString ) const
+{
+	std::vector<SFindDataResult<CVariable>> oGlobalVariableVector{};
+
+	return oGlobalVariableVector;
+}
+
+// ^^x
+// std::vector<SFindDataResult<CVariable>> CSourceFile::FindLocalVariables
+// 3BGO JIRA-238 12-10-2020
+std::vector<SFindDataResult<CVariable>> CCodeParser::FindLocalVariables( const CFunction& oFunction ) const
+{
+	enum EVariableRegexMatchGroups
+	{
+		eRegexMatch,
+		eVariableTypeGroup,
+		eVariableNameGroup,
+	};
+
+	std::vector<SFindDataResult<CVariable>> oLocalVariableVector{};
+	std::regex oRegexPattern{ FIND_VARIABLE_REGEX_STR };
+
+	if ( oFunction.GetBody().has_value() )
+	{
+		const std::string oFunctionBodyString = *oFunction.GetBody();
+
+		const std::sregex_iterator oRegexEndIt{};
+		for ( std::sregex_iterator oRegexBeginIt{ oFunctionBodyString.cbegin(), oFunctionBodyString.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
+		{
+			std::smatch oRegexMatchGroups = *oRegexBeginIt;
+
+			CVariable oVariable{};
+			oVariable.SetType( oRegexMatchGroups[eVariableTypeGroup] );
+			oVariable.SetName( oRegexMatchGroups[eVariableNameGroup] );
+
+			oLocalVariableVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oVariable } );
+		}
+	}
+
+	return oLocalVariableVector;
 }
 
 // ^^x
@@ -271,6 +321,17 @@ void CCodeParser::RetrieveBodyFunctions( const std::string& oCodeString, std::ve
 		{
 			oMemberFunction.oData.SetBody( oMemberFunctionBody );
 		}
+	}
+}
+
+// ^^x
+// void CCodeParser::FindLocalVariables
+// 3BGO JIRA-238 12-10-2020
+void CCodeParser::FindLocalVariables( std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const
+{
+	for ( SFindDataResult<CFunction>& oFunction : oFunctionVector )
+	{
+		oFunction.oData.SetLocalVariables( FindLocalVariables( oFunction.oData ) );
 	}
 }
 

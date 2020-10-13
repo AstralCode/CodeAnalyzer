@@ -63,6 +63,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
                     ProcessSourceFile( oFilePath, oFileContentString );
                     break;
                 }
+                case ECodeFileType::eUnknown:
                 default:
                     break;
                 }
@@ -198,8 +199,8 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
 {
     CSourceFile oSourceFile{ oFilePath };
     oSourceFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
-    oSourceFile.SetGlobalFunctions( m_oCodePareser.FindGlobalFunctions( oFileContentString ) );
     oSourceFile.SetMemberFunctions( m_oCodePareser.FindMemberFunctions( oFileContentString ) );
+    oSourceFile.SetGlobalFunctions( m_oCodePareser.FindGlobalFunctions( oFileContentString ) );
 
     for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {

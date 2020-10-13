@@ -1,7 +1,9 @@
 #pragma once
 
-#include <string>
-#include <optional>
+#include <vector>
+
+#include "Variable.h"
+#include "FindDataResult.h"
 
 struct SFunctionInformation
 {
@@ -18,8 +20,8 @@ public:
 	void SetDestructor( const std::string& oDestructorString );
 	std::optional<std::string> GetDestructor() const;
 
-	void SetReturnType( const std::string& oReturnTypeString );
-	std::optional<std::string> GetReturnType() const;
+	void SetType( const std::string& oReturnTypeString );
+	std::optional<std::string> GetType() const;
 
 	void SetClassName( const std::string& oClassNameString );
 	std::optional<std::string> GetClassName() const;
@@ -33,6 +35,9 @@ public:
 	void SetInformation( const SFunctionInformation& oInformation );
 	std::optional<SFunctionInformation> GetInformation() const;
 
+	void SetLocalVariables( std::vector<SFindDataResult<CVariable>>&& oLocalVariableVector );
+	std::optional<std::vector<SFindDataResult<CVariable>>> GetLocalVariables() const;
+
 	bool IsConstructor() const;
 	bool IsDestructor() const;
 
@@ -41,9 +46,10 @@ public:
 private:
 	std::string m_oNameString;
 	std::optional<std::string> m_oDestructorString;
-	std::optional<std::string> m_oReturnTypeString;
+	std::optional<std::string> m_oTypeString;
 	std::optional<std::string> m_oClassNameString;
 	std::optional<std::string> m_oArgumentListString;
 	std::optional<std::string> m_oBodyString;
 	std::optional<SFunctionInformation> m_oInformation;
+	std::optional<std::vector<SFindDataResult<CVariable>>> m_oLocalVariableVector;
 };

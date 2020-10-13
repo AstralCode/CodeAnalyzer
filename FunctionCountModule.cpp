@@ -1,4 +1,4 @@
-#include "MemberFunctionCountModule.h"
+#include "FunctionCountModule.h"
 
 #include "SourceFile.h"
 

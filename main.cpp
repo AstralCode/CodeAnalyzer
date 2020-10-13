@@ -3,8 +3,8 @@
 #include "CodeAnalyzer.h"
 #include "CsvStatisticsReportWriter.h"
 #include "CodeFileLineCountModule.h"
-#include "MemberFunctionCountModule.h"
-#include "MemberFunctionCodeLineRangeModule.h"
+#include "FunctionCountModule.h"
+#include "FunctionCodeLineRangeModule.h"
 #include "DeveloperAnalyzerModule.h"
 
 // ^^x

@@ -10,6 +10,22 @@ CSourceFile::CSourceFile( const std::filesystem::path& oPath ) :
 }
 
 // ^^x
+// void CSourceFile::SetGlobalVariables
+// 3BGO JIRA-238 12-10-2020
+void CSourceFile::SetGlobalVariables( std::vector<SFindDataResult<CVariable>>&& oGlobalVariableVector )
+{
+	m_oGlobalVariableVector = std::move( oGlobalVariableVector );
+}
+
+// ^^x
+// const std::vector<SFindDataResult<CVariable>>& CSourceFile::GetGlobalVariables
+// 3BGO JIRA-238 12-10-2020
+const std::vector<SFindDataResult<CVariable>>& CSourceFile::GetGlobalVariables() const
+{
+	return m_oGlobalVariableVector;
+}
+
+// ^^x
 // void CSourceFile::SetGlobalFunctions
 // 3BGO JIRA-238 24-09-2020
 void CSourceFile::SetGlobalFunctions( std::vector<SFindDataResult<CFunction>>&& oGlobalFunctionVector )
@@ -24,6 +40,22 @@ void CSourceFile::SetGlobalFunctions( std::vector<SFindDataResult<CFunction>>&& 
 const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetGlobalFunctions() const
 {
 	return m_oGlobalFunctionVector;
+}
+
+// ^^x
+// void CSourceFile::SetMemberVariables
+// 3BGO JIRA-238 12-10-2020
+void CSourceFile::SetMemberVariables( std::map<std::string, SFindDataResult<CVariable>>&& oMemberVariableMap )
+{
+	m_oMemberVariableMap = std::move( oMemberVariableMap );
+}
+
+// ^^x
+// const std::map<std::string, SFindDataResult<CVariable>>& CSourceFile::GetMemberVariables
+// 3BGO JIRA-238 12-10-2020
+const std::map<std::string, SFindDataResult<CVariable>>& CSourceFile::GetMemberVariables() const
+{
+	return m_oMemberVariableMap;
 }
 
 // ^^x

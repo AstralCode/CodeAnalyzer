@@ -33,19 +33,19 @@ std::optional<std::string> CFunction::GetDestructor() const
 }
 
 // ^^x
-// void CFunction::SetReturnType
+// void CFunction::SetType
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetReturnType( const std::string& oReturnTypeString )
+void CFunction::SetType( const std::string& oReturnTypeString )
 {
-    m_oReturnTypeString = oReturnTypeString;
+    m_oTypeString = oReturnTypeString;
 }
 
 // ^^x
-// std::optional<std::string> CFunction::GetReturnType
+// std::optional<std::string> CFunction::GetType
 // 3BGO JIRA-238 09-10-2020
-std::optional<std::string> CFunction::GetReturnType() const
+std::optional<std::string> CFunction::GetType() const
 {
-    return m_oReturnTypeString;
+    return m_oTypeString;
 }
 
 // ^^x
@@ -113,6 +113,22 @@ std::optional<SFunctionInformation> CFunction::GetInformation() const
 }
 
 // ^^x
+// void CFunction::SetLocalVariables
+// 3BGO JIRA-238 09-10-2020
+void CFunction::SetLocalVariables( std::vector<SFindDataResult<CVariable>>&& oVariableVector )
+{
+    m_oLocalVariableVector = std::move( oVariableVector );
+}
+
+// ^^x
+// std::optional<std::vector<SFindDataResult<CVariable>>> CFunction::GetLocalVariables
+// 3BGO JIRA-238 09-10-2020
+std::optional<std::vector<SFindDataResult<CVariable>>> CFunction::GetLocalVariables() const
+{
+    return m_oLocalVariableVector;
+}
+
+// ^^x
 // std::optional<SFunctionInformation> CFunction::GetInformation
 // 3BGO JIRA-238 09-10-2020
 bool CFunction::IsConstructor() const
@@ -121,7 +137,7 @@ bool CFunction::IsConstructor() const
 
     if ( IsMember() )
     {
-        bIsConstructor = !m_oReturnTypeString.has_value();
+        bIsConstructor = !m_oTypeString.has_value();
     }
 
     return bIsConstructor;
@@ -136,7 +152,7 @@ bool CFunction::IsDestructor() const
 
     if ( IsMember() )
     {
-        bIsDestructor = !m_oReturnTypeString.has_value() && m_oDestructorString.has_value();
+        bIsDestructor = !m_oTypeString.has_value() && m_oDestructorString.has_value();
     }
 
     return bIsDestructor;

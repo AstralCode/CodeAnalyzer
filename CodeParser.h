@@ -1,8 +1,10 @@
 #pragma once
 
+#include <map>
 #include <vector>
 
 #include "Function.h"
+#include "Variable.h"
 #include "FindDataResult.h"
 
 class CCodeParser final
@@ -21,6 +23,9 @@ public:
 	std::vector<SFindDataResult<CFunction>> FindMemberFunctionHeaders( const std::string& oCodeString ) const;
 	std::vector<SFindDataResult<CFunction>> FindMemberFunctions( const std::string& oCodeString ) const;
 
+	std::vector<SFindDataResult<CVariable>> FindGlobalVariables( const std::string& oCodeString ) const;
+	std::vector<SFindDataResult<CVariable>> FindLocalVariables( const CFunction& oFunction ) const;
+
 	std::string RemoveSingleLineComments( const std::string& oCodeString ) const;
 	std::string RemoveMultilineComments( const std::string& oCodeString ) const;
 	std::string RemoveIncludeDirectives( const std::string& oCodeString ) const;
@@ -33,6 +38,7 @@ public:
 
 private:
 	void RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oMemberFunctionVector ) const;
+	void FindLocalVariables( std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const;
 
 	std::string PrepareFindGlobalFunctionRegexString() const;
 	std::string PrepareFindMemberFunctionRegexString() const;
