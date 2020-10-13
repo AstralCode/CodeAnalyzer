@@ -99,15 +99,15 @@ std::optional<std::string> CFunction::GetBody() const
 // ^^x
 // void CFunction::SetInformation
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetInformation( const SFunctionInformation& oInformation )
+void CFunction::SetInformation( const SInformation& oInformation )
 {
     m_oInformation = oInformation;
 }
 
 // ^^x
-// std::optional<SFunctionInformation> CFunction::GetInformation
+// std::optional<SInformation> CFunction::GetInformation
 // 3BGO JIRA-238 09-10-2020
-std::optional<SFunctionInformation> CFunction::GetInformation() const
+std::optional<CFunction::SInformation> CFunction::GetInformation() const
 {
     return m_oInformation;
 }

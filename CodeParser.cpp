@@ -77,7 +77,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( 
 
 		if ( oRegexMatchGroups[eFunctionAuthorGroup].matched && oRegexMatchGroups[eFunctionProjectGroup].matched )
 		{
-			SFunctionInformation oFunctionInformation{};
+			CFunction::SInformation oFunctionInformation{};
 			oFunctionInformation.m_oAuthorString = oRegexMatchGroups[eFunctionAuthorGroup];
 			oFunctionInformation.m_oProjectString = oRegexMatchGroups[eFunctionProjectGroup];
 
@@ -150,7 +150,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 
 		if ( oRegexMatchGroups[eFunctionAuthorGroup].matched && oRegexMatchGroups[eFunctionProjectGroup].matched )
 		{
-			SFunctionInformation oFunctionInformation{};
+			CFunction::SInformation oFunctionInformation{};
 			oFunctionInformation.m_oAuthorString = oRegexMatchGroups[eFunctionAuthorGroup];
 			oFunctionInformation.m_oProjectString = oRegexMatchGroups[eFunctionProjectGroup];
 
@@ -225,7 +225,7 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindLocalVariables( const C
 // 3BGO JIRA-238 02-10-2020
 std::string CCodeParser::RemoveSingleLineComments( const std::string& oCodeString ) const
 {
-	return std::regex_replace( oCodeString.data(), std::regex{ FIND_SINGLELINE_COMMENTS_REGEX_STR }, "" );
+	return std::regex_replace( oCodeString, std::regex{ FIND_SINGLELINE_COMMENTS_REGEX_STR }, "" );
 }
 
 // ^^x
@@ -233,7 +233,7 @@ std::string CCodeParser::RemoveSingleLineComments( const std::string& oCodeStrin
 // 3BGO JIRA-238 02-10-2020
 std::string CCodeParser::RemoveMultilineComments( const std::string& oCodeString ) const
 {
-	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MULTILINE_COMMENTS_REGEX_STR }, "" );
+	return std::regex_replace( oCodeString, std::regex{ FIND_MULTILINE_COMMENTS_REGEX_STR }, "" );
 }
 
 // ^^x
@@ -241,7 +241,7 @@ std::string CCodeParser::RemoveMultilineComments( const std::string& oCodeString
 // 3BGO JIRA-238 02-10-2020
 std::string CCodeParser::RemoveIncludeDirectives( const std::string& oCodeString ) const
 {
-	return std::regex_replace( oCodeString.data(), std::regex{ FIND_DIRECTIVE_INCLUDE_REGEX_STR }, "" );
+	return std::regex_replace( oCodeString, std::regex{ FIND_DIRECTIVE_INCLUDE_REGEX_STR }, "" );
 }
 
 // ^^x
@@ -249,7 +249,7 @@ std::string CCodeParser::RemoveIncludeDirectives( const std::string& oCodeString
 // 3BGO JIRA-238 02-10-2020
 std::string CCodeParser::RemoveImplementDynamicMacro( const std::string& oCodeString ) const
 {
-	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MACRO_IMPLEMENT_DYNAMIC_REGEX_STR }, "" );
+	return std::regex_replace( oCodeString, std::regex{ FIND_MACRO_IMPLEMENT_DYNAMIC_REGEX_STR }, "" );
 }
 
 // ^^x
@@ -257,7 +257,7 @@ std::string CCodeParser::RemoveImplementDynamicMacro( const std::string& oCodeSt
 // 3BGO JIRA-238 02-10-2020
 std::string CCodeParser::RemoveImplementDyncreateMacro( const std::string& oCodeString ) const
 {
-	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MACRO_IMPLEMENT_DYNCREATE_REGEX_STR }, "" );
+	return std::regex_replace( oCodeString, std::regex{ FIND_MACRO_IMPLEMENT_DYNCREATE_REGEX_STR }, "" );
 }
 
 // ^^x
@@ -282,7 +282,7 @@ std::string CCodeParser::RemoveMessageMapMacro( const std::string& oCodeString )
 // 3BGO JIRA-238 02-10-2020
 std::string CCodeParser::RemoveMemberDataListInitialization( const std::string& oCodeString ) const
 {
-	return std::regex_replace( oCodeString.data(), std::regex{ FIND_MEMBER_DATA_LIST_INITIALIZATION }, "\n" );
+	return std::regex_replace( oCodeString, std::regex{ FIND_MEMBER_DATA_LIST_INITIALIZATION }, "\n" );
 }
 
 // ^^x

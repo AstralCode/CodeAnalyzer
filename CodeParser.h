@@ -37,7 +37,7 @@ public:
 	std::string RemoveMemberFunctionBodies( const std::string& oCodeString ) const;
 
 private:
-	void RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oMemberFunctionVector ) const;
+	void RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const;
 	void FindLocalVariables( std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const;
 
 	std::string PrepareFindGlobalFunctionRegexString() const;

@@ -13,7 +13,7 @@ std::vector<SStatisticsResult> CCodeAnalyzerModule::GetStatisticsResults() const
 // 3BGO JIRA-238 02-10-2020
 void CCodeAnalyzerModule::CreateStatistics( const std::string& oHeaderString )
 {
-	m_oResultVector.push_back( { oHeaderString.data(), 0u } );
+	m_oResultVector.push_back( { oHeaderString, 0u } );
 }
 
 // ^^x

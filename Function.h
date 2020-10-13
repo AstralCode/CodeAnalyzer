@@ -1,19 +1,20 @@
 #pragma once
 
 #include <vector>
+#include <optional>
 
 #include "Variable.h"
 #include "FindDataResult.h"
 
-struct SFunctionInformation
-{
-	std::string m_oAuthorString;
-	std::string m_oProjectString;
-};
-
 class CFunction final
 {
 public:
+	struct SInformation
+	{
+		std::string m_oAuthorString;
+		std::string m_oProjectString;
+	};
+
 	void SetName( const std::string& oNameString );
 	std::string GetName() const;
 
@@ -32,8 +33,8 @@ public:
 	void SetBody( const std::string& oBodyString );
 	std::optional<std::string> GetBody() const;
 
-	void SetInformation( const SFunctionInformation& oInformation );
-	std::optional<SFunctionInformation> GetInformation() const;
+	void SetInformation( const SInformation& oInformation );
+	std::optional<SInformation> GetInformation() const;
 
 	void SetLocalVariables( std::vector<SFindDataResult<CVariable>>&& oLocalVariableVector );
 	std::optional<std::vector<SFindDataResult<CVariable>>> GetLocalVariables() const;
@@ -50,6 +51,6 @@ private:
 	std::optional<std::string> m_oClassNameString;
 	std::optional<std::string> m_oArgumentListString;
 	std::optional<std::string> m_oBodyString;
-	std::optional<SFunctionInformation> m_oInformation;
+	std::optional<SInformation> m_oInformation;
 	std::optional<std::vector<SFindDataResult<CVariable>>> m_oLocalVariableVector;
 };
