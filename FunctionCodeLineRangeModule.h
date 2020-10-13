@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "StatisticsAnalyzerModule.h"
+#include "CodeAnalyzerModule.h"
 #include "Function.h"
 #include "FindDataResult.h"
 
@@ -17,7 +17,7 @@
 	[4] -> <125-248>	[4P]  -> 4 page
 	[5] -> <249-more>	[4P+] -> 4 and more pages
 */
-class CFunctionCodeLineRangeModule final : public CStatisticsAnalyzerModule
+class CFunctionCodeLineRangeModule final : public CCodeAnalyzerModule
 {
 public:
 	CFunctionCodeLineRangeModule();

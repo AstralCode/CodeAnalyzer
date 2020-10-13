@@ -2,13 +2,13 @@
 
 #include <algorithm>
 
-#include "StatisticsAnalyzerModule.h"
+#include "CodeAnalyzerModule.h"
 
 /*
 	### Module Description ###
 	This module is only for test.
 */
-class CDeveloperAnalyzerModule final : public CStatisticsAnalyzerModule
+class CDeveloperAnalyzerModule final : public CCodeAnalyzerModule
 {
 public:
 	CDeveloperAnalyzerModule( const std::string& oDeveloperString, const unsigned int uiCodeFileCount );

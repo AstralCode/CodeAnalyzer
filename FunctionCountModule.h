@@ -1,13 +1,13 @@
 #pragma once
 
-#include "StatisticsAnalyzerModule.h"
+#include "CodeAnalyzerModule.h"
 
 /*
 	### Module Description ####
 	This module calculates the total number of global and member functions
 	in the source files.
 */
-class CFunctionCountModule final : public CStatisticsAnalyzerModule
+class CFunctionCountModule final : public CCodeAnalyzerModule
 {
 public:
 	CFunctionCountModule();

@@ -4,28 +4,28 @@
 
 #include "ProgramStatusCodes.h"
 #include "CommandLineArgumentDataset.h"
-#include "StatisticsAnalyzerModule.h"
+#include "CodeAnalyzerModule.h"
 #include "CodeParser.h"
 #include "CodeFileTypes.h"
 
 class CCodeAnalyzer final
 {
 public:
-	using StatisticsAnalyzerModule = std::reference_wrapper<CStatisticsAnalyzerModule>;
-	using ConstStatisticsAnalyzerModule = std::reference_wrapper<const CStatisticsAnalyzerModule>;
+	using CodeAnalyzerModule = std::reference_wrapper<CCodeAnalyzerModule>;
+	using ConstCodeAnalyzerModule = std::reference_wrapper<const CCodeAnalyzerModule>;
 
-	using StatisticsAnalyzerModuleVector = std::vector<StatisticsAnalyzerModule>;
-	using ConstStatisticsAnalyzerModuleVector = std::vector<ConstStatisticsAnalyzerModule>;
+	using CodeAnalyzerModuleVector = std::vector<CodeAnalyzerModule>;
+	using ConstCodeAnalyzerModuleVector = std::vector<ConstCodeAnalyzerModule>;
 
 	CCodeAnalyzer() = default;
 
 	CCodeAnalyzer( const CCodeAnalyzer& ) = delete;
 	CCodeAnalyzer& operator=( const CCodeAnalyzer& ) = delete;
 
-	template<typename TDerivedStatisticsAnalyzerModule, typename... TArguments>
+	template<typename TDerivedCodeAnalyzerModule, typename... TArguments>
 	void AddAnalyzerModule( TArguments&&... oArguments );
 
-	ConstStatisticsAnalyzerModuleVector GetAnalyzerModules() const;
+	ConstCodeAnalyzerModuleVector GetAnalyzerModules() const;
 
 	EProgramStatusCodes Execute( const SCommandLineArgumentDataset& oCommandLineArgumentDataset );
 
@@ -46,16 +46,16 @@ private:
 
 	CCodeParser m_oCodePareser;
 	std::filesystem::path m_oInputDirectoryPath;
-	std::vector<std::unique_ptr<CStatisticsAnalyzerModule>> m_oAnalyzerModuleVector;
+	std::vector<std::unique_ptr<CCodeAnalyzerModule>> m_oAnalyzerModuleVector;
 };
 
 // ^^x
 // void CCodeAnalyzer::AddAnalyzerModule
 // 3BGO JIRA-238 24-09-2020
-template<typename TDerivedStatisticsAnalyzerModule, typename... TArguments>
+template<typename TDerivedCodeAnalyzerModule, typename... TArguments>
 inline void CCodeAnalyzer::AddAnalyzerModule( TArguments&&... oArguments )
 {
-	static_assert(std::is_base_of<CStatisticsAnalyzerModule, TDerivedStatisticsAnalyzerModule>::value, "TDerivedStatisticsAnalyzerModule class must derived from CStatisticsAnalyzerModule base class");
+	static_assert(std::is_base_of<CCodeAnalyzerModule, TDerivedCodeAnalyzerModule>::value, "TDerivedCodeAnalyzerModule class must derived from CCodeAnalyzerModule base class");
 
-	m_oAnalyzerModuleVector.push_back(std::make_unique<TDerivedStatisticsAnalyzerModule>( std::forward<TArguments&&>( oArguments )... ) );
+	m_oAnalyzerModuleVector.push_back(std::make_unique<TDerivedCodeAnalyzerModule>( std::forward<TArguments&&>( oArguments )... ) );
 }

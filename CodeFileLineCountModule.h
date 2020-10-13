@@ -1,13 +1,13 @@
 #pragma once
 
-#include "StatisticsAnalyzerModule.h"
+#include "CodeAnalyzerModule.h"
 
 /*
 	### Module Description ###
 	This module calculates the total number of lines of code
 	in the header and source files.
 */
-class CCodeFileLineCountModule final : public CStatisticsAnalyzerModule
+class CCodeFileLineCountModule final : public CCodeAnalyzerModule
 {
 public:
 	CCodeFileLineCountModule();

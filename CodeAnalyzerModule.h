@@ -8,14 +8,14 @@
 class CHeaderFile;
 class CSourceFile;
 
-class CStatisticsAnalyzerModule
+class CCodeAnalyzerModule
 {
 public:
-	CStatisticsAnalyzerModule() = default;
-	virtual ~CStatisticsAnalyzerModule() = default;
+	CCodeAnalyzerModule() = default;
+	virtual ~CCodeAnalyzerModule() = default;
 
-	CStatisticsAnalyzerModule( const CStatisticsAnalyzerModule& ) = delete;
-	CStatisticsAnalyzerModule& operator=( const CStatisticsAnalyzerModule& ) = delete;
+	CCodeAnalyzerModule( const CCodeAnalyzerModule& ) = delete;
+	CCodeAnalyzerModule& operator=( const CCodeAnalyzerModule& ) = delete;
 
 	virtual void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) = 0;
 	virtual void ProcessSourceFile( const CSourceFile& oSourceFile ) = 0;

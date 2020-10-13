@@ -8,13 +8,13 @@
 #include "HeaderFile.h"
 
 // ^^x
-// CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetAnalyzerModules
+// CCodeAnalyzer::ConstCodeAnalyzerModuleVector CCodeAnalyzer::GetAnalyzerModules
 // 3BGO JIRA-238 24-09-2020
-CCodeAnalyzer::ConstStatisticsAnalyzerModuleVector CCodeAnalyzer::GetAnalyzerModules() const
+CCodeAnalyzer::ConstCodeAnalyzerModuleVector CCodeAnalyzer::GetAnalyzerModules() const
 {
-    ConstStatisticsAnalyzerModuleVector oAnalyzerModuleVector{};
+    ConstCodeAnalyzerModuleVector oAnalyzerModuleVector{};
 
-    std::for_each( m_oAnalyzerModuleVector.cbegin(), m_oAnalyzerModuleVector.cend(), [&oAnalyzerModuleVector]( const std::unique_ptr<CStatisticsAnalyzerModule>& upoModule )
+    std::for_each( m_oAnalyzerModuleVector.cbegin(), m_oAnalyzerModuleVector.cend(), [&oAnalyzerModuleVector]( const std::unique_ptr<CCodeAnalyzerModule>& upoModule )
     {
         oAnalyzerModuleVector.emplace_back( std::cref( *upoModule ) );
     });
@@ -186,7 +186,7 @@ void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, c
     CHeaderFile oHeaderFile{ oFilePath };
     oHeaderFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
 
-    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
+    for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
         upoAnalyzerModule->ProcessHeaderFile( oHeaderFile );
     }
@@ -202,7 +202,7 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
     oSourceFile.SetMemberFunctions( m_oCodePareser.FindMemberFunctions( oFileContentString ) );
     oSourceFile.SetGlobalFunctions( m_oCodePareser.FindGlobalFunctions( oFileContentString ) );
 
-    for ( std::unique_ptr<CStatisticsAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
+    for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
         upoAnalyzerModule->ProcessSourceFile( oSourceFile );
     }
