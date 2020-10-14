@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ProgramStatusCodes.h"
-#include "CommandLineArgumentDataset.h"
 #include "StatisticsResult.h"
 
 class CCsvStatisticsReportWriter
