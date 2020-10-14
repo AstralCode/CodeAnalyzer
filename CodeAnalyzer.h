@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <filesystem>
 
 #include "ProgramStatusCodes.h"
-#include "CommandLineArgumentDataset.h"
 #include "CodeAnalyzerModule.h"
 #include "CodeParser.h"
 #include "CodeFileTypes.h"
@@ -11,12 +11,6 @@
 class CCodeAnalyzer final
 {
 public:
-	using CodeAnalyzerModule = std::reference_wrapper<CCodeAnalyzerModule>;
-	using ConstCodeAnalyzerModule = std::reference_wrapper<const CCodeAnalyzerModule>;
-
-	using CodeAnalyzerModuleVector = std::vector<CodeAnalyzerModule>;
-	using ConstCodeAnalyzerModuleVector = std::vector<ConstCodeAnalyzerModule>;
-
 	CCodeAnalyzer() = default;
 
 	CCodeAnalyzer( const CCodeAnalyzer& ) = delete;
@@ -25,9 +19,9 @@ public:
 	template<typename TDerivedCodeAnalyzerModule, typename... TArguments>
 	void AddAnalyzerModule( TArguments&&... oArguments );
 
-	ConstCodeAnalyzerModuleVector GetAnalyzerModules() const;
+	std::vector<SStatisticsResult> GetStatisticsResults() const;
 
-	EProgramStatusCodes Execute( const SCommandLineArgumentDataset& oCommandLineArgumentDataset );
+	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath );
 
 	static unsigned int CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath );
 	static std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath );

@@ -23,8 +23,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 	{
 		if ( oCommandLineArgumentDataset.oDeveloperString.has_value() )
 		{
-			const unsigned int uiCodeFileCount = CCodeAnalyzer::CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath );
-			oCodeAnalyzer.AddAnalyzerModule<CDeveloperAnalyzerModule>( *oCommandLineArgumentDataset.oDeveloperString, uiCodeFileCount );
+			oCodeAnalyzer.AddAnalyzerModule<CDeveloperAnalyzerModule>( *oCommandLineArgumentDataset.oDeveloperString );
 		}
 		else
 		{
@@ -33,13 +32,18 @@ int main( int iArgumentCount, char* apcArguments[] )
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
 		}
 
-		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset );
+		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath );
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
+			const unsigned int uiCodeFileCount = CCodeAnalyzer::CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath );
+
 			std::filesystem::path oOutputReportPath{};
 
-			eStatus = oStatisticsReportWriter.CreateReport( oCodeAnalyzer.GetAnalyzerModules(), oCommandLineArgumentDataset, oOutputReportPath );
+			std::vector<SStatisticsResult> oStatisticsResults = oCodeAnalyzer.GetStatisticsResults();
+			oStatisticsResults.insert( oStatisticsResults.begin(), SStatisticsResult{ "Files", uiCodeFileCount } );
+
+			eStatus = oStatisticsReportWriter.CreateReport( oStatisticsResults, oCommandLineArgumentDataset.oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString, oOutputReportPath );
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{

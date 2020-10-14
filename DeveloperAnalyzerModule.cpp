@@ -7,10 +7,9 @@
 // ^^x
 // CDeveloperAnalyzerModule::CDeveloperAnalyzerModule
 // 3BGO JIRA-238 24-09-2020
-CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( const std::string& oDeveloperString, const unsigned int uiCodeFileCount ) :
+CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( const std::string& oDeveloperString ) :
     m_oDeveloperString{ oDeveloperString }
 {
-    CreateStatistics( "Files" );
     CreateStatistics( "Functions" );
     CreateStatistics( "Function Length QP [0-16]" );
     CreateStatistics( "Function Length HP [17-32]" );
@@ -19,8 +18,6 @@ CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( const std::string& oDevelope
     CreateStatistics( "Function Length 4P [125-248]" );
     CreateStatistics( "Function Length 4P+ [249-more]" );
     CreateStatistics( "Functions Parse Error" );
-
-    GetStatistics( EStatisticsId::eFiles ).uiValue = uiCodeFileCount;
 }
 
 // ^^x

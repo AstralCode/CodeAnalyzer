@@ -9,21 +9,19 @@
 // ^^x
 // EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CCodeAnalyzer::ConstCodeAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset, std::filesystem::path& oOutputReportPath )
+EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<SStatisticsResult>& oStatisticsResultVector, const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString, std::filesystem::path& oOutputReportPath )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	oOutputReportPath = PrepareOutputReportPath( oCommandLineArgumentDataset.oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString );
+	oOutputReportPath = PrepareOutputReportPath( oOutputDirectoryPath, oReportPrefixNameString );
 	
 	std::ofstream oFileStream{ oOutputReportPath.string(), std::fstream::out };
 	char cDataSeparator{};
 
 	if ( oFileStream.is_open() )
 	{
-		eStatus = AssignDataSeparator( oCommandLineArgumentDataset, cDataSeparator );
-
-		WriteStatisticsHeaders( oFileStream, oAnalyzerModuleVector, cDataSeparator );
-		WriteStatisticsValues( oFileStream, oAnalyzerModuleVector, cDataSeparator );
+		WriteStatisticsHeaders( oFileStream, oStatisticsResultVector );
+		WriteStatisticsValues( oFileStream, oStatisticsResultVector );
 	}
 	else
 	{
@@ -36,74 +34,42 @@ EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CCodeAnalyze
 }
 
 // ^^x
-// EProgramStatusCodes CCsvStatisticsReportWriter::AssignDataSeparator
+// void CCsvStatisticsReportWriter::WriteStatisticsHeaders
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCsvStatisticsReportWriter::AssignDataSeparator( const SCommandLineArgumentDataset& oCommandLineArgumentDataset, char& cDataSeparator ) const
+void CCsvStatisticsReportWriter::WriteStatisticsHeaders( std::ofstream& oFileStream, const std::vector<SStatisticsResult>& oStatisticsResultVector ) const
 {
-	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
-
-	cDataSeparator = ';';
-
-	if ( oCommandLineArgumentDataset.oReportDataSeparatorString.has_value() )
+	for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultVector.size(); ++uiResultIndex )
 	{
-		if ( oCommandLineArgumentDataset.oReportDataSeparatorString->size() == 1u )
+		oFileStream << oStatisticsResultVector[uiResultIndex].oHeaderString;
+			
+		if ( uiResultIndex + 1 < oStatisticsResultVector.size() )
 		{
-			cDataSeparator = ( *oCommandLineArgumentDataset.oReportDataSeparatorString )[0u];
+			oFileStream << ';';
 		}
 		else
 		{
-			eStatus = EProgramStatusCodes::eIncorrectDataSeparatorArgument;
+			oFileStream << '\n';
 		}
-	}
-
-	return eStatus;
-}
-
-// ^^x
-// void CCsvStatisticsReportWriter::WriteStatisticsHeaders
-// 3BGO JIRA-238 24-09-2020
-void CCsvStatisticsReportWriter::WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstCodeAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const
-{
-	for ( unsigned int uiModuleIndex{ 0u }; uiModuleIndex < oAnalyzerModuleVector.size(); ++uiModuleIndex )
-	{
-		const CCodeAnalyzerModule& oAnalyzerModule = oAnalyzerModuleVector[uiModuleIndex].get();
-		const std::vector<SStatisticsResult> oStatisticsResultVector = oAnalyzerModule.GetStatisticsResults();
-
-		for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultVector.size(); ++uiResultIndex )
-		{
-			oFileStream << oStatisticsResultVector[uiResultIndex].oHeaderString;
-			
-			if ( uiResultIndex + 1 < oStatisticsResultVector.size() )
-			{
-				oFileStream << cDataSeparator;
-			}
-		}
-
-		oFileStream << ( ( uiModuleIndex + 1 < oAnalyzerModuleVector.size() ) ? cDataSeparator : '\n' );
 	}
 }
 
 // ^^x
 // void CCsvStatisticsReportWriter::WriteStatisticsValues
 // 3BGO JIRA-238 24-09-2020
-void CCsvStatisticsReportWriter::WriteStatisticsValues( std::ofstream& oFileStream, const CCodeAnalyzer::ConstCodeAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const
+void CCsvStatisticsReportWriter::WriteStatisticsValues( std::ofstream& oFileStream, const std::vector<SStatisticsResult>& oStatisticsResultVector ) const
 {
-	for ( unsigned int uiModuleIndex{ 0u }; uiModuleIndex < oAnalyzerModuleVector.size(); ++uiModuleIndex )
+	for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultVector.size(); ++uiResultIndex )
 	{
-		const CCodeAnalyzerModule& oAnalyzerModule = oAnalyzerModuleVector[uiModuleIndex].get();
-		const std::vector<SStatisticsResult> oStatisticsResultVector = oAnalyzerModule.GetStatisticsResults();
+		oFileStream << oStatisticsResultVector[uiResultIndex].uiValue;
 
-		for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultVector.size(); ++uiResultIndex )
+		if ( uiResultIndex + 1 < oStatisticsResultVector.size() )
 		{
-			oFileStream << oStatisticsResultVector[uiResultIndex].uiValue;
-
-			if ( uiResultIndex + 1 < oStatisticsResultVector.size() )
-			{
-				oFileStream << cDataSeparator;
-			}
+			oFileStream << ';';
 		}
-
-		oFileStream << ( ( uiModuleIndex + 1 < oAnalyzerModuleVector.size() ) ? cDataSeparator : '\n' );
+		else
+		{
+			oFileStream << '\n';
+		}
 	}
 }
 

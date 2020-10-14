@@ -9,7 +9,7 @@
 class CDeveloperAnalyzerModule final : public CCodeAnalyzerModule
 {
 public:
-	CDeveloperAnalyzerModule( const std::string& oDeveloperString, const unsigned int uiCodeFileCount );
+	CDeveloperAnalyzerModule( const std::string& oDeveloperString );
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
@@ -17,7 +17,6 @@ public:
 private:
 	enum EStatisticsId
 	{
-		eFiles,
 		eFunctions,
 		eFunctionQPLength,
 		eFunctionHPLength,

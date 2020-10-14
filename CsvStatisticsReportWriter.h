@@ -1,20 +1,20 @@
 #pragma once
 
-#include "CodeAnalyzer.h"
+#include "ProgramStatusCodes.h"
+#include "CommandLineArgumentDataset.h"
+#include "StatisticsResult.h"
 
 class CCsvStatisticsReportWriter
 {
 public:
-	EProgramStatusCodes CreateReport( const CCodeAnalyzer::ConstCodeAnalyzerModuleVector& oAnalyzerModuleVector, const SCommandLineArgumentDataset& oCommandLineArgumentDataset, std::filesystem::path& oFilePath );
+	EProgramStatusCodes CreateReport( const std::vector<SStatisticsResult>& oStatisticsResultVector, const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString, std::filesystem::path& oOutputReportPath );
 
 	CCsvStatisticsReportWriter( const CCsvStatisticsReportWriter& ) = delete;
 	CCsvStatisticsReportWriter& operator=( const CCsvStatisticsReportWriter& ) = delete;
 
 private:
-	EProgramStatusCodes AssignDataSeparator( const SCommandLineArgumentDataset& oCommandLineArgumentDataset, char& cDataSeparator ) const;
-
-	void WriteStatisticsHeaders( std::ofstream& oFileStream, const CCodeAnalyzer::ConstCodeAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const;
-	void WriteStatisticsValues( std::ofstream& oFileStream, const CCodeAnalyzer::ConstCodeAnalyzerModuleVector& oAnalyzerModuleVector, const char cDataSeparator ) const;
+	void WriteStatisticsHeaders( std::ofstream& oFileStream, const std::vector<SStatisticsResult>& oStatisticsResultVector ) const;
+	void WriteStatisticsValues( std::ofstream& oFileStream, const std::vector<SStatisticsResult>& oStatisticsResultVector ) const;
 
 	std::filesystem::path PrepareOutputReportPath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const;
 };

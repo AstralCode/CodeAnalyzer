@@ -8,24 +8,25 @@
 #include "HeaderFile.h"
 
 // ^^x
-// CCodeAnalyzer::ConstCodeAnalyzerModuleVector CCodeAnalyzer::GetAnalyzerModules
+// std::vector<SStatisticsResult> CCodeAnalyzer::GetStatisticsResults
 // 3BGO JIRA-238 24-09-2020
-CCodeAnalyzer::ConstCodeAnalyzerModuleVector CCodeAnalyzer::GetAnalyzerModules() const
+std::vector<SStatisticsResult> CCodeAnalyzer::GetStatisticsResults() const
 {
-    ConstCodeAnalyzerModuleVector oAnalyzerModuleVector{};
+    std::vector<SStatisticsResult> oStatisticsResultVector{};
 
-    std::for_each( m_oAnalyzerModuleVector.cbegin(), m_oAnalyzerModuleVector.cend(), [&oAnalyzerModuleVector]( const std::unique_ptr<CCodeAnalyzerModule>& upoModule )
+    for ( const std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
-        oAnalyzerModuleVector.emplace_back( std::cref( *upoModule ) );
-    });
+        const std::vector<SStatisticsResult> oAnalyzerModuleResults = upoAnalyzerModule->GetStatisticsResults();
+        oStatisticsResultVector.insert( oStatisticsResultVector.end(), oAnalyzerModuleResults.cbegin(), oAnalyzerModuleResults.cend() );
+    }
 
-    return oAnalyzerModuleVector;
+    return oStatisticsResultVector;
 }
 
 // ^^x
 // EProgramStatusCodes CCodeAnalyzer::Execute
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& oCommandLineArgumentDataset )
+EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath )
 {
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
@@ -35,7 +36,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
     std::string oFileContentString{};
     unsigned int uiProcessCodeFileNumber{ 0u };
 
-    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oCommandLineArgumentDataset.oInputDirectoryPath };
+    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
@@ -43,7 +44,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const SCommandLineArgumentDataset& o
 
         if ( eFileType != ECodeFileType::eUnknown )
         {
-            PrintProgress( ++uiProcessCodeFileNumber, CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath ) );
+            PrintProgress( ++uiProcessCodeFileNumber, CountNumberCodeFiles( oInputDirectoryPath ) );
 
             eStatus = ReadFileContent( oFilePath, oFileContentString );
 

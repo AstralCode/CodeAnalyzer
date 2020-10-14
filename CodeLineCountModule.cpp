@@ -8,7 +8,7 @@
 // 3BGO JIRA-238 24-09-2020
 CCodeLineCountModule::CCodeLineCountModule()
 {
-    CreateStatistics( "Code Line Count" );
+    CreateStatistics( "Code Lines" );
 }
 
 // ^^x
