@@ -2,9 +2,9 @@
 #include "CommandLineHandler.h"
 #include "CodeAnalyzer.h"
 #include "CsvStatisticsReportWriter.h"
-#include "CodeFileLineCountModule.h"
+#include "CodeLineCountModule.h"
 #include "FunctionCountModule.h"
-#include "FunctionCodeLineRangeModule.h"
+#include "FunctionLengthModule.h"
 #include "DeveloperAnalyzerModule.h"
 
 // ^^x
@@ -28,9 +28,9 @@ int main( int iArgumentCount, char* apcArguments[] )
 		}
 		else
 		{
-			oCodeAnalyzer.AddAnalyzerModule<CCodeFileLineCountModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CCodeLineCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CFunctionCodeLineRangeModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
 		}
 
 		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset );

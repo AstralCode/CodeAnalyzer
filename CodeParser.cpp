@@ -178,7 +178,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( const 
 // ^^x
 // std::vector<SFindDataResult<CVariable>> CSourceFile::FindGlobalVariables
 // 3BGO JIRA-238 12-10-2020
-std::vector<SFindDataResult<CVariable>> CCodeParser::FindGlobalVariables( const std::string& oCodeString ) const
+std::vector<SFindDataResult<CVariable>> CCodeParser::FindGlobalVariables( const std::string& /*oCodeString*/ ) const
 {
 	std::vector<SFindDataResult<CVariable>> oGlobalVariableVector{};
 

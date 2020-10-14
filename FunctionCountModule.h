@@ -3,7 +3,7 @@
 #include "CodeAnalyzerModule.h"
 
 /*
-	### Module Description ####
+	### Description ###
 	This module calculates the total number of global and member functions
 	in the source files.
 */
@@ -14,4 +14,10 @@ public:
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
+
+private:
+	enum EStatisticsId
+	{
+		eTotalFunctionCount
+	};
 };

@@ -3,15 +3,21 @@
 #include "CodeAnalyzerModule.h"
 
 /*
-	### Module Description ###
+	### Description ###
 	This module calculates the total number of lines of code
 	in the header and source files.
 */
-class CCodeFileLineCountModule final : public CCodeAnalyzerModule
+class CCodeLineCountModule final : public CCodeAnalyzerModule
 {
 public:
-	CCodeFileLineCountModule();
+	CCodeLineCountModule();
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
+
+private:
+	enum EStatisticsId
+	{
+		eTotalCodeLineCount
+	};
 };

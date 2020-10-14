@@ -4,8 +4,6 @@
 #include <vector>
 
 #include "Function.h"
-#include "Variable.h"
-#include "FindDataResult.h"
 
 class CCodeParser final
 {

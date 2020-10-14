@@ -1,7 +1,5 @@
 #pragma once
 
-#include <filesystem>
-
 #include "CodeAnalyzer.h"
 
 class CCsvStatisticsReportWriter

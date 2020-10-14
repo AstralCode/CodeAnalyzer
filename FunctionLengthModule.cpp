@@ -1,13 +1,13 @@
-#include "FunctionCodeLineRangeModule.h"
+#include "FunctionLengthModule.h"
 
 #include "SourceFile.h"
 #include "StringHelper.h"
 #include "Utility.h"
 
 // ^^x
-// CFunctionCodeLineRangeModule::CFunctionCodeLineRangeModule
+// CFunctionLengthModule::CFunctionLengthModule
 // 3BGO JIRA-239 30-09-2020
-CFunctionCodeLineRangeModule::CFunctionCodeLineRangeModule()
+CFunctionLengthModule::CFunctionLengthModule()
 {
     CreateStatistics( "Function Length QP [0-16]" );
     CreateStatistics( "Function Length HP [17-32]" );
@@ -18,26 +18,26 @@ CFunctionCodeLineRangeModule::CFunctionCodeLineRangeModule()
 }
 
 // ^^x
-// void CFunctionCodeLineRangeModule::ProcessHeaderFile
+// void CFunctionLengthModule::ProcessHeaderFile
 // 3BGO JIRA-239 30-09-2020
-void CFunctionCodeLineRangeModule::ProcessHeaderFile( const CHeaderFile& )
+void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile& )
 {
 
 }
 
 // ^^x
-// void CFunctionCodeLineRangeModule::ProcessSourceFile
+// void CFunctionLengthModule::ProcessSourceFile
 // 3BGO JIRA-238 24-09-2020
-void CFunctionCodeLineRangeModule::ProcessSourceFile( const CSourceFile& oSourceFile )
+void CFunctionLengthModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
     CalculateStatistics( oSourceFile.GetGlobalFunctions() );
     CalculateStatistics( oSourceFile.GetMemberFunctions() );
 }
 
 // ^^x
-// void CFunctionCodeLineRangeModule::CalculateStatistics
+// void CFunctionLengthModule::CalculateStatistics
 // 3BGO JIRA-238 24-09-2020
-void CFunctionCodeLineRangeModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector )
+void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector )
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {

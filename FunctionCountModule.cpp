@@ -23,6 +23,6 @@ void CFunctionCountModule::ProcessHeaderFile( const CHeaderFile& )
 // 3BGO JIRA-238 24-09-2020
 void CFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    GetStatistics( 0u ).uiValue += oSourceFile.GetGlobalFunctions().size();
-    GetStatistics( 0u ).uiValue += oSourceFile.GetMemberFunctions().size();
+    GetStatistics( EStatisticsId::eTotalFunctionCount ).uiValue += oSourceFile.GetGlobalFunctions().size();
+    GetStatistics( EStatisticsId::eTotalFunctionCount ).uiValue += oSourceFile.GetMemberFunctions().size();
 }

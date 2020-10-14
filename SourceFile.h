@@ -5,8 +5,6 @@
 
 #include "CodeFile.h"
 #include "Function.h"
-#include "Variable.h"
-#include "FindDataResult.h"
 
 class CSourceFile final : public CCodeFile
 {
