@@ -39,7 +39,7 @@ void CDeveloperAnalyzerModule::ProcessSourceFile( const CSourceFile& oSourceFile
     {
         if ( oMemberFunction.oData.GetInformation().has_value() )
         {
-            if ( oMemberFunction.oData.GetInformation()->m_oAuthorString == m_oDeveloperString )
+            if ( oMemberFunction.oData.GetInformation()->oAuthorString == m_oDeveloperString )
             {
                 ++GetStatistics( EStatisticsId::eFunctions ).uiValue;
 

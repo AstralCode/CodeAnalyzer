@@ -33,19 +33,19 @@ std::optional<std::string> CFunction::GetDestructor() const
 }
 
 // ^^x
-// void CFunction::SetType
+// void CFunction::SetReturnType
 // 3BGO JIRA-238 09-10-2020
-void CFunction::SetType( const std::string& oReturnTypeString )
+void CFunction::SetReturnType( const std::string& oReturnTypeString )
 {
-    m_oTypeString = oReturnTypeString;
+    m_oReturnTypeString = oReturnTypeString;
 }
 
 // ^^x
-// std::optional<std::string> CFunction::GetType
+// std::optional<std::string> CFunction::GetReturnType
 // 3BGO JIRA-238 09-10-2020
-std::optional<std::string> CFunction::GetType() const
+std::optional<std::string> CFunction::GetReturnType() const
 {
-    return m_oTypeString;
+    return m_oReturnTypeString;
 }
 
 // ^^x
@@ -137,7 +137,7 @@ bool CFunction::IsConstructor() const
 
     if ( IsMember() )
     {
-        bIsConstructor = !m_oTypeString.has_value();
+        bIsConstructor = !m_oReturnTypeString.has_value();
     }
 
     return bIsConstructor;
@@ -152,7 +152,7 @@ bool CFunction::IsDestructor() const
 
     if ( IsMember() )
     {
-        bIsDestructor = !m_oTypeString.has_value() && m_oDestructorString.has_value();
+        bIsDestructor = !m_oReturnTypeString.has_value() && m_oDestructorString.has_value();
     }
 
     return bIsDestructor;

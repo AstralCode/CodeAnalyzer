@@ -200,6 +200,7 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
 {
     CSourceFile oSourceFile{ oFilePath };
     oSourceFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
+    oSourceFile.SetGlobalVariables( m_oCodePareser.FindGlobalVariables( oFileContentString ) );
     oSourceFile.SetMemberFunctions( m_oCodePareser.FindMemberFunctions( oFileContentString ) );
     oSourceFile.SetGlobalFunctions( m_oCodePareser.FindGlobalFunctions( oFileContentString ) );
 

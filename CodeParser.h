@@ -23,6 +23,7 @@ public:
 
 	std::vector<SFindDataResult<CVariable>> FindGlobalVariables( const std::string& oCodeString ) const;
 	std::vector<SFindDataResult<CVariable>> FindLocalVariables( const CFunction& oFunction ) const;
+	std::vector<SFindDataResult<CVariable>> FindVariables( const std::string& oCodeString ) const;
 
 	std::string RemoveSingleLineComments( const std::string& oCodeString ) const;
 	std::string RemoveMultilineComments( const std::string& oCodeString ) const;

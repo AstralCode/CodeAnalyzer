@@ -11,8 +11,8 @@ class CFunction final
 public:
 	struct SInformation
 	{
-		std::string m_oAuthorString;
-		std::string m_oProjectString;
+		std::string oAuthorString;
+		std::string oProjectString;
 	};
 
 	void SetName( const std::string& oNameString );
@@ -21,8 +21,8 @@ public:
 	void SetDestructor( const std::string& oDestructorString );
 	std::optional<std::string> GetDestructor() const;
 
-	void SetType( const std::string& oReturnTypeString );
-	std::optional<std::string> GetType() const;
+	void SetReturnType( const std::string& oReturnTypeString );
+	std::optional<std::string> GetReturnType() const;
 
 	void SetClassName( const std::string& oClassNameString );
 	std::optional<std::string> GetClassName() const;
@@ -47,7 +47,7 @@ public:
 private:
 	std::string m_oNameString;
 	std::optional<std::string> m_oDestructorString;
-	std::optional<std::string> m_oTypeString;
+	std::optional<std::string> m_oReturnTypeString;
 	std::optional<std::string> m_oClassNameString;
 	std::optional<std::string> m_oArgumentListString;
 	std::optional<std::string> m_oBodyString;
