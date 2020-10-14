@@ -43,22 +43,6 @@ const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetGlobalFunctions()
 }
 
 // ^^x
-// void CSourceFile::SetMemberVariables
-// 3BGO JIRA-238 12-10-2020
-void CSourceFile::SetMemberVariables( std::map<std::string, SFindDataResult<CVariable>>&& oMemberVariableMap )
-{
-	m_oMemberVariableMap = std::move( oMemberVariableMap );
-}
-
-// ^^x
-// const std::map<std::string, SFindDataResult<CVariable>>& CSourceFile::GetMemberVariables
-// 3BGO JIRA-238 12-10-2020
-const std::map<std::string, SFindDataResult<CVariable>>& CSourceFile::GetMemberVariables() const
-{
-	return m_oMemberVariableMap;
-}
-
-// ^^x
 // void CSourceFile::SetMemberFunctions
 // 3BGO JIRA-238 24-09-2020
 void CSourceFile::SetMemberFunctions( std::vector<SFindDataResult<CFunction>>&& oMemberFunctionVector )
