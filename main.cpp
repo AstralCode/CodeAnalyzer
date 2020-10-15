@@ -30,8 +30,8 @@ int main( int iArgumentCount, char* apcArguments[] )
 		{
 			oCodeAnalyzer.AddAnalyzerModule<CCodeLineCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CGlobalCountModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
 		}
 
 		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath );
