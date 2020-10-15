@@ -16,7 +16,6 @@ EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<
 	oOutputReportPath = PrepareOutputReportPath( oOutputDirectoryPath, oReportPrefixNameString );
 	
 	std::ofstream oFileStream{ oOutputReportPath.string(), std::fstream::out };
-	char cDataSeparator{};
 
 	if ( oFileStream.is_open() )
 	{

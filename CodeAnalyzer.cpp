@@ -36,15 +36,16 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
     std::string oFileContentString{};
     unsigned int uiProcessCodeFileNumber{ 0u };
 
+    const unsigned int uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
-    
+
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
         const ECodeFileType eFileType = CheckFileType( oFilePath );
 
         if ( eFileType != ECodeFileType::eUnknown )
         {
-            PrintProgress( ++uiProcessCodeFileNumber, CountNumberCodeFiles( oInputDirectoryPath ) );
+           PrintProgress( ++uiProcessCodeFileNumber, uiProcessCodeFileCount );
 
             eStatus = ReadFileContent( oFilePath, oFileContentString );
 

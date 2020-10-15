@@ -5,6 +5,7 @@
 #include "CodeLineCountModule.h"
 #include "FunctionCountModule.h"
 #include "FunctionLengthModule.h"
+#include "GlobalCountModule.h"
 #include "DeveloperAnalyzerModule.h"
 
 // ^^x
@@ -30,6 +31,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 			oCodeAnalyzer.AddAnalyzerModule<CCodeLineCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CGlobalCountModule>();
 		}
 
 		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath );

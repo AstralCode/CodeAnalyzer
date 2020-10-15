@@ -3,5 +3,5 @@
 struct SStatisticsResult
 {
 	std::string oHeaderString;
-	unsigned int uiValue{ 0u };
+	std::size_t uiValue{ 0u };
 };
