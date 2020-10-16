@@ -9,10 +9,10 @@ constexpr const char* FIND_FUNCTION_HEADER_INFORMATION_REGEX_STR =
 R"((?:^[ \t]*\/\/\s*\^\^x\n[ \t]*\/\/.*\n[ \t]*\/\/\s*3([a-zA-Z_]{2,3})\s+([a-zA-Z0-9\_\-\. \t]+)\n(?:[\/\/a-zA-Z0-9\_\-\.\(\) \t\n]+)?)?)";
 
 constexpr const char* FIND_GLOBAL_FUNCTION_HEADER_REGEX_STR =
-R"(^[ \t]*(?:static\s+)?([\w:<>:,*&]{3,})(?:[\s\*\&]+)?(?:CALLBACK|__cdecl)?\s+([\w]{3,})\s*\(\s*([\w\t \.\-:<>,*&\/'";\n]+)?\s*\)[\t ]*$)";
+R"(^[ \t]*(?:static\s+)?([\w\:\<\>\:\,\*\&]{3,})(?:[\s\*\&]+)?(?:CALLBACK|__cdecl)?\s+([\w]{3,})\s*\(\s*([\w\t \.\-\:\<\>\,\*\&\/'\"\;\[\]\n]+)?\s*\)[\t ]*$)";
 
 constexpr const char* FIND_MEMBER_FUNCTION_HEADER_REGEX_STR =
-R"(^[ \t]*(?:inline\s+)?(?:([\w:<>,*&]{3,})(?:[\s\*\&]+)?\s+)?(?:__cdecl\s+)?([\w:]+)::(\~)?([\w]+)\s*\(\s*([\w\t \.\-:<>,*&\/='";\n]+)?\s*\)\s*(?:const)?[ \t]*$)";
+R"(^[ \t]*(?:inline\s+)?(?:([\w\:\<\>\,\*\&]{3,})(?:[\s\*\&]+)?\s+)?(?:__cdecl\s+)?([\w\:]+)::(\~)?([\w]+)\s*\(\s*([\w\t \.\-\:\<\>\,\*\&\/\=\'\"\;\n]+)?\s*\)\s*(?:const)?[ \t]*$)";
 
 constexpr const char* FIND_SINGLELINE_COMMENTS_REGEX_STR =
 R"((?:\/\/.*))";
@@ -33,7 +33,7 @@ constexpr const char* FIND_MEMBER_DATA_LIST_INITIALIZATION =
 R"(\:(?:\s+(?:\w+(?:[\{\(]).*(?:[\}\)])(?:\,)?)+)+)";
 
 constexpr const char* FIND_VARIABLE_REGEX_STR =
-R"(^[\t ]*((?:static\s+)?(?:const\s+)?(?:\w+::)*(?!(?:return|delete|class))(?:unsigned\s+|signed\s+)?\w{3,})(?:[*&]+)?\s+(\w+)(?:\[.*\)?\])?(?:\s*(?:=\s*.*?)|(?:\(.*\)|(?:\[.*\])))?;$)";
+R"(^[\t ]*((?:static\s+)?(?:constexpr\s+)?(?:const\s+)?(?:\w+::)*(?!(?:return|delete|class))(?:unsigned\s+|signed\s+)?\w{3,}(?:\<.*\>)?)(?:[*&]+)?\s+(\w+)\s*(?:\[.*\])?(?:\s*(?:=\s*.*?)|(?:\{.*\}|\(.*\)|(?:\[.*\])))?;$)";
 
 // ^^x
 // unsigned int CCodeParser::CountLines
