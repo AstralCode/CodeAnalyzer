@@ -23,7 +23,7 @@ public:
 
 	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath );
 
-	static unsigned int CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath );
+	static std::size_t CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath );
 	static std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath );
 
 	static ECodeFileType CheckFileType( const std::filesystem::path& oFilePath );
@@ -36,7 +36,7 @@ private:
 	void ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
 	void ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
 
-	void PrintProgress( const unsigned int uiFileNumber, const unsigned int uiFileCount ) const;
+	void PrintProgress( const unsigned int uiFileNumber, const std::size_t uiFileCount ) const;
 
 	CCodeParser m_oCodePareser;
 	std::filesystem::path m_oInputDirectoryPath;

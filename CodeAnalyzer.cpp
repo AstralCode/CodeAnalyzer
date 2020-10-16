@@ -36,7 +36,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
     std::string oFileContentString{};
     unsigned int uiProcessCodeFileNumber{ 0u };
 
-    const unsigned int uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
+    const std::size_t uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
 
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
@@ -83,9 +83,9 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 }
 
 // ^^x
-// unsigned int CCodeAnalyzer::CountNumberCodeFiles
+// std::size_t CCodeAnalyzer::CountNumberCodeFiles
 // 3BGO JIRA-238 24-09-2020
-unsigned int CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath )
+std::size_t CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath )
 {
     return std::count_if( std::filesystem::recursive_directory_iterator{ oDirectoryPath },
                           std::filesystem::recursive_directory_iterator{},
@@ -214,9 +214,9 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
 // ^^x
 // void CCodeAnalyzer::PrintProgress
 // 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const unsigned int uiFileCount ) const
+void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const std::size_t uiFileCount ) const
 {
-    const unsigned int uiCurrentProgressPos = uiFileNumber * 100u / uiFileCount;
+    const std::size_t uiCurrentProgressPos = uiFileNumber * 100u / uiFileCount;
     const std::string oCompleteProgressString( uiCurrentProgressPos / 2u, static_cast<char>( 219 ) );
 
     std::string oProgressBarString( 50u, static_cast<char>( 176 ) );

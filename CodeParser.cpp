@@ -36,9 +36,9 @@ constexpr const char* FIND_VARIABLE_REGEX_STR =
 R"(^[\t ]*((?:static\s+)?(?:constexpr\s+)?(?:const\s+)?(?:\w+::)*(?!(?:return|delete|class))(?:unsigned\s+|signed\s+)?\w{3,}(?:\<.*\>)?)(?:[*&]+)?\s+(\w+)\s*(?:\[.*\])?(?:\s*(?:=\s*.*?)|(?:\{.*\}|\(.*\)|(?:\[.*\])))?;$)";
 
 // ^^x
-// unsigned int CCodeParser::CountLines
+// std::size_t CCodeParser::CountLines
 // 3BGO JIRA-238 02-10-2020
-unsigned int CCodeParser::CountLines( const std::string& oCodeString ) const
+std::size_t CCodeParser::CountLines( const std::string& oCodeString ) const
 {
 	return CStringHelper::SplitLines( oCodeString ).size();
 }

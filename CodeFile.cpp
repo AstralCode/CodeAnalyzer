@@ -21,15 +21,15 @@ std::filesystem::path CCodeFile::GetPath() const
 // ^^x
 // void CCodeFile::SetCodeLineCount
 // 3BGO JIRA-238 05-10-2020
-void CCodeFile::SetCodeLineCount( const unsigned int uiCount )
+void CCodeFile::SetCodeLineCount( const std::size_t uiCount )
 {
 	m_uiCodeLineCount = uiCount;
 }
 
 // ^^x
-// unsigned int CCodeFile::GetCodeLineCount
+// std::size_t CCodeFile::GetCodeLineCount
 // 3BGO JIRA-238 05-10-2020
-unsigned int CCodeFile::GetCodeLineCount() const
+std::size_t CCodeFile::GetCodeLineCount() const
 {
 	return m_uiCodeLineCount;
 }

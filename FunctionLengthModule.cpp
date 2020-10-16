@@ -41,33 +41,33 @@ void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResu
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {
-        unsigned int uiFunctionCodeLineCount = CStringHelper::SplitLines( *oFunction.oData.GetBody() ).size();
+        std::size_t uiFunctionCodeLineCount = CStringHelper::SplitLines( *oFunction.oData.GetBody() ).size();
 
         if ( uiFunctionCodeLineCount >= 2u )
         {
             uiFunctionCodeLineCount -= 2u;
 
-            if ( SRange::Contains( uiFunctionCodeLineCount, 0u, 16u ) )
+            if ( SRange::Contains( uiFunctionCodeLineCount, { 0u }, { 16u } ) )
             {
                 ++GetStatistics( EStatisticsId::eFunctionQPLength ).uiValue;
             }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, 17u, 32u ) )
+            else if ( SRange::Contains( uiFunctionCodeLineCount, { 17u }, { 32u } ) )
             {
                 ++GetStatistics( EStatisticsId::eFunctionHPLength ).uiValue;
             }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, 33u, 62u ) )
+            else if ( SRange::Contains( uiFunctionCodeLineCount, { 33u }, { 62u } ) )
             {
                 ++GetStatistics( EStatisticsId::eFunction1PLength ).uiValue;
             }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, 63u, 124u ) )
+            else if ( SRange::Contains( uiFunctionCodeLineCount, { 63u }, { 124u } ) )
             {
                 ++GetStatistics( EStatisticsId::eFunction2PLength ).uiValue;
             }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, 125u, 248u ) )
+            else if ( SRange::Contains( uiFunctionCodeLineCount, { 125u }, { 248u } ) )
             {
                 ++GetStatistics( EStatisticsId::eFunction4PLength ).uiValue;
             }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, 249u ) )
+            else if ( SRange::Contains( uiFunctionCodeLineCount, { 249u } ) )
             {
                 ++GetStatistics( EStatisticsId::eFunction4PMoreLength ).uiValue;
             }

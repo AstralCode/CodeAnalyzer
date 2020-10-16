@@ -13,10 +13,10 @@ public:
 
 	std::filesystem::path GetPath() const;
 
-	void SetCodeLineCount( const unsigned int uiCount );
-	unsigned int GetCodeLineCount() const;
+	void SetCodeLineCount( const std::size_t uiCount );
+	std::size_t GetCodeLineCount() const;
 
 private:
 	std::filesystem::path m_oPath;
-	unsigned int m_uiCodeLineCount;
+	std::size_t m_uiCodeLineCount;
 };

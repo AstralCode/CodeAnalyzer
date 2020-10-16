@@ -13,7 +13,7 @@ public:
 	CCodeParser( const CCodeParser& ) = delete;
 	CCodeParser& operator=( const CCodeParser& ) = delete;
 
-	unsigned int CountLines( const std::string& oCodeString ) const;
+	std::size_t CountLines( const std::string& oCodeString ) const;
 
 	std::vector<SFindDataResult<CFunction>> FindGlobalFunctionHeaders( const std::string& oCodeString ) const;
 	std::vector<SFindDataResult<CFunction>> FindGlobalFunctions( const std::string& oCodeString ) const;
