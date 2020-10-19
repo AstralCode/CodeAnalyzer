@@ -25,18 +25,19 @@ public:
 	std::vector<SFindDataResult<CVariable>> FindLocalVariables( const CFunction& oFunction ) const;
 	std::vector<SFindDataResult<CVariable>> FindVariables( const std::string& oCodeString ) const;
 
-	std::string RemoveSingleLineComments( const std::string& oCodeString ) const;
-	std::string RemoveMultilineComments( const std::string& oCodeString ) const;
-	std::string RemoveIncludeDirectives( const std::string& oCodeString ) const;
-	std::string RemoveImplementDynamicMacro( const std::string& oCodeString ) const;
-	std::string RemoveImplementDyncreateMacro( const std::string& oCodeString ) const;
-	std::string RemoveMessageMapMacro( const std::string& oCodeString ) const;
-	std::string RemoveMemberDataListInitialization( const std::string& oCodeString ) const;
-	std::string RemoveMemberFunctionBodies( const std::string& oCodeString ) const;
+	void RemoveMultiLineComments( std::string& oCodeString ) const;
+	void RemoveSingleLineComments( std::string& oCodeString ) const;
+	void RemoveDirectives( std::string& oCodeString ) const;
+	void RemoveMacros( std::string& oCodeString ) const;
+	void RemoveStatemets( std::string& oCodeString ) const;
+	void RemoveMemberDataListInitialization( std::string& oCodeString ) const;
+	void RemoveMemberFunctionBodies( std::string& oCodeString ) const;
 
 private:
 	void RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const;
 	void FindLocalVariables( std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const;
+
+	void RemoveMatches( std::string& oCodeString, const char* szRegexPattern ) const;
 
 	std::string PrepareFindGlobalFunctionRegexString() const;
 	std::string PrepareFindMemberFunctionRegexString() const;

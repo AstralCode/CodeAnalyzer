@@ -172,12 +172,11 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
 // 3BGO JIRA-238 24-09-2020
 void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) const
 {
-    oFileContentString = m_oCodePareser.RemoveMultilineComments( oFileContentString );
-    oFileContentString = m_oCodePareser.RemoveMemberDataListInitialization( oFileContentString );
-    oFileContentString = m_oCodePareser.RemoveIncludeDirectives( oFileContentString );
-    oFileContentString = m_oCodePareser.RemoveImplementDynamicMacro( oFileContentString );
-    oFileContentString = m_oCodePareser.RemoveImplementDyncreateMacro( oFileContentString );
-    oFileContentString = m_oCodePareser.RemoveMessageMapMacro( oFileContentString );
+    m_oCodePareser.RemoveMultiLineComments( oFileContentString );
+    m_oCodePareser.RemoveDirectives( oFileContentString );
+    m_oCodePareser.RemoveMacros( oFileContentString );
+    m_oCodePareser.RemoveStatemets( oFileContentString );
+    m_oCodePareser.RemoveMemberDataListInitialization( oFileContentString );
 }
 
 // ^^x
