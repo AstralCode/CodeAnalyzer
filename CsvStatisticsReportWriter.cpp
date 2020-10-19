@@ -19,7 +19,17 @@ EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<
 
 	if ( oFileStream.is_open() )
 	{
+		oFileStream << ';';
+
 		WriteStatisticsHeaders( oFileStream, oStatisticsResultVector );
+
+		if ( oReportPrefixNameString.has_value() )
+		{
+			oFileStream << *oReportPrefixNameString;
+		}
+
+		oFileStream << ';';
+
 		WriteStatisticsValues( oFileStream, oStatisticsResultVector );
 	}
 	else
