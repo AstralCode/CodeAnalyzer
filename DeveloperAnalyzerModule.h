@@ -18,13 +18,13 @@ private:
 	enum EStatisticsId
 	{
 		eFunctions,
+		eFunctionsParseError,
 		eFunctionQPLength,
 		eFunctionHPLength,
 		eFunction1PLength,
 		eFunction2PLength,
 		eFunction4PLength,
-		eFunction4PMoreLength,
-		eFunctionsParseError
+		eFunction4PMoreLength
 	};
 
 	std::string m_oDeveloperString;

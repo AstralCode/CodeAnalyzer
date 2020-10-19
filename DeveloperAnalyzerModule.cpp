@@ -10,14 +10,14 @@
 CDeveloperAnalyzerModule::CDeveloperAnalyzerModule( const std::string& oDeveloperString ) :
     m_oDeveloperString{ oDeveloperString }
 {
-    CreateStatistics( "Functions" );
-    CreateStatistics( "Function Length QP" );
-    CreateStatistics( "Function Length HP" );
-    CreateStatistics( "Function Length 1P" );
-    CreateStatistics( "Function Length 2P" );
-    CreateStatistics( "Function Length 4P" );
-    CreateStatistics( "Function Length 4P+" );
-    CreateStatistics( "Functions Parse Error" );
+    CreateStatistics( "Total Functions" );
+    CreateStatistics( "Total Functions Parse Error" );
+    CreateStatistics( "Functions 'QP'" );
+    CreateStatistics( "Functions 'HP'" );
+    CreateStatistics( "Functions '1P'" );
+    CreateStatistics( "Functions '2P'" );
+    CreateStatistics( "Functions '4P'" );
+    CreateStatistics( "Functions '4P+'" );
 }
 
 // ^^x
