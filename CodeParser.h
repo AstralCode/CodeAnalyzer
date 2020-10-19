@@ -31,7 +31,6 @@ public:
 	std::string RemoveImplementDynamicMacro( const std::string& oCodeString ) const;
 	std::string RemoveImplementDyncreateMacro( const std::string& oCodeString ) const;
 	std::string RemoveMessageMapMacro( const std::string& oCodeString ) const;
-
 	std::string RemoveMemberDataListInitialization( const std::string& oCodeString ) const;
 	std::string RemoveMemberFunctionBodies( const std::string& oCodeString ) const;
 
