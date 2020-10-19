@@ -33,7 +33,6 @@ void CSourceFile::SetGlobalFunctions( std::vector<SFindDataResult<CFunction>>&& 
 	m_oGlobalFunctionVector = std::move( oGlobalFunctionVector );
 }
 
-
 // ^^x
 // const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetGlobalFunctions
 // 3BGO JIRA-238 24-09-2020
@@ -49,7 +48,6 @@ void CSourceFile::SetMemberFunctions( std::vector<SFindDataResult<CFunction>>&& 
 {
 	m_oMemberFunctionVector = std::move( oMemberFunctionVector );
 }
-
 
 // ^^x
 // const std::vector<SFindDataResult<CFunction>>& CSourceFile::GetMemberFunctions
