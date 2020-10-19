@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <filesystem>
+#include <optional>
 
 #include "ProgramStatusCodes.h"
 #include "CodeAnalyzerModule.h"
@@ -21,7 +22,7 @@ public:
 
 	std::vector<SStatisticsResult> GetStatisticsResults() const;
 
-	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath );
+	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath, std::optional<std::string> oDeveloperString = {} );
 
 	static std::size_t CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath );
 	static std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath );
@@ -33,8 +34,10 @@ private:
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
 	void PreProcessFileContent( std::string& oFileContentString ) const;
 
-	void ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
-	void ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString );
+	void ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString );
+	void ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString );
+
+	void FilterResults( std::vector<SFindDataResult<CFunction>>& oFunctionVector, std::optional<std::string> oDeveloperString ) const;
 
 	void PrintProgress( const unsigned int uiFileNumber, const std::size_t uiFileCount ) const;
 

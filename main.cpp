@@ -6,7 +6,6 @@
 #include "FunctionCountModule.h"
 #include "FunctionLengthModule.h"
 #include "GlobalCountModule.h"
-#include "DeveloperAnalyzerModule.h"
 
 // ^^x
 // int main
@@ -22,19 +21,12 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 	if ( eStatus == EProgramStatusCodes::eSuccess )
 	{
-		if ( oCommandLineArgumentDataset.oDeveloperString.has_value() )
-		{
-			oCodeAnalyzer.AddAnalyzerModule<CDeveloperAnalyzerModule>( *oCommandLineArgumentDataset.oDeveloperString );
-		}
-		else
-		{
-			oCodeAnalyzer.AddAnalyzerModule<CCodeLineCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CFunctionCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CGlobalCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
-		}
+		oCodeAnalyzer.AddAnalyzerModule<CCodeLineCountModule>();
+		oCodeAnalyzer.AddAnalyzerModule<CFunctionCountModule>();
+		oCodeAnalyzer.AddAnalyzerModule<CGlobalCountModule>();
+		oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
 
-		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath );
+		eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath, oCommandLineArgumentDataset.oDeveloperString );
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{

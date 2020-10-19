@@ -26,7 +26,7 @@ std::vector<SStatisticsResult> CCodeAnalyzer::GetStatisticsResults() const
 // ^^x
 // EProgramStatusCodes CCodeAnalyzer::Execute
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath )
+EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath, std::optional<std::string> oDeveloperString )
 {
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
@@ -57,12 +57,12 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
                 {
                 case ECodeFileType::eHeader:
                 {
-                    ProcessHeaderFile( oFilePath, oFileContentString );
+                    ProcessHeaderFile( oFilePath, oFileContentString, oDeveloperString );
                     break;
                 }
                 case ECodeFileType::eSource:
                 {
-                    ProcessSourceFile( oFilePath, oFileContentString );
+                    ProcessSourceFile( oFilePath, oFileContentString, oDeveloperString );
                     break;
                 }
                 case ECodeFileType::eUnknown:
@@ -183,7 +183,7 @@ void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) con
 // ^^x
 // void CCodeAnalyzer::ProcessHeaderFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString )
+void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString )
 {
     CHeaderFile oHeaderFile{ oFilePath };
     oHeaderFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
@@ -197,17 +197,45 @@ void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, c
 // ^^x
 // void CCodeAnalyzer::ProcessSourceFile
 // 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString )
+void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString )
 {
     CSourceFile oSourceFile{ oFilePath };
     oSourceFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
     oSourceFile.SetGlobalVariables( m_oCodePareser.FindGlobalVariables( oFileContentString ) );
-    oSourceFile.SetMemberFunctions( m_oCodePareser.FindMemberFunctions( oFileContentString ) );
-    oSourceFile.SetGlobalFunctions( m_oCodePareser.FindGlobalFunctions( oFileContentString ) );
+
+    std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = m_oCodePareser.FindMemberFunctions( oFileContentString );
+    FilterResults( oMemberFunctionVector, oDeveloperString );
+
+    std::vector<SFindDataResult<CFunction>> oGlobalFunctionVector = m_oCodePareser.FindGlobalFunctions( oFileContentString );
+    FilterResults( oGlobalFunctionVector, oDeveloperString );
+
+    oSourceFile.SetMemberFunctions( std::move( oMemberFunctionVector ) );
+    oSourceFile.SetGlobalFunctions( std::move( oGlobalFunctionVector ) );
 
     for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
         upoAnalyzerModule->ProcessSourceFile( oSourceFile );
+    }
+}
+
+// ^^x
+// void CCodeAnalyzer::FilterResults
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzer::FilterResults( std::vector<SFindDataResult<CFunction>>& oFunctionVector, std::optional<std::string> oDeveloperString ) const
+{
+    if ( oDeveloperString.has_value() )
+    {
+        const std::vector<SFindDataResult<CFunction>>::iterator oFunctionVectorIt = std::remove_if( oFunctionVector.begin(), oFunctionVector.end(), [oDeveloperString]( const SFindDataResult<CFunction>& oFunction )
+        {
+            if ( oFunction.oData.GetInformation().has_value() )
+            {
+                return oFunction.oData.GetInformation()->oAuthorString != *oDeveloperString;
+            }
+
+            return true;
+        } );
+
+        oFunctionVector.erase( oFunctionVectorIt, oFunctionVector.cend() );
     }
 }
 
