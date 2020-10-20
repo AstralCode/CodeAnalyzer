@@ -54,7 +54,7 @@ std::string CStringHelper::Replace( const std::string& oInputString, const std::
 // 3BGO JIRA-238 06-10-2020
 std::string CStringHelper::Remove( const std::string& oInputString, const std::string& oSubString )
 {
-
+	return {};
 }
 
 // ^^x
