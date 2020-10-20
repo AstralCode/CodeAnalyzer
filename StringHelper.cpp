@@ -50,6 +50,47 @@ std::string CStringHelper::Replace( const std::string& oInputString, const std::
 }
 
 // ^^x
+// std::string CStringHelper::Remove
+// 3BGO JIRA-238 06-10-2020
+std::string CStringHelper::Remove( const std::string& oInputString, const std::string& oSubString )
+{
+
+}
+
+// ^^x
+// std::string CStringHelper::Remove
+// 3BGO JIRA-238 06-10-2020
+std::string CStringHelper::Remove( const std::string& oInputString, const std::string& oLeftString, const std::string& oRightString )
+{
+	std::string oResultString = oInputString;
+
+	std::string::size_type uiCurrentOffsetPos{ 0u };
+
+	while ( uiCurrentOffsetPos < oResultString.size() )
+	{
+		const std::string::size_type uiBegPos = oResultString.find( oLeftString, uiCurrentOffsetPos );
+		uiCurrentOffsetPos = uiBegPos;
+
+		if ( uiBegPos != std::string::npos )
+		{
+			uiCurrentOffsetPos += oLeftString.size();
+
+			const std::string::size_type uiEndPos = oResultString.find( oRightString, uiCurrentOffsetPos );
+			
+			if ( uiEndPos != std::string::npos )
+			{
+				const std::string::size_type uiLength = ( uiEndPos - uiBegPos ) + oRightString.size();
+				
+				oResultString.erase( uiBegPos, uiLength );
+				uiCurrentOffsetPos = uiBegPos;
+			}
+		}
+	}
+
+	return oResultString;
+}
+
+// ^^x
 // std::string CStringHelper::ToLowerCase
 // 3BGO JIRA-238 06-10-2020
 std::string CStringHelper::ToLowerCase( const std::string& oInputString )

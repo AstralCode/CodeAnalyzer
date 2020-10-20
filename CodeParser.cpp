@@ -216,27 +216,7 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::s
 // 3BGO JIRA-238 02-10-2020
 void CCodeParser::RemoveMultiLineComments( std::string& oCodeString ) const
 {
-	std::string::size_type uiCurrentCodeOffsetPos{ 0u };
-
-	while( uiCurrentCodeOffsetPos < oCodeString.size() )
-	{
-		const std::string::size_type uiMultiLineCommentBegPos = oCodeString.find( "/*", uiCurrentCodeOffsetPos );
-		uiCurrentCodeOffsetPos = uiMultiLineCommentBegPos;
-
-		if ( uiMultiLineCommentBegPos != std::string::npos )
-		{
-			uiCurrentCodeOffsetPos += 2u;
-
-			const std::string::size_type uiMultiLineCommentEndPos = oCodeString.find( "*/", uiCurrentCodeOffsetPos );
-			if ( uiMultiLineCommentEndPos != std::string::npos )
-			{
-				const std::string::size_type uiMultilineCommentLength = ( uiMultiLineCommentEndPos - uiMultiLineCommentBegPos ) + std::string{ "*/" }.size();
-				oCodeString.erase( uiMultiLineCommentBegPos, uiMultilineCommentLength );
-
-				uiCurrentCodeOffsetPos = uiMultiLineCommentBegPos;
-			}
-		}
-	}
+	oCodeString = CStringHelper::Remove( oCodeString, "/*", "*/" );
 }
 
 // ^^x
@@ -254,6 +234,7 @@ void CCodeParser::RemoveDirectives( std::string& oCodeString ) const
 {
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_DIRECTIVE_INCLUDE );
 }
+
 // ^^x
 // void CCodeParser::RemoveMacros
 // 3BGO JIRA-238 02-10-2020
@@ -262,18 +243,7 @@ void CCodeParser::RemoveMacros( std::string& oCodeString ) const
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_MACRO_IMPLEMENT_DYNAMIC );
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_MACRO_IMPLEMENT_DYNCREATE );
 
-	constexpr const char* SZ_MACRO_MESSAGE_MAP_BEG = "BEGIN_MESSAGE_MAP";
-	constexpr const char* SZ_MACRO_MESSAGE_MAP_END = "END_MESSAGE_MAP()";
-
-	const std::string::size_type uiMacroMessageMapBegPos = oCodeString.find( SZ_MACRO_MESSAGE_MAP_BEG );
-
-	if ( uiMacroMessageMapBegPos != std::string::npos )
-	{
-		const std::string::size_type uiMacroMessageMapEndPos = oCodeString.find( SZ_MACRO_MESSAGE_MAP_END );
-		const std::string::size_type uiMacroMessageMapLength = ( uiMacroMessageMapEndPos - uiMacroMessageMapBegPos ) + std::string{ SZ_MACRO_MESSAGE_MAP_END }.size();
-
-		oCodeString.erase( uiMacroMessageMapBegPos, uiMacroMessageMapLength );
-	}
+	oCodeString = CStringHelper::Remove( oCodeString, "BEGIN_MESSAGE_MAP", "END_MESSAGE_MAP()" );
 }
 
 // ^^x
@@ -281,7 +251,8 @@ void CCodeParser::RemoveMacros( std::string& oCodeString ) const
 // 3BGO JIRA-238 02-10-2020
 void CCodeParser::RemoveStatemets( std::string& oCodeString ) const
 {
-
+	oCodeString = CStringHelper::Remove( oCodeString, "\"", "\"" );
+	oCodeString = CStringHelper::Remove( oCodeString, "'", "'" );
 }
 
 // ^^x
