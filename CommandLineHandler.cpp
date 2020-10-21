@@ -4,12 +4,14 @@
 
 #include "StringHelper.h"
 
+constexpr unsigned int UI_REQUIRED_ARGS_COUNT = 1;
+
 // ^^x
 // CCommandLineHandler::CCommandLineHandler
 // 3BGO JIRA-238 24-09-2020
 CCommandLineHandler::CCommandLineHandler( int iArgumentCount, char* apcArguments[] )
 {
-	for ( int iArgIndex{ 1 }; iArgIndex < iArgumentCount; ++iArgIndex )
+	for ( int iArgIndex{ UI_REQUIRED_ARGS_COUNT }; iArgIndex < iArgumentCount; ++iArgIndex )
     {
 		m_oArgumentVector.push_back( apcArguments[iArgIndex] );
     }
@@ -80,7 +82,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	for ( unsigned int uiArgIndex{ 1u }; uiArgIndex + 1u < m_oArgumentVector.size(); uiArgIndex += 2u )
+	for ( unsigned int uiArgIndex{ UI_REQUIRED_ARGS_COUNT }; uiArgIndex + 1u < m_oArgumentVector.size(); uiArgIndex += 2u )
 	{
 		const std::string& oInputString = m_oArgumentVector[uiArgIndex + 0u] + " " + m_oArgumentVector[uiArgIndex + 1u];
 
