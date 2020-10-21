@@ -80,7 +80,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	for ( unsigned int uiArgIndex{ 2u }; uiArgIndex + 1u < m_oArgumentVector.size(); uiArgIndex += 2u )
+	for ( unsigned int uiArgIndex{ 1u }; uiArgIndex + 1u < m_oArgumentVector.size(); uiArgIndex += 2u )
 	{
 		const std::string& oInputString = m_oArgumentVector[uiArgIndex + 0u] + " " + m_oArgumentVector[uiArgIndex + 1u];
 
