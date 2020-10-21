@@ -24,7 +24,7 @@ EProgramStatusCodes CCommandLineHandler::HandleArguments( SCommandLineArgumentDa
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	if ( m_oArgumentVector.size() < 1u )
+	if ( m_oArgumentVector.size() < UI_REQUIRED_ARGS_COUNT )
 	{
 		eStatus = EProgramStatusCodes::eIncorrectArgumentCount;
 	}
