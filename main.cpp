@@ -59,7 +59,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 				std::filesystem::path oReportPath{};
 
 				std::vector<SStatisticsResult> oStatisticsResults = oCodeAnalyzer.GetStatisticsResults();
-				oStatisticsResults.insert( oStatisticsResults.begin(), SStatisticsResult{ "Total Files", uiCodeFileCount } );
+				oStatisticsResults.insert( oStatisticsResults.begin(), SStatisticsResult{ "Files", uiCodeFileCount } );
 
 				eStatus = oStatisticsReportWriter.CreateReport( oStatisticsResults, oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString, oReportPath );
 

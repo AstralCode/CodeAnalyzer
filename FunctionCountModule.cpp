@@ -7,7 +7,7 @@
 // 3BGO JIRA-239 01-10-2020
 CFunctionCountModule::CFunctionCountModule()
 {
-    CreateStatistics( "Total Functions" );
+    CreateStatistics( "Functions" );
 }
 
 // ^^x
