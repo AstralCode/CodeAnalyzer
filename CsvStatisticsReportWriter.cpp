@@ -9,13 +9,13 @@
 // ^^x
 // EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<SStatisticsResult>& oStatisticsResultVector, const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString, std::filesystem::path& oOutputReportPath )
+EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<SStatisticsResult>& oStatisticsResultVector, const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString, std::filesystem::path& oReportPath )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	oOutputReportPath = PrepareOutputReportPath( oOutputDirectoryPath, oReportPrefixNameString );
+	oReportPath = PrepareOutputReportPath( oOutputDirectoryPath, oReportPrefixNameString );
 	
-	std::ofstream oFileStream{ oOutputReportPath.string(), std::fstream::out };
+	std::ofstream oFileStream{ oReportPath.string(), std::fstream::out };
 
 	if ( oFileStream.is_open() )
 	{
@@ -36,8 +36,7 @@ EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<
 	else
 	{
 		eStatus = EProgramStatusCodes::eOpenOutputFileError;
-
-		oOutputReportPath.clear();
+		oReportPath.clear();
 	}
 
 	return eStatus;

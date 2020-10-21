@@ -22,7 +22,7 @@ EProgramStatusCodes CCommandLineHandler::HandleArguments( SCommandLineArgumentDa
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	if ( m_oArgumentVector.size() < 2u )
+	if ( m_oArgumentVector.size() < 1u )
 	{
 		eStatus = EProgramStatusCodes::eIncorrectArgumentCount;
 	}
@@ -47,7 +47,7 @@ std::string CCommandLineHandler::GetUsageMessage() const
 {
 	return {
 		"usage:" "\n\t"
-			"codeanalyzer.exe <input_directory_path> <output_directory_path>" "\n\n"
+			"codeanalyzer.exe <input_directory_path>" "\n\n"
 		"optional options:" "\n\t"
 			"[--report-prefix]" };
 }
@@ -64,17 +64,6 @@ EProgramStatusCodes CCommandLineHandler::HandleRequiredArguments( SCommandLineAr
 	if ( std::filesystem::exists( oInputDirectoryPath ) && std::filesystem::is_directory( oInputDirectoryPath ) )
 	{
 		oArgumentDataset.oInputDirectoryPath = oInputDirectoryPath;
-
-		const std::filesystem::path oOutputDirectoryPath{ m_oArgumentVector[1] };
-
-		if ( std::filesystem::exists( oOutputDirectoryPath ) && std::filesystem::is_directory( oOutputDirectoryPath ) )
-		{
-			oArgumentDataset.oOutputDirectoryPath = oOutputDirectoryPath;
-		}
-		else
-		{
-			eStatus = EProgramStatusCodes::eIncorrectOutputDirectoryArgument;
-		}
 	}
 	else
 	{
