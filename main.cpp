@@ -17,7 +17,8 @@ EProgramStatusCodes PrepareOutputDirectory( std::filesystem::path& oOutputDirect
 	{
 		std::filesystem::create_directories( oOutputDirectoryPath );
 	}
-	else
+
+	if ( !std::filesystem::exists( oOutputDirectoryPath ) )
 	{
 		eStatus = EProgramStatusCodes::eCreateOutputDirectoryError;
 	}
