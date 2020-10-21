@@ -43,9 +43,12 @@ void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResu
     {
         std::size_t uiFunctionCodeLineCount = CStringHelper::SplitLines( *oFunction.oData.GetBody() ).size();
 
-        if ( uiFunctionCodeLineCount >= 2u )
+        if ( uiFunctionCodeLineCount > 0u )
         {
-            uiFunctionCodeLineCount -= 2u;
+            if ( uiFunctionCodeLineCount >= 2u )
+            {
+                uiFunctionCodeLineCount -= 2u;
+            }
 
             if ( SRange::Contains( uiFunctionCodeLineCount, { 0u }, { 16u } ) )
             {
