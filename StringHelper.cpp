@@ -1,4 +1,4 @@
-#include "StringHelper.h"
+ #include "StringHelper.h"
 
 #include <algorithm>
 #include <iterator>
@@ -54,13 +54,29 @@ std::string CStringHelper::Replace( const std::string& oInputString, const std::
 // 3BGO JIRA-238 06-10-2020
 std::string CStringHelper::Remove( const std::string& oInputString, const std::string& oSubString )
 {
-	return {};
+	std::string oResultString{ oInputString };
+	std::string::size_type uiCurrentOffsetPos{ 0u };
+
+	do
+	{
+		const std::string::size_type uiBegPos = oResultString.find( oSubString, uiCurrentOffsetPos );
+		if ( uiBegPos == std::string::npos )
+		{
+			break;
+		}
+
+		oResultString.erase( uiBegPos, oSubString.size() );
+		uiCurrentOffsetPos = uiBegPos;
+	}
+	while ( true );
+
+	return oResultString;
 }
 
 // ^^x
-// std::string CStringHelper::Remove
+// std::string CStringHelper::RemoveBetween
 // 3BGO JIRA-238 06-10-2020
-std::string CStringHelper::Remove( const std::string& oInputString, const std::string& oLeftString, const std::string& oRightString )
+std::string CStringHelper::RemoveBetween( const std::string& oInputString, const std::string& oLeftString, const std::string& oRightString, bool bSameLine )
 {
 	std::string oResultString = oInputString;
 
@@ -75,8 +91,15 @@ std::string CStringHelper::Remove( const std::string& oInputString, const std::s
 		{
 			uiCurrentOffsetPos += oLeftString.size();
 
-			const std::string::size_type uiEndPos = oResultString.find( oRightString, uiCurrentOffsetPos );
+			std::string::size_type uiEndPos = oResultString.find_first_of( oRightString, uiCurrentOffsetPos );
 			
+			if ( bSameLine )
+			{
+				const std::string::size_type uiNewLinePos = oResultString.find_first_of( "\n", uiCurrentOffsetPos );
+				uiCurrentOffsetPos = uiEndPos;
+				uiEndPos = ( uiNewLinePos < uiEndPos ) ? std::string::npos : uiEndPos;
+			}
+
 			if ( uiEndPos != std::string::npos )
 			{
 				const std::string::size_type uiLength = ( uiEndPos - uiBegPos ) + oRightString.size();

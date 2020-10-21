@@ -12,7 +12,7 @@ public:
 	static std::string Replace( const std::string& oInputString, const std::string& oOldString, const std::string& oNewString );
 
 	static std::string Remove( const std::string& oInputString, const std::string& oSubString );
-	static std::string Remove( const std::string& oInputString, const std::string& oLeftString, const std::string& oRightString );
+	static std::string RemoveBetween( const std::string& oInputString, const std::string& oLeftString, const std::string& oRightString, bool bSameLine = false );
 
 	static std::string ToLowerCase( const std::string& oInputString );
 

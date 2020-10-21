@@ -216,7 +216,7 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::s
 // 3BGO JIRA-238 02-10-2020
 void CCodeParser::RemoveMultiLineComments( std::string& oCodeString ) const
 {
-	oCodeString = CStringHelper::Remove( oCodeString, "/*", "*/" );
+	oCodeString = CStringHelper::RemoveBetween( oCodeString, "/*", "*/" );
 }
 
 // ^^x
@@ -243,7 +243,7 @@ void CCodeParser::RemoveMacros( std::string& oCodeString ) const
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_MACRO_IMPLEMENT_DYNAMIC );
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_MACRO_IMPLEMENT_DYNCREATE );
 
-	oCodeString = CStringHelper::Remove( oCodeString, "BEGIN_MESSAGE_MAP", "END_MESSAGE_MAP()" );
+	oCodeString = CStringHelper::RemoveBetween( oCodeString, "BEGIN_MESSAGE_MAP", "END_MESSAGE_MAP()" );
 }
 
 // ^^x
@@ -251,8 +251,14 @@ void CCodeParser::RemoveMacros( std::string& oCodeString ) const
 // 3BGO JIRA-238 02-10-2020
 void CCodeParser::RemoveStatemets( std::string& oCodeString ) const
 {
-	oCodeString = CStringHelper::Remove( oCodeString, "\"", "\"" );
-	oCodeString = CStringHelper::Remove( oCodeString, "'", "'" );
+	oCodeString = CStringHelper::Remove( oCodeString, R"('{')" );
+	oCodeString = CStringHelper::Remove( oCodeString, R"('}')" );
+	oCodeString = CStringHelper::Remove( oCodeString, R"('"')" );
+	oCodeString = CStringHelper::Remove( oCodeString, R"(\")" );
+	oCodeString = CStringHelper::Remove( oCodeString, R"(')" );
+	oCodeString = CStringHelper::RemoveBetween( oCodeString, R"!(R"()!", R"!()")!" );
+	oCodeString = CStringHelper::RemoveBetween( oCodeString, R"(")", R"(")", true );
+	oCodeString = CStringHelper::Remove( oCodeString, R"(\)" );
 }
 
 // ^^x
@@ -362,55 +368,24 @@ std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCo
 std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oCodeString, std::string::size_type uiCurrentCodeOffsetPos ) const
 {
 	std::string::size_type uiFunctionBracketLevel{ 1u };
-	std::string::size_type uiSyntaxCharacterPos{ std::string::npos };
 
-	bool bBeginCharacterLiteral{ false };
-	bool bBeginStringLiteral{ false };
-
-	while ( uiFunctionBracketLevel > 0u )
+	while ( uiFunctionBracketLevel > 0u && uiCurrentCodeOffsetPos < std::string::npos )
 	{
-		uiSyntaxCharacterPos = oCodeString.find_first_of( "{}'\"", uiCurrentCodeOffsetPos );
+		const std::string::size_type uiSyntaxCharacterPos = oCodeString.find_first_of( "{}", uiCurrentCodeOffsetPos );
+		uiCurrentCodeOffsetPos = uiSyntaxCharacterPos;
 
 		if ( uiSyntaxCharacterPos != std::string::npos )
 		{
 			if ( oCodeString[uiSyntaxCharacterPos] == '{' )
 			{
-				if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
-				{
-					++uiFunctionBracketLevel;
-				}
+				++uiFunctionBracketLevel;
 			}
 			else if ( oCodeString[uiSyntaxCharacterPos] == '}' )
 			{
-				if ( !bBeginCharacterLiteral && !bBeginStringLiteral )
-				{
-					--uiFunctionBracketLevel;
-				}
+				--uiFunctionBracketLevel;
 			}
-			else if ( oCodeString[uiSyntaxCharacterPos] == '\'' )
-			{
-				if ( !bBeginStringLiteral )
-				{
-					bBeginCharacterLiteral = !bBeginCharacterLiteral;
-				}
-			}
-			else if ( oCodeString[uiSyntaxCharacterPos] == '"' )
-			{
-				bBeginStringLiteral = !bBeginStringLiteral;
-			}
-			else if ( oCodeString[uiSyntaxCharacterPos] == '\\' )
-			{
-				if ( !bBeginStringLiteral )
-				{
-					uiSyntaxCharacterPos = oCodeString.find_first_not_of( " \t\n", uiSyntaxCharacterPos + 1u );
-				}
-			}
-			
-			uiCurrentCodeOffsetPos = uiSyntaxCharacterPos + 1u;
-		}
-		else
-		{
-			break;
+
+			++uiCurrentCodeOffsetPos;
 		}
 	}
 
