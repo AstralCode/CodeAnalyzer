@@ -9,12 +9,12 @@
 // 3BGO JIRA-239 30-09-2020
 CFunctionLengthModule::CFunctionLengthModule()
 {
-    CreateStatistics( "Functions 'QP'" );
-    CreateStatistics( "Functions 'HP'" );
-    CreateStatistics( "Functions '1P'" );
-    CreateStatistics( "Functions '2P'" );
-    CreateStatistics( "Functions '4P'" );
-    CreateStatistics( "Functions '4P+'" );
+    CreateStatistics( "Functions Len. 'QP'" );
+    CreateStatistics( "Functions Len. 'HP'" );
+    CreateStatistics( "Functions Len. '1P'" );
+    CreateStatistics( "Functions Len. '2P'" );
+    CreateStatistics( "Functions Len. '4P'" );
+    CreateStatistics( "Functions Len. '4P+'" );
 }
 
 // ^^x

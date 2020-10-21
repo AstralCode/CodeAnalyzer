@@ -18,6 +18,6 @@ public:
 private:
 	enum EStatisticsId
 	{
-		eTotalCodeLineCount
+		eCodeLineCount
 	};
 };

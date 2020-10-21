@@ -11,7 +11,6 @@
 CGlobalCountModule::CGlobalCountModule()
 {
     CreateStatistics( "Global Variables" );
-    CreateStatistics( "Global Functions" );
 }
 
 // ^^x
@@ -27,5 +26,4 @@ void CGlobalCountModule::ProcessHeaderFile( const CHeaderFile& )
 void CGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
     GetStatistics( EStatisticsId::eGlobalVariables ).uiValue += oSourceFile.GetGlobalVariables().size();
-    GetStatistics( EStatisticsId::eGlobalFunctions ).uiValue += oSourceFile.GetGlobalFunctions().size();
 }

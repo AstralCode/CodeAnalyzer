@@ -18,6 +18,8 @@ public:
 private:
 	enum EStatisticsId
 	{
-		eTotalFunctionCount
+		eFunctionCount,
+		eMemberFunctions,
+		eGlobalFunctions
 	};
 };

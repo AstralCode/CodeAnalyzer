@@ -18,7 +18,6 @@ public:
 private:
 	enum EStatisticsId
 	{
-		eGlobalVariables,
-		eGlobalFunctions
+		eGlobalVariables
 	};
 };
