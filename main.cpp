@@ -3,9 +3,10 @@
 #include "CodeAnalyzer.h"
 #include "CsvStatisticsReportWriter.h"
 #include "CodeLineCountModule.h"
+#include "GlobalCountModule.h"
 #include "FunctionCountModule.h"
 #include "FunctionLengthModule.h"
-#include "GlobalCountModule.h"
+#include "FunctionArgsCountModule.h"
 
 EProgramStatusCodes PrepareOutputDirectory( std::filesystem::path& oOutputDirectoryPath )
 {
@@ -49,6 +50,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CGlobalCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CFunctionArgsCountModule>();
 
 			eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath, oCommandLineArgumentDataset.oDeveloperString );
 

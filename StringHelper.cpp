@@ -130,6 +130,66 @@ std::string CStringHelper::ToLowerCase( const std::string& oInputString )
 }
 
 // ^^x
+// std::string CStringHelper::TrimLeft
+// 3BGO JIRA-238 22-10-2020
+std::string CStringHelper::TrimLeft( const std::string& oInputString )
+{
+	std::string oResultString{ oInputString };
+
+	const std::string::const_iterator oStringIt = std::find_if( oResultString.cbegin(), oResultString.cend(), []( const unsigned char cCharacter )
+	{
+		return !std::isspace( cCharacter );
+	} );
+
+	oResultString.erase( oResultString.cbegin(), oStringIt );
+
+	return oResultString;
+}
+
+// ^^x
+// std::string CStringHelper::TrimRight
+// 3BGO JIRA-238 22-10-2020
+std::string CStringHelper::TrimRight( const std::string& oInputString )
+{
+	std::string oResultString{ oInputString };
+
+	const std::string::const_iterator oStringIt = std::find_if( oResultString.crbegin(), oResultString.crend(), []( const unsigned char cCharacter )
+	{
+		return !std::isspace( cCharacter );
+	} ).base();
+
+	oResultString.erase( oStringIt, oResultString.cend() );
+
+	return oResultString;
+}
+
+// ^^x
+// std::string CStringHelper::Trim
+// 3BGO JIRA-238 22-10-2020
+std::string CStringHelper::Trim( const std::string& oInputString )
+{
+	return TrimRight( TrimLeft( oInputString ) );
+}
+
+// ^^x
+// std::vector<std::string> CStringHelper::Split
+// 3BGO JIRA-238 22-10-2020
+std::vector<std::string> CStringHelper::Split( const std::string& oInputString, const char cDelimiter )
+{
+	std::vector<std::string> oLineVector{};
+
+	std::istringstream oStringStream{ oInputString };
+	std::string oLineString{};
+
+	while ( std::getline( oStringStream, oLineString, cDelimiter ) )
+	{
+		oLineVector.push_back( oLineString );
+	}
+
+	return oLineVector;
+}
+
+// ^^x
 // std::vector<std::string> CStringHelper::SplitLines
 // 3BGO JIRA-238 02-10-2020
 std::vector<std::string> CStringHelper::SplitLines( const std::string& oInputString )

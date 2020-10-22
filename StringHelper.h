@@ -16,5 +16,11 @@ public:
 
 	static std::string ToLowerCase( const std::string& oInputString );
 
+	static std::string TrimLeft( const std::string& oInputString );
+	static std::string TrimRight( const std::string& oInputString );
+	static std::string Trim( const std::string& oInputString );
+
+	static std::vector<std::string> Split( const std::string& oInputString, const char cDelimiter );
+
 	static std::vector<std::string> SplitLines( const std::string& oInputString );
 };
