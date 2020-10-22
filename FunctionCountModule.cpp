@@ -4,7 +4,7 @@
 
 // ^^x
 // CFunctionCountModule::CFunctionCountModule
-// 3BGO JIRA-239 01-10-2020
+// 3BGO JIRA-238 01-10-2020
 CFunctionCountModule::CFunctionCountModule()
 {
     CreateStatistics( "Functions" );
@@ -14,7 +14,7 @@ CFunctionCountModule::CFunctionCountModule()
 
 // ^^x
 // void CFunctionCountModule::ProcessHeaderFile
-// 3BGO JIRA-239 01-10-2020
+// 3BGO JIRA-238 01-10-2020
 void CFunctionCountModule::ProcessHeaderFile( const CHeaderFile& )
 {
 

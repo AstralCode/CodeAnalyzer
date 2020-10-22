@@ -1,9 +1,17 @@
 #include "CodeAnalyzerModule.h"
 
 // ^^x
-// std::vector<SStatisticsResult> CCodeAnalyzerModule::GetStatisticsResults
+// void CCodeAnalyzerModule::OnComplete
+// 3BGO JIRA-238 22-10-2020
+void CCodeAnalyzerModule::OnComplete()
+{
+
+}
+
+// ^^x
+// const std::vector<SStatisticsResult>& CCodeAnalyzerModule::GetStatisticsResults
 // 3BGO JIRA-238 02-10-2020
-std::vector<SStatisticsResult> CCodeAnalyzerModule::GetStatisticsResults() const
+const std::vector<SStatisticsResult>& CCodeAnalyzerModule::GetStatisticsResults() const
 {
 	return m_oResultVector;
 }

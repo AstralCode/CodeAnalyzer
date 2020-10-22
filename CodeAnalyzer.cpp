@@ -30,54 +30,25 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 {
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-    CConsoleInterface::PrintLineTime( "Code analysis in progress..." );
-    CConsoleInterface::Print( "  Calculating the number of files. Please wait...\r" );
-   
-    std::string oFileContentString{};
     unsigned int uiProcessCodeFileNumber{ 0u };
 
-    const std::size_t uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
-    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
+    ExecutionBegun();
 
+    const std::size_t uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
+
+    std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
         const ECodeFileType eFileType = CheckFileType( oFilePath );
 
         if ( eFileType != ECodeFileType::eUnknown )
         {
-           PrintProgress( ++uiProcessCodeFileNumber, uiProcessCodeFileCount );
-
-            eStatus = ReadFileContent( oFilePath, oFileContentString );
-
-            if ( eStatus == EProgramStatusCodes::eSuccess )
-            {
-                PreProcessFileContent( oFileContentString );
-
-                switch ( eFileType )
-                {
-                case ECodeFileType::eHeader:
-                {
-                    ProcessHeaderFile( oFilePath, oFileContentString, oDeveloperString );
-                    break;
-                }
-                case ECodeFileType::eSource:
-                {
-                    ProcessSourceFile( oFilePath, oFileContentString, oDeveloperString );
-                    break;
-                }
-                case ECodeFileType::eUnknown:
-                default:
-                    break;
-                }
-            }
+            ProcessCodeFile( eFileType, oFilePath, oDeveloperString );
+            PrintProgress( ++uiProcessCodeFileNumber, uiProcessCodeFileCount );
         }
     }
 
-    if ( eStatus == EProgramStatusCodes::eSuccess )
-    {
-        CConsoleInterface::ClearLine();
-        CConsoleInterface::PrintLineTime( "Analysis complete!" );
-    }
+    ExecutionComplete( eStatus );
 
     return eStatus;
 }
@@ -127,8 +98,7 @@ ECodeFileType CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePa
             {
                 eType = ECodeFileType::eHeader;
             }
-
-            if ( oFilePath.extension() == ".cpp" )
+            else if ( oFilePath.extension() == ".cpp" )
             {
                 eType = ECodeFileType::eSource;
             }
@@ -157,11 +127,46 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
 
     if ( oFileStream.is_open() )
     {
-        oFileContentString.assign( std::istreambuf_iterator<char>{ oFileStream }, std::istreambuf_iterator<char>{} );
+        oFileContentString.assign( std::istreambuf_iterator<char>{ oFileStream }, {} );
     }
     else
     {
         eStatus = EProgramStatusCodes::eOpenInputFileError;
+    }
+
+    return eStatus;
+}
+
+// ^^x
+// EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile
+// 3BGO JIRA-238 24-09-2020
+EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileType eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString )
+{
+    std::string oCodeString{};
+
+    EProgramStatusCodes eStatus = ReadFileContent( oFilePath, oCodeString );
+    
+    if ( eStatus == EProgramStatusCodes::eSuccess )
+    {
+        PreProcessFileContent( oCodeString );
+
+        switch ( eFileType )
+        {
+            case ECodeFileType::eHeader:
+                {
+                    ProcessHeaderFile( oFilePath, oCodeString, oDeveloperString );
+                    break;
+                }
+            case ECodeFileType::eSource:
+                {
+                    ProcessSourceFile( oFilePath, oCodeString, oDeveloperString );
+                    break;
+                }
+            case ECodeFileType::eUnknown:
+            default:
+                eStatus = EProgramStatusCodes::eUnknownInputFileType;
+                break;
+        }
     }
 
     return eStatus;
@@ -235,6 +240,32 @@ void CCodeAnalyzer::FilterResults( std::vector<SFindDataResult<CFunction>>& oFun
         } );
 
         oFunctionVector.erase( oFunctionVectorIt, oFunctionVector.cend() );
+    }
+}
+
+// ^^x
+// void CCodeAnalyzer::ExecutionBegun
+// 3BGO JIRA-238 22-10-2020
+void CCodeAnalyzer::ExecutionBegun()
+{
+    CConsoleInterface::PrintLineTime( "Code analysis in progress..." );
+    CConsoleInterface::Print( "  Calculating the number of files. Please wait...\r" );
+}
+
+// ^^x
+// void CCodeAnalyzer::ExecutionComplete
+// 3BGO JIRA-238 22-10-2020
+void CCodeAnalyzer::ExecutionComplete( const EProgramStatusCodes eStatus )
+{
+    if ( eStatus == EProgramStatusCodes::eSuccess )
+    {
+        for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
+        {
+            upoAnalyzerModule->OnComplete();
+        }
+
+        CConsoleInterface::ClearLine();
+        CConsoleInterface::PrintLineTime( "Analysis complete!" );
     }
 }
 

@@ -32,12 +32,17 @@ public:
 
 private:
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
+	EProgramStatusCodes ProcessCodeFile( const ECodeFileType eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString );
+
 	void PreProcessFileContent( std::string& oFileContentString ) const;
 
 	void ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString );
 	void ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString );
 
 	void FilterResults( std::vector<SFindDataResult<CFunction>>& oFunctionVector, std::optional<std::string> oDeveloperString ) const;
+
+	void ExecutionBegun();
+	void ExecutionComplete( const EProgramStatusCodes eStatus );
 
 	void PrintProgress( const unsigned int uiFileNumber, const std::size_t uiFileCount ) const;
 

@@ -23,6 +23,8 @@ public:
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
 
+	void OnComplete() override;
+
 private:
 	enum EStatisticsId
 	{
@@ -35,4 +37,7 @@ private:
 	};
 
 	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector );
+
+	std::size_t SumStatisticsValues() const;
+	void ToPercent( std::size_t& uiStatisticsValue, const std::size_t uiTotalSumStatisticsValue );
 };

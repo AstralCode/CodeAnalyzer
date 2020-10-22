@@ -20,7 +20,9 @@ public:
 	virtual void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) = 0;
 	virtual void ProcessSourceFile( const CSourceFile& oSourceFile ) = 0;
 
-	std::vector<SStatisticsResult> GetStatisticsResults() const;
+	virtual void OnComplete();
+
+	const std::vector<SStatisticsResult>& GetStatisticsResults() const;
 
 protected:
 	void CreateStatistics( const std::string& oHeaderString );
