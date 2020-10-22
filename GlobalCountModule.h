@@ -10,6 +10,10 @@
 	### Description ###
 	This module calculates the total number of global
 	functions and variables in the source files only.
+
+	Note: The module uses exclude type list,
+	which are not treat as Global variable, eq.
+	primitive types like char, int, short, long, etc.
 */
 class CGlobalCountModule final : public CCodeAnalyzerModule
 {

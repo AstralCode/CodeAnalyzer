@@ -13,7 +13,7 @@
 	[2] -> <33-62>		[1P]  -> 1 page
 	[3] -> <63-124>		[2P]  -> 2 page
 	[4] -> <125-248>	[4P]  -> 4 page
-	[5] -> <249-more>	[4P+] -> 4 and more pages
+	[5] -> <249-more>	[4P+] -> 5 and more pages
 */
 class CFunctionLengthModule final : public CCodeAnalyzerModule
 {
