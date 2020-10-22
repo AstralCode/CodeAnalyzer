@@ -1,6 +1,10 @@
 #pragma once
 
+#include <array>
+
 #include "CodeAnalyzerModule.h"
+#include "FindDataResult.h"
+#include "Variable.h"
 
 /*
 	### Description ###
@@ -20,4 +24,9 @@ private:
 	{
 		eGlobalVariables
 	};
+
+	static std::array<std::string_view, 19u> aszExcludedVariableType;
+
+	void PrepareVariableType( std::string& oVariableTypeString ) const;
+	void FilterVariableTypes( std::vector<SFindDataResult<CVariable>>& oVariableVector ) const;
 };
