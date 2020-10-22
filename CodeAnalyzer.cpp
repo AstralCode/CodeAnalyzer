@@ -16,7 +16,7 @@ std::vector<SStatisticsResult> CCodeAnalyzer::GetStatisticsResults() const
 
     for ( const std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
-        const std::vector<SStatisticsResult> oAnalyzerModuleResults = upoAnalyzerModule->GetStatisticsResults();
+        const std::vector<SStatisticsResult>& oAnalyzerModuleResults = upoAnalyzerModule->GetStatisticsResults();
         oStatisticsResultVector.insert( oStatisticsResultVector.end(), oAnalyzerModuleResults.cbegin(), oAnalyzerModuleResults.cend() );
     }
 
