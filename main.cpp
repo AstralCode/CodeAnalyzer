@@ -77,5 +77,10 @@ int main( int iArgumentCount, char* apcArguments[] )
 		CConsoleInterface::PrintLine( oCommandLineHandler.GetUsageMessage() );
 	}
 
+	if ( eStatus != EProgramStatusCodes::eSuccess )
+	{
+		CConsoleInterface::PrintLine( "Error Code: " + std::to_string( static_cast<int>( eStatus ) ) );
+	}
+
 	return static_cast<int>( eStatus );
 }
