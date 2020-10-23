@@ -39,9 +39,9 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
-        const ECodeFileType eFileType = CheckFileType( oFilePath );
+        const ECodeFileTypes eFileType = CheckFileType( oFilePath );
 
-        if ( eFileType != ECodeFileType::eUnknown )
+        if ( eFileType != ECodeFileTypes::eUnknown )
         {
             ProcessCodeFile( eFileType, oFilePath, oDeveloperString );
             PrintProgress( ++uiProcessCodeFileNumber, uiProcessCodeFileCount );
@@ -84,11 +84,11 @@ std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles( const std::filesystem::path& o
 }
 
 // ^^x
-// ECodeFileType CCodeAnalyzer::CheckFileType
+// ECodeFileTypes CCodeAnalyzer::CheckFileType
 // 3BGO JIRA-238 24-09-2020
-ECodeFileType CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePath )
+ECodeFileTypes CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePath )
 {
-    ECodeFileType eType{ ECodeFileType::eUnknown };
+    ECodeFileTypes eType{ ECodeFileTypes::eUnknown };
 
     if ( std::filesystem::is_regular_file( oFilePath ) )
     {
@@ -96,11 +96,11 @@ ECodeFileType CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePa
         {
             if ( oFilePath.extension() == ".h" )
             {
-                eType = ECodeFileType::eHeader;
+                eType = ECodeFileTypes::eHeader;
             }
             else if ( oFilePath.extension() == ".cpp" )
             {
-                eType = ECodeFileType::eSource;
+                eType = ECodeFileTypes::eSource;
             }
         }
     }
@@ -113,7 +113,7 @@ ECodeFileType CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePa
 // 3BGO JIRA-238 06-10-2020
 bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath )
 {
-    return CheckFileType( oFilePath ) != ECodeFileType::eUnknown;
+    return CheckFileType( oFilePath ) != ECodeFileTypes::eUnknown;
 }
 
 // ^^x
@@ -140,7 +140,7 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
 // ^^x
 // EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileType eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString )
+EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileTypes eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString )
 {
     std::string oCodeString{};
 
@@ -152,17 +152,17 @@ EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileType eFileTyp
 
         switch ( eFileType )
         {
-            case ECodeFileType::eHeader:
+            case ECodeFileTypes::eHeader:
                 {
                     ProcessHeaderFile( oFilePath, oCodeString, oDeveloperString );
                     break;
                 }
-            case ECodeFileType::eSource:
+            case ECodeFileTypes::eSource:
                 {
                     ProcessSourceFile( oFilePath, oCodeString, oDeveloperString );
                     break;
                 }
-            case ECodeFileType::eUnknown:
+            case ECodeFileTypes::eUnknown:
             default:
                 eStatus = EProgramStatusCodes::eUnknownInputFileType;
                 break;

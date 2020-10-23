@@ -27,12 +27,12 @@ public:
 	static std::size_t CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath );
 	static std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath );
 
-	static ECodeFileType CheckFileType( const std::filesystem::path& oFilePath );
+	static ECodeFileTypes CheckFileType( const std::filesystem::path& oFilePath );
 	static bool IsCodeFile( const std::filesystem::path& oFilePath );
 
 private:
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
-	EProgramStatusCodes ProcessCodeFile( const ECodeFileType eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString );
+	EProgramStatusCodes ProcessCodeFile( const ECodeFileTypes eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString );
 
 	void PreProcessFileContent( std::string& oFileContentString ) const;
 

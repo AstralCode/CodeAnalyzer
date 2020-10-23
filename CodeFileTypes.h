@@ -1,6 +1,6 @@
 #pragma once
 
-enum class ECodeFileType
+enum class ECodeFileTypes
 {
 	eUnknown,
 	eHeader,
