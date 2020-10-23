@@ -11,7 +11,7 @@ constexpr unsigned int UI_REQUIRED_ARGS_COUNT = 1;
 // 3BGO JIRA-238 24-09-2020
 CCommandLineHandler::CCommandLineHandler( int iArgumentCount, char* apcArguments[] )
 {
-	for ( int iArgIndex{ UI_REQUIRED_ARGS_COUNT }; iArgIndex < iArgumentCount; ++iArgIndex )
+	for ( int iArgIndex{ 1u }; iArgIndex < iArgumentCount; ++iArgIndex )
     {
 		m_oArgumentVector.push_back( apcArguments[iArgIndex] );
     }
@@ -49,9 +49,10 @@ std::string CCommandLineHandler::GetUsageMessage() const
 {
 	return {
 		"usage:" "\n\t"
-			"codeanalyzer.exe <input_directory_path>" "\n\n"
-		"optional options:" "\n\t"
-			"[--report-prefix]" };
+			"codeanalyzer.exe <input_directory_path> [--report-prefix]" "\n\n"
+		"optional options:" "\n"
+			"\t" "--report-prefix, -rp" "\t\t" "Add prefix to report filename" "\n"
+	};
 }
 
 // ^^x
@@ -107,7 +108,11 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 
 	const std::string oOptionLowerCaseString = CStringHelper::ToLowerCase( oOptionString );
 
-	if ( oOptionLowerCaseString == "report-prefix" || oOptionLowerCaseString == "rp" )
+	if ( oOptionLowerCaseString == "status-codes" || oOptionLowerCaseString == "sc" )
+	{
+		AssignOptionalArgument( oArgumentDataset.oStatusCodeInformationString, oArgumentString );
+	}
+	else if ( oOptionLowerCaseString == "report-prefix" || oOptionLowerCaseString == "rp" )
 	{
 		AssignOptionalArgument( oArgumentDataset.oReportPrefixNameString, oArgumentString );
 	}

@@ -8,6 +8,9 @@
 #include "FunctionLengthModule.h"
 #include "FunctionArgsCountModule.h"
 
+// ^^x
+// EProgramStatusCodes PrepareOutputDirectory
+// 3BGO JIRA-238 23-10-2020
 EProgramStatusCodes PrepareOutputDirectory( std::filesystem::path& oOutputDirectoryPath )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
@@ -33,6 +36,7 @@ EProgramStatusCodes PrepareOutputDirectory( std::filesystem::path& oOutputDirect
 int main( int iArgumentCount, char* apcArguments[] )
 {
 	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
+
 	CCodeAnalyzer oCodeAnalyzer{};
 	CCsvStatisticsReportWriter oStatisticsReportWriter{};
 
@@ -42,6 +46,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 	if ( eStatus == EProgramStatusCodes::eSuccess )
 	{
 		std::filesystem::path oOutputDirectoryPath{};
+
 		eStatus = PrepareOutputDirectory( oOutputDirectoryPath );
 
 		if ( eStatus == EProgramStatusCodes::eSuccess )
@@ -75,11 +80,6 @@ int main( int iArgumentCount, char* apcArguments[] )
 	else
 	{
 		CConsoleInterface::PrintLine( oCommandLineHandler.GetUsageMessage() );
-	}
-
-	if ( eStatus != EProgramStatusCodes::eSuccess )
-	{
-		CConsoleInterface::PrintLine( "Error Code: " + std::to_string( static_cast<int>( eStatus ) ) );
 	}
 
 	return static_cast<int>( eStatus );
