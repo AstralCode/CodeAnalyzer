@@ -22,5 +22,6 @@ enum class EStatisticsTypes
 	eFunctionLength4PPercent,
 	eFunctionLength4PPlusCount,
 	eFunctionLength4PPlusPercent,
-	eFunction5PlusArgsCount
+	eFunction5PlusArgsCount,
+	eFunction5PlusArgsPercent
 };

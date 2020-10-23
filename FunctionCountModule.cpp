@@ -2,6 +2,7 @@
 
 #include "SourceFile.h"
 #include "StatisticsCollection.h"
+#include "Utility.h"
 
 // ^^x
 // void CFunctionLengthModule::OnExcute
@@ -43,6 +44,6 @@ void CFunctionCountModule::OnExcuteComplete( CStatisticsCollection& oStatisticsC
 {
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 
-    oStatisticsCollection[EStatisticsTypes::eMemberFunctionPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eMemberFunctionCount].uiValue * 100 / uiFunctionCount;
-    oStatisticsCollection[EStatisticsTypes::eGlobalFunctionPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eGlobalFunctionCount].uiValue * 100 / uiFunctionCount;
+    oStatisticsCollection[EStatisticsTypes::eMemberFunctionPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eMemberFunctionCount].uiValue, uiFunctionCount );
+    oStatisticsCollection[EStatisticsTypes::eGlobalFunctionPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eGlobalFunctionCount].uiValue, uiFunctionCount );
 }

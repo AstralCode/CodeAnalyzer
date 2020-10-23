@@ -50,12 +50,12 @@ void CFunctionLengthModule::OnExcuteComplete( CStatisticsCollection& oStatistics
 {
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 
-    oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].uiValue * 100 / uiFunctionCount;
-    oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].uiValue * 100 / uiFunctionCount;
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength1PPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].uiValue * 100 / uiFunctionCount;
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength2PPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue * 100 / uiFunctionCount;
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue * 100 / uiFunctionCount;
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue * 100 / uiFunctionCount;
+    oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].uiValue, uiFunctionCount );
+    oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].uiValue, uiFunctionCount );
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength1PPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].uiValue, uiFunctionCount );
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength2PPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue, uiFunctionCount );
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue, uiFunctionCount );
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue, uiFunctionCount );
 }
 
 // ^^x

@@ -3,6 +3,7 @@
 #include "SourceFile.h"
 #include "StatisticsCollection.h"
 #include "StringHelper.h"
+#include "Utility.h"
 
 // ^^x
 // void CFunctionLengthModule::OnExcute
@@ -10,6 +11,7 @@
 void CFunctionArgsCountModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].oHeaderString = "Functions Args 5+";
+    oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsPercent].oHeaderString = "%";
 }
 
 // ^^x
@@ -32,9 +34,11 @@ void CFunctionArgsCountModule::ProcessSourceFile( const CSourceFile& oSourceFile
 // ^^x
 // void CFunctionLengthModule::OnExcuteComplete
 // 3BGO JIRA-238 22-10-2020
-void CFunctionArgsCountModule::OnExcuteComplete( CStatisticsCollection& )
+void CFunctionArgsCountModule::OnExcuteComplete( CStatisticsCollection& oStatisticsCollection )
 {
+    const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 
+    oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue, uiFunctionCount );
 }
 
 // ^^x
