@@ -19,7 +19,7 @@ public:
 private:
 	enum EStatisticsId
 	{
-		eFunctionArgs5MoreCount
+		eFunctionArgs5More
 	};
 
 	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector );

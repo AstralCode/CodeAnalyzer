@@ -31,3 +31,35 @@ SStatisticsResult& CCodeAnalyzerModule::GetStatistics( const unsigned int uiInde
 {
 	return m_oResultVector[ uiIndex ];
 }
+
+// ^^x
+// std::size_t CCodeAnalyzerModule::SumStatisticsValues
+// 3BGO JIRA-238 24-09-2020
+std::size_t CCodeAnalyzerModule::SumStatisticsValues() const
+{
+    std::size_t uiTotalSum{ 0u };
+
+    const std::vector<SStatisticsResult>& oResults = GetStatisticsResults();
+    for ( const SStatisticsResult& oResult : oResults )
+    {
+        uiTotalSum += oResult.uiValue;
+    }
+
+    return uiTotalSum;
+}
+
+// ^^x
+// void CCodeAnalyzerModule::ToPercent
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzerModule::ToPercent( const unsigned int uiStatisticsTargetIndex, const unsigned int eStatisticsInputIndex, const std::size_t uiTotalSumStatisticsValue )
+{
+    GetStatistics( uiStatisticsTargetIndex ).uiValue = CalculatePercent( GetStatistics( eStatisticsInputIndex ).uiValue, uiTotalSumStatisticsValue );
+}
+
+// ^^x
+// std::size_t CCodeAnalyzerModule::CalculatePercent
+// 3BGO JIRA-238 24-09-2020
+std::size_t CCodeAnalyzerModule::CalculatePercent( const std::size_t uiStatisticsValue, const std::size_t uiTotalSumStatisticsValue ) const
+{
+    return uiStatisticsValue * 100u / uiTotalSumStatisticsValue;
+}

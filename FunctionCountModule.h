@@ -15,11 +15,15 @@ public:
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
 
+	void OnComplete() override;
+
 private:
 	enum EStatisticsId
 	{
-		eFunctionCount,
+		eFunctions,
 		eMemberFunctions,
-		eGlobalFunctions
+		eMemberFunctionsPercent,
+		eGlobalFunctions,
+		eGlobalFunctionsPercent
 	};
 };

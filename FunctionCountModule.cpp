@@ -9,7 +9,9 @@ CFunctionCountModule::CFunctionCountModule()
 {
     CreateStatistics( "Functions" );
     CreateStatistics( "Member Functions" );
+    CreateStatistics( "%" );
     CreateStatistics( "Global Functions" );
+    CreateStatistics( "%" );
 }
 
 // ^^x
@@ -25,9 +27,23 @@ void CFunctionCountModule::ProcessHeaderFile( const CHeaderFile& )
 // 3BGO JIRA-238 24-09-2020
 void CFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    GetStatistics( EStatisticsId::eFunctionCount ).uiValue += oSourceFile.GetMemberFunctions().size();
-    GetStatistics( EStatisticsId::eFunctionCount ).uiValue += oSourceFile.GetGlobalFunctions().size();
+    const std::size_t uiMemberFunctionCount = oSourceFile.GetMemberFunctions().size();
+    const std::size_t uiGlobalFunctionCount = oSourceFile.GetGlobalFunctions().size();
 
-    GetStatistics( EStatisticsId::eMemberFunctions ).uiValue += oSourceFile.GetMemberFunctions().size();
-    GetStatistics( EStatisticsId::eGlobalFunctions ).uiValue += oSourceFile.GetGlobalFunctions().size();
+    GetStatistics( EStatisticsId::eFunctions ).uiValue += uiMemberFunctionCount;
+    GetStatistics( EStatisticsId::eFunctions ).uiValue += uiGlobalFunctionCount;
+
+    GetStatistics( EStatisticsId::eMemberFunctions ).uiValue += uiMemberFunctionCount;
+    GetStatistics( EStatisticsId::eGlobalFunctions ).uiValue += uiGlobalFunctionCount;
+}
+
+// ^^x
+// void CFunctionCountModule::OnComplete
+// 3BGO JIRA-238 23-10-2020
+void CFunctionCountModule::OnComplete()
+{
+    const std::size_t uiTotalSumStatisticsValue = GetStatistics( EStatisticsId::eFunctions ).uiValue;
+
+    ToPercent( EStatisticsId::eMemberFunctionsPercent, EStatisticsId::eMemberFunctions, uiTotalSumStatisticsValue );
+    ToPercent( EStatisticsId::eGlobalFunctionsPercent, EStatisticsId::eGlobalFunctions, uiTotalSumStatisticsValue );
 }

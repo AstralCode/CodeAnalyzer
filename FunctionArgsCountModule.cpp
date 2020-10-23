@@ -41,7 +41,7 @@ void CFunctionArgsCountModule::CalculateStatistics( const std::vector<SFindDataR
 
             if ( uiFunctionCodeLineCount > 5u )
             {
-                ++GetStatistics( EStatisticsId::eFunctionArgs5MoreCount ).uiValue;
+                ++GetStatistics( EStatisticsId::eFunctionArgs5More ).uiValue;
             }
         }
     }

@@ -29,15 +29,18 @@ private:
 	enum EStatisticsId
 	{
 		eFunctionQPLength,
+		eFunctionQPLengthPercent,
 		eFunctionHPLength,
+		eFunctionHPLengthPercent,
 		eFunction1PLength,
+		eFunction1PLengthPercent,
 		eFunction2PLength,
+		eFunction2PLengthPercent,
 		eFunction4PLength,
-		eFunction4PMoreLength
+		eFunction4PLengthPercent,
+		eFunction4PMoreLength,
+		eFunction4PMoreLengthPercent
 	};
 
 	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector );
-
-	std::size_t SumStatisticsValues() const;
-	void ToPercent( std::size_t& uiStatisticsValue, const std::size_t uiTotalSumStatisticsValue );
 };

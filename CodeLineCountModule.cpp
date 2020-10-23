@@ -16,7 +16,7 @@ CCodeLineCountModule::CCodeLineCountModule()
 // 3BGO JIRA-238 24-09-2020
 void CCodeLineCountModule::ProcessHeaderFile( const CHeaderFile& oHeaderFile )
 {
-    GetStatistics( EStatisticsId::eCodeLineCount ).uiValue += oHeaderFile.GetCodeLineCount();
+    GetStatistics( EStatisticsId::eCodeLines ).uiValue += oHeaderFile.GetCodeLineCount();
 }
 
 // ^^x
@@ -24,5 +24,5 @@ void CCodeLineCountModule::ProcessHeaderFile( const CHeaderFile& oHeaderFile )
 // 3BGO JIRA-238 24-09-2020
 void CCodeLineCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    GetStatistics( EStatisticsId::eCodeLineCount ).uiValue += oSourceFile.GetCodeLineCount();
+    GetStatistics( EStatisticsId::eCodeLines ).uiValue += oSourceFile.GetCodeLineCount();
 }

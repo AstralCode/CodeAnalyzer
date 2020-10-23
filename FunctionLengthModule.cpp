@@ -11,12 +11,18 @@
 // 3BGO JIRA-238 30-09-2020
 CFunctionLengthModule::CFunctionLengthModule()
 {
-    CreateStatistics( "Functions Len. QP" );
-    CreateStatistics( "Functions Len. HP" );
-    CreateStatistics( "Functions Len. 1P" );
-    CreateStatistics( "Functions Len. 2P" );
-    CreateStatistics( "Functions Len. 4P" );
-    CreateStatistics( "Functions Len. 4P+" );
+    CreateStatistics( "Functions QP" );
+    CreateStatistics( "%" );
+    CreateStatistics( "Functions HP" );
+    CreateStatistics( "%" );
+    CreateStatistics( "Functions 1P" );
+    CreateStatistics( "%" );
+    CreateStatistics( "Functions 2P" );
+    CreateStatistics( "%" );
+    CreateStatistics( "Functions 4P" );
+    CreateStatistics( "%" );
+    CreateStatistics( "Functions 4P+" );
+    CreateStatistics( "%" );
 }
 
 // ^^x
@@ -43,12 +49,12 @@ void CFunctionLengthModule::OnComplete()
 {
     const std::size_t uiTotalSumStatisticsValue = SumStatisticsValues();
 
-    ToPercent( GetStatistics( EStatisticsId::eFunctionQPLength ).uiValue, uiTotalSumStatisticsValue );
-    ToPercent( GetStatistics( EStatisticsId::eFunctionHPLength ).uiValue, uiTotalSumStatisticsValue );
-    ToPercent( GetStatistics( EStatisticsId::eFunction1PLength ).uiValue, uiTotalSumStatisticsValue );
-    ToPercent( GetStatistics( EStatisticsId::eFunction2PLength ).uiValue, uiTotalSumStatisticsValue );
-    ToPercent( GetStatistics( EStatisticsId::eFunction4PLength ).uiValue, uiTotalSumStatisticsValue );
-    ToPercent( GetStatistics( EStatisticsId::eFunction4PMoreLength ).uiValue, uiTotalSumStatisticsValue );
+    ToPercent( EStatisticsId::eFunctionQPLengthPercent, EStatisticsId::eFunctionQPLength, uiTotalSumStatisticsValue );
+    ToPercent( EStatisticsId::eFunctionHPLengthPercent, EStatisticsId::eFunctionHPLength, uiTotalSumStatisticsValue );
+    ToPercent( EStatisticsId::eFunction1PLengthPercent, EStatisticsId::eFunction1PLength, uiTotalSumStatisticsValue );
+    ToPercent( EStatisticsId::eFunction2PLengthPercent, EStatisticsId::eFunction2PLength, uiTotalSumStatisticsValue );
+    ToPercent( EStatisticsId::eFunction4PLengthPercent, EStatisticsId::eFunction4PLength, uiTotalSumStatisticsValue );
+    ToPercent( EStatisticsId::eFunction4PMoreLengthPercent, EStatisticsId::eFunction4PMoreLength, uiTotalSumStatisticsValue );
 }
 
 // ^^x
@@ -93,28 +99,4 @@ void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResu
             }
         }
     }
-}
-
-// ^^x
-// std::size_t CFunctionLengthModule::SumStatisticsValues
-// 3BGO JIRA-238 24-09-2020
-std::size_t CFunctionLengthModule::SumStatisticsValues() const
-{
-    std::size_t uiTotalSum{ 0u };
-
-    const std::vector<SStatisticsResult>& oResults = GetStatisticsResults();
-    for ( const SStatisticsResult& oResult : oResults )
-    {
-        uiTotalSum += oResult.uiValue;
-    }
-
-    return uiTotalSum;
-}
-
-// ^^x
-// void CFunctionLengthModule::ToPercent
-// 3BGO JIRA-238 24-09-2020
-void CFunctionLengthModule::ToPercent( std::size_t& uiStatisticsValue, const std::size_t uiTotalSumStatisticsValue )
-{
-    uiStatisticsValue = uiStatisticsValue * 100u / uiTotalSumStatisticsValue;
 }
