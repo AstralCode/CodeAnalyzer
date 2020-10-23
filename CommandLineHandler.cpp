@@ -88,7 +88,8 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 
 		std::smatch oMatchRegex{};
 		
-		if ( std::regex_match( oInputString, oMatchRegex, std::regex{ R"(\-\-(\w+(?:\-\w+)*)\s+(.+))" } ) )
+		if ( std::regex_match( oInputString, oMatchRegex, std::regex{ R"(\-\-(\w+(?:\-\w+)*)\s+(\w+))" } ) ||
+			 std::regex_match( oInputString, oMatchRegex, std::regex{ R"(\-(\w{0,3})\s+(\w+))" } ) )
 		{
 			HandleOptionalArgument( oArgumentDataset, oMatchRegex[1u].str(), oMatchRegex[2u].str() );
 		}
@@ -106,11 +107,11 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 
 	const std::string oOptionLowerCaseString = CStringHelper::ToLowerCase( oOptionString );
 
-	if ( oOptionLowerCaseString == "report-prefix" )
+	if ( oOptionLowerCaseString == "report-prefix" || oOptionLowerCaseString == "rp" )
 	{
 		AssignOptionalArgument( oArgumentDataset.oReportPrefixNameString, oArgumentString );
 	}
-	else if ( oOptionLowerCaseString == "dev" )
+	else if ( oOptionLowerCaseString == "dev" || oOptionLowerCaseString == "d" )
 	{
 		AssignOptionalArgument( oArgumentDataset.oDeveloperString, oArgumentString );
 	}
