@@ -9,7 +9,7 @@ constexpr const char* SZ_RGX_GLOBAL_FUNCTION_HEADER =
 R"(^[ \t]*(?:static\s+)?([\w\:\<\>\:\,\*\&]{3,})(?:[\s\*\&]+)?(?:CALLBACK|__cdecl)?\s+([\w]{3,})\s*\(\s*([\w\t \.\-\:\<\>\,\*\&\/'\"\;\[\]\n]+)?\s*\)[\t ]*$)";
 
 constexpr const char* SZ_RGX_MEMBER_FUNCTION_HEADER =
-R"(^[ \t]*(?:inline\s+)?(?:([\w\:\<\>\,\*\&]{3,})(?:[\s\*\&]+)?\s+)?(?:__cdecl\s+)?([\w\:]+)::(\~)?([\w]+)\s*\(\s*([\w\t \.\-\:\<\>\,\*\&\/\=\'\"\;\n]+)?\s*\)\s*(?:const)?(?:\:)?[ \t]*$)";
+R"(^[ \t]*(?:inline\s+)?(?:([\w\:\<\>\,\*\&]{3,})(?:[\s\*\&]+)?\s+)?(?:__cdecl\s+)?([\w\:\<\>\,\t ]+)::(\~)?([\w]+(?:[\t \W]{0,4})?)\s*\(\s*([\w\t \.\-\:\<\>\,\*\&\/\=\'\"\;\n]+)?\s*\)\s*(?:const)?(?:\:)?[ \t]*$)";
 
 constexpr const char* SZ_RGX_COMMENT_SINGLELINE =
 R"((?:\/\/.*))";
