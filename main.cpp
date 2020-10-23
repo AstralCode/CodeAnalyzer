@@ -61,14 +61,9 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{
-				const std::size_t uiCodeFileCount = CCodeAnalyzer::CountNumberCodeFiles( oCommandLineArgumentDataset.oInputDirectoryPath );
-
 				std::filesystem::path oReportPath{};
 
-				std::vector<SStatisticsResult> oStatisticsResults = oCodeAnalyzer.GetStatisticsResults();
-				oStatisticsResults.insert( oStatisticsResults.begin(), SStatisticsResult{ "Files", uiCodeFileCount } );
-
-				eStatus = oStatisticsReportWriter.CreateReport( oStatisticsResults, oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString, oReportPath );
+				eStatus = oStatisticsReportWriter.CreateReport( oCodeAnalyzer.GetStatisticsResults(), oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString, oReportPath );
 
 				if ( eStatus == EProgramStatusCodes::eSuccess )
 				{

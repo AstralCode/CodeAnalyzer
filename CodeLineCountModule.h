@@ -10,14 +10,10 @@
 class CCodeLineCountModule final : public CCodeAnalyzerModule
 {
 public:
-	CCodeLineCountModule();
+	void OnExcute( CStatisticsCollection& oStatisticsCollection ) override;
 
-	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
-	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
+	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;
+	void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) override;
 
-private:
-	enum EStatisticsId
-	{
-		eCodeLines
-	};
+	void OnExcuteComplete( CStatisticsCollection& oStatisticsCollection ) override;
 };

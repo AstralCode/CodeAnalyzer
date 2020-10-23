@@ -18,29 +18,13 @@
 class CFunctionLengthModule final : public CCodeAnalyzerModule
 {
 public:
-	CFunctionLengthModule();
+	void OnExcute( CStatisticsCollection& oStatisticsCollection ) override;
 
-	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
-	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
+	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;
+	void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) override;
 
-	void OnComplete() override;
+	void OnExcuteComplete( CStatisticsCollection& oStatisticsCollection ) override;
 
 private:
-	enum EStatisticsId
-	{
-		eFunctionQPLength,
-		eFunctionQPLengthPercent,
-		eFunctionHPLength,
-		eFunctionHPLengthPercent,
-		eFunction1PLength,
-		eFunction1PLengthPercent,
-		eFunction2PLength,
-		eFunction2PLengthPercent,
-		eFunction4PLength,
-		eFunction4PLengthPercent,
-		eFunction4PMoreLength,
-		eFunction4PMoreLengthPercent
-	};
-
-	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector );
+	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection );
 };

@@ -3,32 +3,33 @@
 #include <cmath>
 
 #include "SourceFile.h"
+#include "StatisticsCollection.h"
 #include "StringHelper.h"
 #include "Utility.h"
 
 // ^^x
-// CFunctionLengthModule::CFunctionLengthModule
+// void CFunctionLengthModule::OnExcute
 // 3BGO JIRA-238 30-09-2020
-CFunctionLengthModule::CFunctionLengthModule()
+void CFunctionLengthModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
 {
-    CreateStatistics( "Functions QP" );
-    CreateStatistics( "%" );
-    CreateStatistics( "Functions HP" );
-    CreateStatistics( "%" );
-    CreateStatistics( "Functions 1P" );
-    CreateStatistics( "%" );
-    CreateStatistics( "Functions 2P" );
-    CreateStatistics( "%" );
-    CreateStatistics( "Functions 4P" );
-    CreateStatistics( "%" );
-    CreateStatistics( "Functions 4P+" );
-    CreateStatistics( "%" );
+    oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].oHeaderString = "Functions QP";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPPercent].oHeaderString = "%";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].oHeaderString = "Functions HP";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPPercent].oHeaderString = "%";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].oHeaderString = "Functions 1P";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength1PPercent].oHeaderString = "%";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].oHeaderString = "Functions 2P";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength2PPercent].oHeaderString = "%";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].oHeaderString = "Functions 4P";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].oHeaderString = "%";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].oHeaderString = "Functions 4P+";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].oHeaderString = "%";
 }
 
 // ^^x
 // void CFunctionLengthModule::ProcessHeaderFile
 // 3BGO JIRA-238 30-09-2020
-void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile& )
+void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
 {
 
 }
@@ -36,31 +37,31 @@ void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile& )
 // ^^x
 // void CFunctionLengthModule::ProcessSourceFile
 // 3BGO JIRA-238 24-09-2020
-void CFunctionLengthModule::ProcessSourceFile( const CSourceFile& oSourceFile )
+void CFunctionLengthModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
 {
-    CalculateStatistics( oSourceFile.GetGlobalFunctions() );
-    CalculateStatistics( oSourceFile.GetMemberFunctions() );
+    CalculateStatistics( oSourceFile.GetGlobalFunctions(), oStatisticsCollection );
+    CalculateStatistics( oSourceFile.GetMemberFunctions(), oStatisticsCollection );
 }
 
 // ^^x
-// void CFunctionLengthModule::OnComplete
-// 3BGO JIRA-238 22-10-2020
-void CFunctionLengthModule::OnComplete()
+// void CFunctionLengthModule::OnExcuteComplete
+// 3BGO JIRA-238 30-09-2020
+void CFunctionLengthModule::OnExcuteComplete( CStatisticsCollection& oStatisticsCollection )
 {
-    const std::size_t uiTotalSumStatisticsValue = SumStatisticsValues();
+    const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 
-    ToPercent( EStatisticsId::eFunctionQPLengthPercent, EStatisticsId::eFunctionQPLength, uiTotalSumStatisticsValue );
-    ToPercent( EStatisticsId::eFunctionHPLengthPercent, EStatisticsId::eFunctionHPLength, uiTotalSumStatisticsValue );
-    ToPercent( EStatisticsId::eFunction1PLengthPercent, EStatisticsId::eFunction1PLength, uiTotalSumStatisticsValue );
-    ToPercent( EStatisticsId::eFunction2PLengthPercent, EStatisticsId::eFunction2PLength, uiTotalSumStatisticsValue );
-    ToPercent( EStatisticsId::eFunction4PLengthPercent, EStatisticsId::eFunction4PLength, uiTotalSumStatisticsValue );
-    ToPercent( EStatisticsId::eFunction4PMoreLengthPercent, EStatisticsId::eFunction4PMoreLength, uiTotalSumStatisticsValue );
+    oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].uiValue * 100 / uiFunctionCount;
+    oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].uiValue * 100 / uiFunctionCount;
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength1PPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].uiValue * 100 / uiFunctionCount;
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength2PPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue * 100 / uiFunctionCount;
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue * 100 / uiFunctionCount;
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].uiValue = oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue * 100 / uiFunctionCount;
 }
 
 // ^^x
 // void CFunctionLengthModule::CalculateStatistics
 // 3BGO JIRA-238 24-09-2020
-void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector )
+void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection )
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {
@@ -75,27 +76,27 @@ void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResu
 
             if ( SRange::Contains( uiFunctionCodeLineCount, { 0u }, { 16u } ) )
             {
-                ++GetStatistics( EStatisticsId::eFunctionQPLength ).uiValue;
+                ++oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].uiValue;
             }
             else if ( SRange::Contains( uiFunctionCodeLineCount, { 17u }, { 32u } ) )
             {
-                ++GetStatistics( EStatisticsId::eFunctionHPLength ).uiValue;
+                ++oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].uiValue;
             }
             else if ( SRange::Contains( uiFunctionCodeLineCount, { 33u }, { 62u } ) )
             {
-                ++GetStatistics( EStatisticsId::eFunction1PLength ).uiValue;
+                ++oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].uiValue;
             }
             else if ( SRange::Contains( uiFunctionCodeLineCount, { 63u }, { 124u } ) )
             {
-                ++GetStatistics( EStatisticsId::eFunction2PLength ).uiValue;
+                ++oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue;
             }
             else if ( SRange::Contains( uiFunctionCodeLineCount, { 125u }, { 248u } ) )
             {
-                ++GetStatistics( EStatisticsId::eFunction4PLength ).uiValue;
+                ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue;
             }
             else if ( SRange::Contains( uiFunctionCodeLineCount, { 249u } ) )
             {
-                ++GetStatistics( EStatisticsId::eFunction4PMoreLength ).uiValue;
+                ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue;
             }
         }
     }

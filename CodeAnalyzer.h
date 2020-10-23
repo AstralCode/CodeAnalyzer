@@ -5,8 +5,9 @@
 #include <optional>
 
 #include "ProgramStatusCodes.h"
-#include "CodeAnalyzerModule.h"
 #include "CodeParser.h"
+#include "CodeAnalyzerModule.h"
+#include "StatisticsCollection.h"
 #include "CodeFileTypes.h"
 
 class CCodeAnalyzer final
@@ -24,12 +25,6 @@ public:
 
 	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath, std::optional<std::string> oDeveloperString = {} );
 
-	static std::size_t CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath );
-	static std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath );
-
-	static ECodeFileTypes CheckFileType( const std::filesystem::path& oFilePath );
-	static bool IsCodeFile( const std::filesystem::path& oFilePath );
-
 private:
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
 	EProgramStatusCodes ProcessCodeFile( const ECodeFileTypes eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString );
@@ -41,13 +36,22 @@ private:
 
 	void FilterResults( std::vector<SFindDataResult<CFunction>>& oFunctionVector, std::optional<std::string> oDeveloperString ) const;
 
-	void ExecutionBegun( const std::filesystem::path& oInputDirectoryPath );
+	void ExecutionStarts( const std::filesystem::path& oInputDirectoryPath );
 	void ExecutionComplete( const EProgramStatusCodes eStatus );
+
+	std::size_t CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
+	std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
+
+	ECodeFileTypes CheckFileType( const std::filesystem::path& oFilePath ) const;
+	bool IsCodeFile( const std::filesystem::path& oFilePath ) const;
 
 	void PrintProgress( const unsigned int uiFileNumber, const std::size_t uiFileCount ) const;
 
-	CCodeParser m_oCodePareser;
 	std::filesystem::path m_oInputDirectoryPath;
+
+	CCodeParser m_oCodePareser;
+	CStatisticsCollection m_oStatisticsCollection;
+	
 	std::vector<std::unique_ptr<CCodeAnalyzerModule>> m_oAnalyzerModuleVector;
 };
 

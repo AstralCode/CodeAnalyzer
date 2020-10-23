@@ -11,16 +11,13 @@
 class CFunctionArgsCountModule final : public CCodeAnalyzerModule
 {
 public:
-	CFunctionArgsCountModule();
+	void OnExcute( CStatisticsCollection& oStatisticsCollection ) override;
 
-	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
-	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
+	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;
+	void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) override;
+
+	void OnExcuteComplete( CStatisticsCollection& oStatisticsCollection ) override;
 
 private:
-	enum EStatisticsId
-	{
-		eFunctionArgs5More
-	};
-
-	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector );
+	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection );
 };

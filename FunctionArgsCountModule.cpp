@@ -1,20 +1,21 @@
 #include "FunctionArgsCountModule.h"
 
 #include "SourceFile.h"
+#include "StatisticsCollection.h"
 #include "StringHelper.h"
 
 // ^^x
-// CFunctionArgsCountModule::CFunctionArgsCountModule
+// void CFunctionLengthModule::OnExcute
 // 3BGO JIRA-238 22-10-2020
-CFunctionArgsCountModule::CFunctionArgsCountModule()
+void CFunctionArgsCountModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
 {
-    CreateStatistics( "Functions Args 5+" );
+    oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].oHeaderString = "Functions Args 5+";
 }
 
 // ^^x
 // void CFunctionLengthModule::ProcessHeaderFile
 // 3BGO JIRA-238 22-10-2020
-void CFunctionArgsCountModule::ProcessHeaderFile( const CHeaderFile& )
+void CFunctionArgsCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
 {
 
 }
@@ -22,16 +23,24 @@ void CFunctionArgsCountModule::ProcessHeaderFile( const CHeaderFile& )
 // ^^x
 // void CFunctionLengthModule::ProcessSourceFile
 // 3BGO JIRA-238 22-10-2020
-void CFunctionArgsCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
+void CFunctionArgsCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
 {
-    CalculateStatistics( oSourceFile.GetGlobalFunctions() );
-    CalculateStatistics( oSourceFile.GetMemberFunctions() );
+    CalculateStatistics( oSourceFile.GetGlobalFunctions(), oStatisticsCollection );
+    CalculateStatistics( oSourceFile.GetMemberFunctions(), oStatisticsCollection );
 }
 
 // ^^x
-// void CFunctionLengthModule::ProcessSourceFile
+// void CFunctionLengthModule::OnExcuteComplete
 // 3BGO JIRA-238 22-10-2020
-void CFunctionArgsCountModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector )
+void CFunctionArgsCountModule::OnExcuteComplete( CStatisticsCollection& )
+{
+
+}
+
+// ^^x
+// void CFunctionLengthModule::CalculateStatistics
+// 3BGO JIRA-238 22-10-2020
+void CFunctionArgsCountModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection )
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {
@@ -41,7 +50,7 @@ void CFunctionArgsCountModule::CalculateStatistics( const std::vector<SFindDataR
 
             if ( uiFunctionCodeLineCount > 5u )
             {
-                ++GetStatistics( EStatisticsId::eFunctionArgs5More ).uiValue;
+                ++oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue;
             }
         }
     }

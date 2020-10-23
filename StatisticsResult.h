@@ -1,7 +1,11 @@
 #pragma once
 
+#include <string>
+
 struct SStatisticsResult
 {
+	using ValueType = std::size_t;
+
 	std::string oHeaderString;
-	std::size_t uiValue{ 0u };
+	ValueType uiValue{ 0u };
 };

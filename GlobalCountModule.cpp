@@ -1,9 +1,10 @@
 #include "GlobalCountModule.h"
 
 #include <algorithm>
-#include "StringHelper.h"
 
 #include "SourceFile.h"
+#include "StatisticsCollection.h"
+#include "StringHelper.h"
 
 std::array<std::string_view, 19u> CGlobalCountModule::aszExcludedVariableType =
 {
@@ -17,29 +18,38 @@ std::array<std::string_view, 19u> CGlobalCountModule::aszExcludedVariableType =
 };
 
 // ^^x
-// CCodeLineCountModule::CCodeLineCountModule
+// void CCodeLineCountModule::OnExcute
 // 3BGO JIRA-238 22-10-2020
-CGlobalCountModule::CGlobalCountModule()
+void CGlobalCountModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
 {
-    CreateStatistics( "Global Variables" );
+    oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].oHeaderString = "Global Variables";
 }
 
 // ^^x
 // void CCodeLineCountModule::ProcessHeaderFile
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::ProcessHeaderFile( const CHeaderFile& )
+void CGlobalCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
 {
+
 }
 
 // ^^x
 // void CCodeLineCountModule::ProcessSourceFile
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
+void CGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
 {
     std::vector<SFindDataResult<CVariable>> oGlobalVariableVector = oSourceFile.GetGlobalVariables();
     FilterVariableTypes( oGlobalVariableVector );
+    
+    oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].uiValue += oGlobalVariableVector.size();
+}
 
-    GetStatistics( EStatisticsId::eGlobalVariables ).uiValue += oGlobalVariableVector.size();
+// ^^x
+// void CCodeLineCountModule::OnExcuteComplete
+// 3BGO JIRA-238 22-10-2020
+void CGlobalCountModule::OnExcuteComplete( CStatisticsCollection& )
+{
+
 }
 
 // ^^x

@@ -10,20 +10,10 @@
 class CFunctionCountModule final : public CCodeAnalyzerModule
 {
 public:
-	CFunctionCountModule();
+	void OnExcute( CStatisticsCollection& oStatisticsCollection ) override;
 
-	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
-	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
+	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;
+	void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) override;
 
-	void OnComplete() override;
-
-private:
-	enum EStatisticsId
-	{
-		eFunctions,
-		eMemberFunctions,
-		eMemberFunctionsPercent,
-		eGlobalFunctions,
-		eGlobalFunctionsPercent
-	};
+	void OnExcuteComplete( CStatisticsCollection& oStatisticsCollection ) override;
 };
