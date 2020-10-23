@@ -108,11 +108,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 
 	const std::string oOptionLowerCaseString = CStringHelper::ToLowerCase( oOptionString );
 
-	if ( oOptionLowerCaseString == "status-codes" || oOptionLowerCaseString == "sc" )
-	{
-		AssignOptionalArgument( oArgumentDataset.oStatusCodeInformationString, oArgumentString );
-	}
-	else if ( oOptionLowerCaseString == "report-prefix" || oOptionLowerCaseString == "rp" )
+	if ( oOptionLowerCaseString == "report-prefix" || oOptionLowerCaseString == "rp" )
 	{
 		AssignOptionalArgument( oArgumentDataset.oReportPrefixNameString, oArgumentString );
 	}
