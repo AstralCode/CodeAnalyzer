@@ -41,7 +41,7 @@ private:
 
 	void FilterResults( std::vector<SFindDataResult<CFunction>>& oFunctionVector, std::optional<std::string> oDeveloperString ) const;
 
-	void ExecutionBegun();
+	void ExecutionBegun( const std::filesystem::path& oInputDirectoryPath );
 	void ExecutionComplete( const EProgramStatusCodes eStatus );
 
 	void PrintProgress( const unsigned int uiFileNumber, const std::size_t uiFileCount ) const;

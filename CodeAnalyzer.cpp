@@ -32,7 +32,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 
     unsigned int uiProcessCodeFileNumber{ 0u };
 
-    ExecutionBegun();
+    ExecutionBegun( oInputDirectoryPath );
 
     const std::size_t uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
 
@@ -246,9 +246,9 @@ void CCodeAnalyzer::FilterResults( std::vector<SFindDataResult<CFunction>>& oFun
 // ^^x
 // void CCodeAnalyzer::ExecutionBegun
 // 3BGO JIRA-238 22-10-2020
-void CCodeAnalyzer::ExecutionBegun()
+void CCodeAnalyzer::ExecutionBegun( const std::filesystem::path& oInputDirectoryPath )
 {
-    CConsoleInterface::PrintLineTime( "Code analysis in progress..." );
+    CConsoleInterface::PrintLineTime( "Code analysis in progress... \"" + oInputDirectoryPath.string() + "\"" );
     CConsoleInterface::Print( "  Calculating the number of files. Please wait...\r" );
 }
 
