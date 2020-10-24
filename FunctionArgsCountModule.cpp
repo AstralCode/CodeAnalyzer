@@ -6,9 +6,9 @@
 #include "Utility.h"
 
 // ^^x
-// void CFunctionLengthModule::OnExcute
+// void CFunctionLengthModule::OnPreExecute
 // 3BGO JIRA-238 22-10-2020
-void CFunctionArgsCountModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
+void CFunctionArgsCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].oHeaderString = "Functions Args 5+";
     oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsPercent].oHeaderString = "%";
@@ -32,9 +32,9 @@ void CFunctionArgsCountModule::ProcessSourceFile( const CSourceFile& oSourceFile
 }
 
 // ^^x
-// void CFunctionLengthModule::OnExcuteComplete
+// void CFunctionLengthModule::OnPostExecute
 // 3BGO JIRA-238 22-10-2020
-void CFunctionArgsCountModule::OnExcuteComplete( CStatisticsCollection& oStatisticsCollection )
+void CFunctionArgsCountModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 

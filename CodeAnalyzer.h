@@ -36,8 +36,8 @@ private:
 
 	void FilterResults( std::vector<SFindDataResult<CFunction>>& oFunctionVector, std::optional<std::string> oDeveloperString ) const;
 
-	void ExecutionStarts( const std::filesystem::path& oInputDirectoryPath );
-	void ExecutionComplete( const EProgramStatusCodes eStatus );
+	void OnPreExecute( const std::filesystem::path& oInputDirectoryPath );
+	void OnPostExecute( const EProgramStatusCodes eStatus );
 
 	std::size_t CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
 	std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath ) const;

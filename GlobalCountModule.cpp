@@ -18,9 +18,9 @@ std::array<std::string_view, 19u> CGlobalCountModule::aszExcludedVariableType =
 };
 
 // ^^x
-// void CCodeLineCountModule::OnExcute
+// void CCodeLineCountModule::OnPreExecute
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
+void CGlobalCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].oHeaderString = "Global Variables";
 }
@@ -45,9 +45,9 @@ void CGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CSta
 }
 
 // ^^x
-// void CCodeLineCountModule::OnExcuteComplete
+// void CCodeLineCountModule::OnPostExecute
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::OnExcuteComplete( CStatisticsCollection& )
+void CGlobalCountModule::OnPostExecute( CStatisticsCollection& )
 {
 
 }

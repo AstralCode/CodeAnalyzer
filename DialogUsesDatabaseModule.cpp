@@ -22,9 +22,9 @@ std::array<std::string_view, 7u> CDialogUsesDatabaseModule::aszDatabaseFunctionN
 };
 
 // ^^x
-// void CDialogUsesDatabaseModule::OnExcute
+// void CDialogUsesDatabaseModule::OnPreExecute
 // 3BGO JIRA-238 24-10-2020
-void CDialogUsesDatabaseModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
+void CDialogUsesDatabaseModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eDialogClassesCount].oHeaderString = "Dialogs";
     oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].oHeaderString = "Dialogs uses database";
@@ -53,9 +53,9 @@ void CDialogUsesDatabaseModule::ProcessSourceFile( const CSourceFile& oSourceFil
 }
 
 // ^^x
-// void CDialogUsesDatabaseModule::OnExcuteComplete
+// void CDialogUsesDatabaseModule::OnPostExecute
 // 3BGO JIRA-238 24-10-2020
-void CDialogUsesDatabaseModule::OnExcuteComplete( CStatisticsCollection& oStatisticsCollection )
+void CDialogUsesDatabaseModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
     const std::size_t uiDialogCount = m_oDialogClassSet.size();
 

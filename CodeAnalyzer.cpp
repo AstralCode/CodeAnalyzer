@@ -24,7 +24,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 
     unsigned int uiProcessCodeFileNumber{ 0u };
 
-    ExecutionStarts( oInputDirectoryPath );
+    OnPreExecute( oInputDirectoryPath );
 
     const std::size_t uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
     m_oStatisticsCollection[EStatisticsTypes::eFileCount] = { "Files", uiProcessCodeFileCount };
@@ -41,7 +41,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
         }
     }
 
-    ExecutionComplete( eStatus );
+    OnPostExecute( eStatus );
 
     return eStatus;
 }
@@ -174,29 +174,29 @@ void CCodeAnalyzer::FilterResults( std::vector<SFindDataResult<CFunction>>& oFun
 }
 
 // ^^x
-// void CCodeAnalyzer::ExecutionStarts
+// void CCodeAnalyzer::OnPreExecute
 // 3BGO JIRA-238 22-10-2020
-void CCodeAnalyzer::ExecutionStarts( const std::filesystem::path& oInputDirectoryPath )
+void CCodeAnalyzer::OnPreExecute( const std::filesystem::path& oInputDirectoryPath )
 {
     CConsoleInterface::PrintLineTime( "Code analysis in progress... \"" + oInputDirectoryPath.string() + "\"" );
     CConsoleInterface::Print( "  Calculating the number of files. Please wait...\r" );
 
     for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
-        upoAnalyzerModule->OnExcute( m_oStatisticsCollection );
+        upoAnalyzerModule->OnPreExecute( m_oStatisticsCollection );
     }
 }
 
 // ^^x
-// void CCodeAnalyzer::ExecutionComplete
+// void CCodeAnalyzer::OnPostExecute
 // 3BGO JIRA-238 22-10-2020
-void CCodeAnalyzer::ExecutionComplete( const EProgramStatusCodes eStatus )
+void CCodeAnalyzer::OnPostExecute( const EProgramStatusCodes eStatus )
 {
     if ( eStatus == EProgramStatusCodes::eSuccess )
     {
         for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
         {
-            upoAnalyzerModule->OnExcuteComplete( m_oStatisticsCollection );
+            upoAnalyzerModule->OnPostExecute( m_oStatisticsCollection );
         }
 
         CConsoleInterface::ClearLine();

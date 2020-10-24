@@ -5,9 +5,9 @@
 #include "StatisticsCollection.h"
 
 // ^^x
-// void CCodeLineCountModule::OnExcute
+// void CCodeLineCountModule::OnPreExecute
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
+void CCodeLineCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eCodeLineCount].oHeaderString = "Code Lines";
 }
@@ -29,9 +29,9 @@ void CCodeLineCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CS
 }
 
 // ^^x
-// void CCodeLineCountModule::OnExcuteComplete
+// void CCodeLineCountModule::OnPostExecute
 // 3BGO JIRA-238 24-09-2020
-void CCodeLineCountModule::OnExcuteComplete( CStatisticsCollection& )
+void CCodeLineCountModule::OnPostExecute( CStatisticsCollection& )
 {
 
 }

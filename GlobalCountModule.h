@@ -18,12 +18,12 @@
 class CGlobalCountModule final : public CCodeAnalyzerModule
 {
 public:
-	void OnExcute( CStatisticsCollection& oStatisticsCollection ) override;
+	void OnPreExecute( CStatisticsCollection& oStatisticsCollection ) override;
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;
 	void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) override;
 
-	void OnExcuteComplete( CStatisticsCollection& oStatisticsCollection ) override;
+	void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) override;
 
 private:
 	static std::array<std::string_view, 19u> aszExcludedVariableType;

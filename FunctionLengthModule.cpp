@@ -6,9 +6,9 @@
 #include "Utility.h"
 
 // ^^x
-// void CFunctionLengthModule::OnExcute
+// void CFunctionLengthModule::OnPreExecute
 // 3BGO JIRA-238 30-09-2020
-void CFunctionLengthModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
+void CFunctionLengthModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].oHeaderString = "Functions QP";
     oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPPercent].oHeaderString = "%";
@@ -42,9 +42,9 @@ void CFunctionLengthModule::ProcessSourceFile( const CSourceFile& oSourceFile, C
 }
 
 // ^^x
-// void CFunctionLengthModule::OnExcuteComplete
+// void CFunctionLengthModule::OnPostExecute
 // 3BGO JIRA-238 30-09-2020
-void CFunctionLengthModule::OnExcuteComplete( CStatisticsCollection& oStatisticsCollection )
+void CFunctionLengthModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 

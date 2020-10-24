@@ -16,10 +16,10 @@ public:
 	CCodeAnalyzerModule( const CCodeAnalyzerModule& ) = delete;
 	CCodeAnalyzerModule& operator=( const CCodeAnalyzerModule& ) = delete;
 
-	virtual void OnExcute( CStatisticsCollection& oStatisticsCollection ) = 0;
+	virtual void OnPreExecute( CStatisticsCollection& oStatisticsCollection ) = 0;
 
 	virtual void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) = 0;
 	virtual void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) = 0;
 
-	virtual void OnExcuteComplete( CStatisticsCollection& oStatisticsCollection ) = 0;
+	virtual void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) = 0;
 };

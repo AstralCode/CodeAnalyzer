@@ -5,9 +5,9 @@
 #include "Utility.h"
 
 // ^^x
-// void CFunctionLengthModule::OnExcute
+// void CFunctionLengthModule::OnPreExecute
 // 3BGO JIRA-238 23-10-2020
-void CFunctionCountModule::OnExcute( CStatisticsCollection& oStatisticsCollection )
+void CFunctionCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eFunctionCount].oHeaderString = "Functions";
     oStatisticsCollection[EStatisticsTypes::eMemberFunctionCount].oHeaderString = "Member Functions";
@@ -38,9 +38,9 @@ void CFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CS
 }
 
 // ^^x
-// void CFunctionCountModule::OnExcuteComplete
+// void CFunctionCountModule::OnPostExecute
 // 3BGO JIRA-238 23-10-2020
-void CFunctionCountModule::OnExcuteComplete( CStatisticsCollection& oStatisticsCollection )
+void CFunctionCountModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 
