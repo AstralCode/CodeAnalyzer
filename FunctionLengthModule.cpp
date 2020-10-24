@@ -1,7 +1,5 @@
 #include "FunctionLengthModule.h"
 
-#include <cmath>
-
 #include "SourceFile.h"
 #include "StatisticsCollection.h"
 #include "StringHelper.h"

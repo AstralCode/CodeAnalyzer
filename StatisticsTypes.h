@@ -23,5 +23,8 @@ enum class EStatisticsTypes
 	eFunctionLength4PPlusCount,
 	eFunctionLength4PPlusPercent,
 	eFunction5PlusArgsCount,
-	eFunction5PlusArgsPercent
+	eFunction5PlusArgsPercent,
+	eDialogClassesCount,
+	eDialogUsesDatabaseCount,
+	eDialogUsesDatabasePercent
 };

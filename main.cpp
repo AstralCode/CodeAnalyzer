@@ -7,6 +7,7 @@
 #include "FunctionCountModule.h"
 #include "FunctionLengthModule.h"
 #include "FunctionArgsCountModule.h"
+#include "DialogUsesDatabaseModule.h"
 
 // ^^x
 // EProgramStatusCodes PrepareOutputDirectory
@@ -56,6 +57,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 			oCodeAnalyzer.AddAnalyzerModule<CGlobalCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionArgsCountModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CDialogUsesDatabaseModule>();
 
 			eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath, oCommandLineArgumentDataset.oDeveloperString );
 
