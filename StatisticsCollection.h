@@ -11,7 +11,7 @@ class CStatisticsCollection final
 public:
 	SStatisticsResult& operator[]( const EStatisticsTypes eType );
 
-	std::vector<SStatisticsResult> GetStatisticsResults() const;
+	std::vector<SStatisticsResult> GetStatisticsCollection() const;
 
 private:
 	std::map<EStatisticsTypes, SStatisticsResult> m_oStatisticsResultMap;

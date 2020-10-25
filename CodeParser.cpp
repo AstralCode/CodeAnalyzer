@@ -29,7 +29,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( 
 		eFunctionArgumentListGroup
 	};
 
-	std::vector<SFindDataResult<CFunction>> oMemberFunctionVector{};
+	std::vector<SFindDataResult<CFunction>> oFunctionVector{};
 	std::regex oRegexPattern{ PrepareFindGlobalFunctionRegexString() };
 
 	const std::sregex_iterator oRegexEndIt{};
@@ -37,13 +37,13 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( 
 	{
 		std::smatch oRegexMatchGroups = *oRegexBeginIt;
 
-		CFunction oGlobalFunction{};
-		oGlobalFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
-		oGlobalFunction.SetName( oRegexMatchGroups[eFunctionNameGroup] );
+		CFunction oFunction{};
+		oFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
+		oFunction.SetName( oRegexMatchGroups[eFunctionNameGroup] );
 
 		if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
 		{
-			oGlobalFunction.SetArgumentList( SimplifyCode( oRegexMatchGroups[eFunctionArgumentListGroup] ) );
+			oFunction.SetArgumentList( SimplifyCode( oRegexMatchGroups[eFunctionArgumentListGroup] ) );
 		}
 
 		if ( oRegexMatchGroups[eFunctionAuthorGroup].matched && oRegexMatchGroups[eFunctionProjectGroup].matched )
@@ -52,13 +52,15 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( 
 			oFunctionInformation.oAuthorString = oRegexMatchGroups[eFunctionAuthorGroup];
 			oFunctionInformation.oProjectString = oRegexMatchGroups[eFunctionProjectGroup];
 
-			oGlobalFunction.SetInformation( oFunctionInformation );
+			oFunction.SetInformation( oFunctionInformation );
 		}
 
-		oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oGlobalFunction } );
+		oFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oFunction } );
 	}
 
-	return oMemberFunctionVector;
+	oFunctionVector.shrink_to_fit();
+
+	return oFunctionVector;
 }
 
 // ^^x
@@ -69,11 +71,11 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctions( const 
 	std::string oModifiedCodeString = oCodeString;
 	RemoveMemberFunctionBodies( oModifiedCodeString );
 
-	std::vector<SFindDataResult<CFunction>> oGlobalFunctionVector = FindGlobalFunctionHeaders( oModifiedCodeString );
-	RetrieveBodyFunctions( oCodeString, oGlobalFunctionVector );
-	FindLocalVariables( oGlobalFunctionVector );
+	std::vector<SFindDataResult<CFunction>> oFunctionVector = FindGlobalFunctionHeaders( oModifiedCodeString );
+	RetrieveBodyFunctions( oCodeString, oFunctionVector );
+	FindLocalVariables( oFunctionVector );
 
-	return oGlobalFunctionVector;
+	return oFunctionVector;
 }
 
 // ^^x
@@ -93,7 +95,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 		eFunctionArgumentListGroup
 	};
 
-	std::vector<SFindDataResult<CFunction>> oMemberFunctionVector{};
+	std::vector<SFindDataResult<CFunction>> oFunctionVector{};
 	std::regex oRegexPattern{ PrepareFindMemberFunctionRegexString(), std::regex_constants::icase };
 
 	const std::sregex_iterator oRegexEndIt{};
@@ -101,23 +103,23 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 	{
 		std::smatch oRegexMatchGroups = *oRegexBeginIt;
 
-		CFunction oMemberFunction{};
-		oMemberFunction.SetName( oRegexMatchGroups[eFunctionNameGroup] );
-		oMemberFunction.SetClassName( SimplifyCode( oRegexMatchGroups[eFunctionClassNameGroup] ) );
+		CFunction oFunction{};
+		oFunction.SetName( oRegexMatchGroups[eFunctionNameGroup] );
+		oFunction.SetClassName( SimplifyCode( oRegexMatchGroups[eFunctionClassNameGroup] ) );
 
 		if ( oRegexMatchGroups[eFunctionReturnTypeGroup].matched )
 		{
-			oMemberFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
+			oFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
 		}
 
 		if ( oRegexMatchGroups[eFunctionDestructorGroup].matched )
 		{
-			oMemberFunction.SetDestructor( oRegexMatchGroups[eFunctionDestructorGroup] );
+			oFunction.SetDestructor( oRegexMatchGroups[eFunctionDestructorGroup] );
 		}
 
 		if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
 		{
-			oMemberFunction.SetArgumentList( SimplifyCode( oRegexMatchGroups[eFunctionArgumentListGroup] ) );
+			oFunction.SetArgumentList( SimplifyCode( oRegexMatchGroups[eFunctionArgumentListGroup] ) );
 		}
 
 		if ( oRegexMatchGroups[eFunctionAuthorGroup].matched && oRegexMatchGroups[eFunctionProjectGroup].matched )
@@ -126,13 +128,15 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 			oFunctionInformation.oAuthorString = oRegexMatchGroups[eFunctionAuthorGroup];
 			oFunctionInformation.oProjectString = oRegexMatchGroups[eFunctionProjectGroup];
 
-			oMemberFunction.SetInformation( oFunctionInformation );
+			oFunction.SetInformation( oFunctionInformation );
 		}
 
-		oMemberFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oMemberFunction } );
+		oFunctionVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oFunction } );
 	}
 
-	return oMemberFunctionVector;
+	oFunctionVector.shrink_to_fit();
+
+	return oFunctionVector;
 }
 
 // ^^x
@@ -140,11 +144,11 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 // 3BGO JIRA-238 02-10-2020
 std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( const std::string& oCodeString ) const
 {
-	std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = FindMemberFunctionHeaders( oCodeString );
-	RetrieveBodyFunctions( oCodeString, oMemberFunctionVector );
-	FindLocalVariables( oMemberFunctionVector );
+	std::vector<SFindDataResult<CFunction>> oFunctionVector = FindMemberFunctionHeaders( oCodeString );
+	RetrieveBodyFunctions( oCodeString, oFunctionVector );
+	FindLocalVariables( oFunctionVector );
 
-	return oMemberFunctionVector;
+	return oFunctionVector;
 }
 
 // ^^x
@@ -170,14 +174,14 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindGlobalVariables( const 
 // 3BGO JIRA-238 12-10-2020
 std::vector<SFindDataResult<CVariable>> CCodeParser::FindLocalVariables( const CFunction& oFunction ) const
 {
-	std::vector<SFindDataResult<CVariable>> oLocalVariableVector{};
+	std::vector<SFindDataResult<CVariable>> oVariableVector{};
 
 	if ( oFunction.GetBody().has_value() )
 	{
-		oLocalVariableVector = FindVariables( *oFunction.GetBody() );
+		oVariableVector = FindVariables( *oFunction.GetBody() );
 	}
 
-	return oLocalVariableVector;
+	return oVariableVector;
 }
 
 // ^^x
@@ -207,6 +211,8 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::s
 
 		oVariableVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oVariable } );
 	}
+
+	oVariableVector.shrink_to_fit();
 
 	return oVariableVector;
 }
@@ -293,16 +299,16 @@ void CCodeParser::RemoveMemberFunctionBodies( std::string& oCodeString ) const
 // ^^x
 // void CCodeParser::RetrieveBodyFunctions
 // 3BGO JIRA-238 05-10-2020
-void CCodeParser::RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oMemberFunctionVector ) const
+void CCodeParser::RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const
 {
 	std::string::size_type uiCurrentCodeOffsetPos{ 0u };
 
-	for ( SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
+	for ( SFindDataResult<CFunction>& oFunction : oFunctionVector )
 	{
-		const std::string oMemberFunctionBody = RetrieveBodyFunction( oCodeString, oMemberFunction.oRegexMatchString, uiCurrentCodeOffsetPos );
-		if ( !oMemberFunctionBody.empty() )
+		const std::string oFunctionBody = RetrieveBodyFunction( oCodeString, oFunction.oRegexMatchString, uiCurrentCodeOffsetPos );
+		if ( !oFunctionBody.empty() )
 		{
-			oMemberFunction.oData.SetBody( oMemberFunctionBody );
+			oFunction.oData.SetBody( oFunctionBody );
 		}
 	}
 }

@@ -21,7 +21,7 @@ public:
 	template<typename TDerivedCodeAnalyzerModule, typename... TArguments>
 	void AddAnalyzerModule( TArguments&&... oArguments );
 
-	std::vector<SStatisticsResult> GetStatisticsResults() const;
+	const CStatisticsCollection& GetStatisticsCollection() const;
 
 	EProgramStatusCodes Execute( const std::filesystem::path& oInputDirectoryPath, std::optional<std::string> oDeveloperString = {} );
 
@@ -36,16 +36,17 @@ private:
 
 	void FilterResults( std::vector<SFindDataResult<CFunction>>& oFunctionVector, std::optional<std::string> oDeveloperString ) const;
 
-	void OnPreExecute( const std::filesystem::path& oInputDirectoryPath );
+	void OnPreExecute( const std::filesystem::path& oInputDirectoryPath, std::size_t& uiCodeFileCount );
 	void OnPostExecute( const EProgramStatusCodes eStatus );
 
 	std::size_t CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
+	std::size_t CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath, const ECodeFileTypes eCodeFileType ) const;
 	std::uintmax_t CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath ) const;
 
 	ECodeFileTypes CheckFileType( const std::filesystem::path& oFilePath ) const;
 	bool IsCodeFile( const std::filesystem::path& oFilePath ) const;
 
-	void PrintProgress( const unsigned int uiFileNumber, const std::size_t uiFileCount ) const;
+	void PrintProgress( const std::size_t uiFileNumber, const std::size_t uiFileCount ) const;
 
 	std::filesystem::path m_oInputDirectoryPath;
 

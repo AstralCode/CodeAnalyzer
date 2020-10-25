@@ -104,7 +104,6 @@ void CDialogUsesDatabaseModule::ThisDialogClassUsesDatabase( std::string& oClass
 bool CDialogUsesDatabaseModule::ContainsClassName( const SFindDataResult<CFunction>& oMemberFunction, std::string& oClassNameString ) const
 {
     bool bHasClassName = oMemberFunction.oData.GetClassName().has_value();
-
     if ( bHasClassName )
     {
         oClassNameString = *oMemberFunction.oData.GetClassName();
@@ -119,7 +118,6 @@ bool CDialogUsesDatabaseModule::ContainsClassName( const SFindDataResult<CFuncti
 bool CDialogUsesDatabaseModule::ContainsFunctionBody( const SFindDataResult<CFunction>& oMemberFunction, std::string& oFunctionBodyString ) const
 {
     bool bHasFunctionBody = oMemberFunction.oData.GetBody().has_value();
-
     if ( bHasFunctionBody )
     {
         oFunctionBodyString = *oMemberFunction.oData.GetBody();
@@ -138,7 +136,6 @@ bool CDialogUsesDatabaseModule::IsMemberFunctionBodyUsesDatabase( std::string& o
     for ( std::string_view szDatabaseFunctionName : aszDatabaseFunctionNames )
     {
         bIsFunctionUsesDatabase = oFunctionBodyString.find( szDatabaseFunctionName ) != std::string::npos;
-
         if ( bIsFunctionUsesDatabase )
         {
             break;
@@ -158,7 +155,6 @@ bool CDialogUsesDatabaseModule::IsDialogClass( const std::string& oClassNameStri
     for ( std::string_view szDialogDatabaseIdentifier : aszDialogDatabaseIdentifiers )
     {
         bIsDialogClass = oClassNameString.find( szDialogDatabaseIdentifier ) != std::string::npos;
-
         if ( bIsDialogClass )
         {
             break;

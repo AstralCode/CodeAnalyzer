@@ -6,13 +6,14 @@
 #include "ConsoleInterface.h"
 #include "SourceFile.h"
 #include "HeaderFile.h"
+#include "Utility.h"
 
 // ^^x
-// std::vector<SStatisticsResult> CCodeAnalyzer::GetStatisticsResults
+// const CStatisticsCollection& CCodeAnalyzer::GetStatisticsCollection
 // 3BGO JIRA-238 24-09-2020
-std::vector<SStatisticsResult> CCodeAnalyzer::GetStatisticsResults() const
+const CStatisticsCollection& CCodeAnalyzer::GetStatisticsCollection() const
 {
-    return m_oStatisticsCollection.GetStatisticsResults();
+    return m_oStatisticsCollection;
 }
 
 // ^^x
@@ -21,23 +22,21 @@ std::vector<SStatisticsResult> CCodeAnalyzer::GetStatisticsResults() const
 EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath, std::optional<std::string> oDeveloperString )
 {
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
+    std::size_t uiProcessCodeFileNumber{ 0u };
+    std::size_t uiCodeFileCount{ 0u };
 
-    unsigned int uiProcessCodeFileNumber{ 0u };
+    OnPreExecute( oInputDirectoryPath, uiCodeFileCount );
 
-    OnPreExecute( oInputDirectoryPath );
-
-    const std::size_t uiProcessCodeFileCount = CountNumberCodeFiles( oInputDirectoryPath );
-    m_oStatisticsCollection[EStatisticsTypes::eFileCount] = { "Files", uiProcessCodeFileCount };
+    m_oStatisticsCollection[EStatisticsTypes::eFileCount] = { "Files", uiCodeFileCount };
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
         const ECodeFileTypes eFileType = CheckFileType( oFilePath );
-
         if ( eFileType != ECodeFileTypes::eUnknown )
         {
             ProcessCodeFile( eFileType, oFilePath, oDeveloperString );
-            PrintProgress( ++uiProcessCodeFileNumber, uiProcessCodeFileCount );
+            PrintProgress( ++uiProcessCodeFileNumber, uiCodeFileCount );
         }
     }
 
@@ -54,7 +53,6 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
     std::ifstream oFileStream{ oFilePath.string(), std::fstream::in };
-
     if ( oFileStream.is_open() )
     {
         oFileContentString.assign( std::istreambuf_iterator<char>{ oFileStream }, {} );
@@ -75,7 +73,6 @@ EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileTypes eFileTy
     std::string oCodeString{};
 
     EProgramStatusCodes eStatus = ReadFileContent( oFilePath, oCodeString );
-    
     if ( eStatus == EProgramStatusCodes::eSuccess )
     {
         PreProcessFileContent( oCodeString );
@@ -176,10 +173,23 @@ void CCodeAnalyzer::FilterResults( std::vector<SFindDataResult<CFunction>>& oFun
 // ^^x
 // void CCodeAnalyzer::OnPreExecute
 // 3BGO JIRA-238 22-10-2020
-void CCodeAnalyzer::OnPreExecute( const std::filesystem::path& oInputDirectoryPath )
+void CCodeAnalyzer::OnPreExecute( const std::filesystem::path& oInputDirectoryPath, std::size_t& uiCodeFileCount )
 {
-    CConsoleInterface::PrintLineTime( "Code analysis in progress... \"" + oInputDirectoryPath.string() + "\"" );
-    CConsoleInterface::Print( "  Calculating the number of files. Please wait...\r" );
+    CConsoleInterface::PrintLine( "Code Analyzer [Version 1.0] (c) 2020 IN-Software" );
+    CConsoleInterface::NewLine();
+    CConsoleInterface::PrintLine( "Code directory: \"" + oInputDirectoryPath.string() + "\"", true );
+    CConsoleInterface::Print( "Calculating the number of C++ code files. Please wait...\r" );
+
+    const std::size_t uiHeaderFileCount = CountNumberCodeFiles( oInputDirectoryPath, ECodeFileTypes::eHeader );
+    const std::size_t uiSourceFileCount = CountNumberCodeFiles( oInputDirectoryPath, ECodeFileTypes::eSource );
+    uiCodeFileCount = uiHeaderFileCount + uiSourceFileCount;
+
+    CConsoleInterface::ClearLine();
+    CConsoleInterface::PrintLine( "C++ Header files: " + std::to_string( uiHeaderFileCount ), true );
+    SleepThread( 1ull );
+    CConsoleInterface::PrintLine( "C++ Source files: " + std::to_string( uiSourceFileCount ), true );
+    SleepThread( 1ull );
+    CConsoleInterface::Print( "Code analysis in progress...\r" );
 
     for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
@@ -200,7 +210,7 @@ void CCodeAnalyzer::OnPostExecute( const EProgramStatusCodes eStatus )
         }
 
         CConsoleInterface::ClearLine();
-        CConsoleInterface::PrintLineTime( "Analysis complete!" );
+        CConsoleInterface::PrintLine( "Analysis complete!", true );
     }
 }
 
@@ -215,6 +225,20 @@ std::size_t CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oD
 }
 
 // ^^x
+// std::size_t CCodeAnalyzer::CountNumberCodeFiles
+// 3BGO JIRA-238 25-10-2020
+std::size_t CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath, const ECodeFileTypes eCodeFileType ) const
+{
+    return std::count_if( std::filesystem::recursive_directory_iterator{ oDirectoryPath },
+                          std::filesystem::recursive_directory_iterator{},
+                          [this, eCodeFileType]( const std::filesystem::path& oFilePath )
+                          {
+                              const ECodeFileTypes eFileType = CheckFileType( oFilePath );
+                              return eFileType == eCodeFileType;
+                          } );
+}
+
+// ^^x
 // std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles
 // 3BGO JIRA-238 24-09-2020
 std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath ) const
@@ -222,7 +246,6 @@ std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles( const std::filesystem::path& o
     std::uintmax_t ullFileCodeSizes = 0u;
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oDirectoryPath };
-
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
     {
         if ( IsCodeFile( oFilePath ) )
@@ -270,7 +293,7 @@ bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath ) const
 // ^^x
 // void CCodeAnalyzer::PrintProgress
 // 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::PrintProgress( const unsigned int uiFileNumber, const std::size_t uiFileCount ) const
+void CCodeAnalyzer::PrintProgress( const std::size_t uiFileNumber, const std::size_t uiFileCount ) const
 {
     const std::size_t uiCurrentProgressPos = uiFileNumber * 100u / uiFileCount;
     const std::string oCompleteProgressString( uiCurrentProgressPos / 2u, static_cast<char>( 219 ) );

@@ -63,7 +63,6 @@ EProgramStatusCodes CCommandLineHandler::HandleRequiredArguments( SCommandLineAr
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
 	const std::filesystem::path oInputDirectoryPath{ m_oArgumentVector[0] };
-
 	if ( std::filesystem::exists( oInputDirectoryPath ) && std::filesystem::is_directory( oInputDirectoryPath ) )
 	{
 		oArgumentDataset.oInputDirectoryPath = oInputDirectoryPath;

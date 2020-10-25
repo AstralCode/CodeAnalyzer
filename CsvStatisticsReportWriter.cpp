@@ -3,18 +3,18 @@
 #include <fstream>
 
 #include "ProgramStatusCodes.h"
+#include "StatisticsCollection.h"
 #include "DateTimeHelper.h"
 #include "StringHelper.h"
 
 // ^^x
 // EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<SStatisticsResult>& oStatisticsResultVector, const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString, std::filesystem::path& oReportPath )
+EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CStatisticsCollection& oStatisticsCollection, const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString, std::filesystem::path& oReportPath )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
 	oReportPath = PrepareOutputReportPath( oOutputDirectoryPath, oReportPrefixNameString );
-	
 	std::ofstream oFileStream{ oReportPath.string(), std::fstream::out };
 
 	if ( oFileStream.is_open() )
@@ -24,14 +24,14 @@ EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<
 			oFileStream << ';';
 		}
 		
-		WriteStatisticsHeaders( oFileStream, oStatisticsResultVector );
+		WriteStatisticsHeaders( oFileStream, oStatisticsCollection );
 
 		if ( oReportPrefixNameString.has_value() )
 		{
 			oFileStream << *oReportPrefixNameString << ';';
 		}
 
-		WriteStatisticsValues( oFileStream, oStatisticsResultVector );
+		WriteStatisticsValues( oFileStream, oStatisticsCollection );
 	}
 	else
 	{
@@ -45,8 +45,10 @@ EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const std::vector<
 // ^^x
 // void CCsvStatisticsReportWriter::WriteStatisticsHeaders
 // 3BGO JIRA-238 24-09-2020
-void CCsvStatisticsReportWriter::WriteStatisticsHeaders( std::ofstream& oFileStream, const std::vector<SStatisticsResult>& oStatisticsResultVector ) const
+void CCsvStatisticsReportWriter::WriteStatisticsHeaders( std::ofstream& oFileStream, const CStatisticsCollection& oStatisticsCollection ) const
 {
+	const std::vector<SStatisticsResult> oStatisticsResultVector = oStatisticsCollection.GetStatisticsCollection();
+
 	for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultVector.size(); ++uiResultIndex )
 	{
 		oFileStream << oStatisticsResultVector[uiResultIndex].oHeaderString;
@@ -65,8 +67,10 @@ void CCsvStatisticsReportWriter::WriteStatisticsHeaders( std::ofstream& oFileStr
 // ^^x
 // void CCsvStatisticsReportWriter::WriteStatisticsValues
 // 3BGO JIRA-238 24-09-2020
-void CCsvStatisticsReportWriter::WriteStatisticsValues( std::ofstream& oFileStream, const std::vector<SStatisticsResult>& oStatisticsResultVector ) const
+void CCsvStatisticsReportWriter::WriteStatisticsValues( std::ofstream& oFileStream, const CStatisticsCollection& oStatisticsCollection ) const
 {
+	const std::vector<SStatisticsResult> oStatisticsResultVector = oStatisticsCollection.GetStatisticsCollection();
+
 	for ( unsigned int uiResultIndex{ 0u }; uiResultIndex < oStatisticsResultVector.size(); ++uiResultIndex )
 	{
 		oFileStream << oStatisticsResultVector[uiResultIndex].uiValue;

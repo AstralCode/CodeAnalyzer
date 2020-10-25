@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <numeric>
+#include <thread>
+#include <chrono>
 
 struct SRange
 {
@@ -25,4 +27,9 @@ template<typename T>
 inline constexpr T ToPercent( const T oValue, const T oTotal )
 {
 	return oValue * static_cast<T>( 100 ) / oTotal;
+}
+
+inline void SleepThread( const unsigned long long ullSeconds )
+{
+	std::this_thread::sleep_for( std::chrono::seconds( ullSeconds ) );
 }

@@ -8,25 +8,27 @@
 // ^^x
 // void CConsoleInterface::Print
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::Print( const std::string& oMessageString )
+void CConsoleInterface::Print( const std::string& oMessageString, const bool bPrintTime )
 {
+	if ( bPrintTime )
+	{
+		std::cout << "<" + CDateTimeHelper::CurrentTime() + "> ";
+	}
+
 	std::cout << oMessageString;
 }
 
 // ^^x
 // void CConsoleInterface::PrintLine
 // 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::PrintLine( const std::string& oMessageString )
+void CConsoleInterface::PrintLine( const std::string& oMessageString, const bool bPrintTime )
 {
-	std::cout << oMessageString << '\n';
-}
+	if ( bPrintTime )
+	{
+		std::cout << "<" + CDateTimeHelper::CurrentTime() + "> ";
+	}
 
-// ^^x
-// void CConsoleInterface::PrintLineTime
-// 3BGO JIRA-238 01-10-2020
-void CConsoleInterface::PrintLineTime( const std::string& oMessageString )
-{
-	std::cout << "<" + CDateTimeHelper::CurrentTime() + "> " << oMessageString << '\n';
+	std::cout << oMessageString << '\n';
 }
 
 // ^^x

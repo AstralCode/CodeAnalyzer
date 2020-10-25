@@ -40,16 +40,14 @@ int main( int iArgumentCount, char* apcArguments[] )
 
 	CCodeAnalyzer oCodeAnalyzer{};
 	CCsvStatisticsReportWriter oStatisticsReportWriter{};
-
 	SCommandLineArgumentDataset oCommandLineArgumentDataset{};
-	EProgramStatusCodes eStatus = oCommandLineHandler.HandleArguments( oCommandLineArgumentDataset );
 
+	EProgramStatusCodes eStatus = oCommandLineHandler.HandleArguments( oCommandLineArgumentDataset );
 	if ( eStatus == EProgramStatusCodes::eSuccess )
 	{
 		std::filesystem::path oOutputDirectoryPath{};
 
 		eStatus = PrepareOutputDirectory( oOutputDirectoryPath );
-
 		if ( eStatus == EProgramStatusCodes::eSuccess )
 		{
 			oCodeAnalyzer.AddAnalyzerModule<CCodeLineCountModule>();
@@ -60,16 +58,14 @@ int main( int iArgumentCount, char* apcArguments[] )
 			oCodeAnalyzer.AddAnalyzerModule<CDialogUsesDatabaseModule>();
 
 			eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath, oCommandLineArgumentDataset.oDeveloperString );
-
 			if ( eStatus == EProgramStatusCodes::eSuccess )
 			{
 				std::filesystem::path oReportPath{};
 
-				eStatus = oStatisticsReportWriter.CreateReport( oCodeAnalyzer.GetStatisticsResults(), oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString, oReportPath );
-
+				eStatus = oStatisticsReportWriter.CreateReport( oCodeAnalyzer.GetStatisticsCollection(), oOutputDirectoryPath, oCommandLineArgumentDataset.oReportPrefixNameString, oReportPath );
 				if ( eStatus == EProgramStatusCodes::eSuccess )
 				{
-					CConsoleInterface::PrintLineTime( "Report created at: \"" + oReportPath.string() + "\"" );
+					CConsoleInterface::PrintLine( "Report created at: \"" + oReportPath.string() + "\"" );
 				}
 			}
 		}

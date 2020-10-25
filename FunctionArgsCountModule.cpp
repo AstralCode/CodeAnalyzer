@@ -51,7 +51,6 @@ void CFunctionArgsCountModule::CalculateStatistics( const std::vector<SFindDataR
         if ( oFunction.oData.GetArgumentList().has_value() )
         {
             const std::size_t uiFunctionCodeLineCount = CStringHelper::Split( *oFunction.oData.GetArgumentList(), ',' ).size();
-
             if ( uiFunctionCodeLineCount > 5u )
             {
                 ++oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue;
