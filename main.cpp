@@ -8,6 +8,7 @@
 #include "FunctionLengthModule.h"
 #include "FunctionArgsCountModule.h"
 #include "DialogUsesDatabaseModule.h"
+#include "VariableRulesModule.h"
 
 // ^^x
 // EProgramStatusCodes PrepareOutputDirectory

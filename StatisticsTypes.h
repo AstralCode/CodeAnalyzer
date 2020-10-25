@@ -26,5 +26,6 @@ enum class EStatisticsTypes
 	eFunction5PlusArgsPercent,
 	eDialogClassesCount,
 	eDialogUsesDatabaseCount,
-	eDialogUsesDatabasePercent
+	eDialogUsesDatabasePercent,
+	eVariableIncorrectNameCount
 };
