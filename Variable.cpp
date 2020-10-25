@@ -9,9 +9,9 @@ void CVariable::SetName( const std::string& oNameString )
 }
 
 // ^^x
-// std::string CVariable::GetName
+// const std::string& CVariable::GetName
 // 3BGO JIRA-238 09-10-2020
-std::string CVariable::GetName() const
+const std::string& CVariable::GetName() const
 {
     return m_oNameString;
 }
@@ -25,9 +25,9 @@ void CVariable::SetType( const std::string& oTypeString )
 }
 
 // ^^x
-// std::string CVariable::GetType
+// const std::string& CVariable::GetType
 // 3BGO JIRA-238 09-10-2020
-std::string CVariable::GetType() const
+const std::string& CVariable::GetType() const
 {
     return m_oTypeString;
 }

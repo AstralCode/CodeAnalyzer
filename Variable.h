@@ -6,10 +6,10 @@ class CVariable final
 {
 public:
 	void SetName( const std::string& oNameString );
-	std::string GetName() const;
+	const std::string& GetName() const;
 
 	void SetType( const std::string& oTypeString );
-	std::string GetType() const;
+	const std::string& GetType() const;
 
 private:
 	std::string m_oNameString;

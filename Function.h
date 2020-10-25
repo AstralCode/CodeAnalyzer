@@ -16,7 +16,7 @@ public:
 	};
 
 	void SetName( const std::string& oNameString );
-	std::string GetName() const;
+	const std::string& GetName() const;
 
 	void SetDestructor( const std::string& oDestructorString );
 	std::optional<std::string> GetDestructor() const;

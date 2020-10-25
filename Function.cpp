@@ -9,9 +9,9 @@ void CFunction::SetName( const std::string& oNameString )
 }
 
 // ^^x
-// std::string CFunction::GetName
+// const std::string& CFunction::GetName
 // 3BGO JIRA-238 09-10-2020
-std::string CFunction::GetName() const
+const std::string& CFunction::GetName() const
 {
     return m_oNameString;
 }
