@@ -26,7 +26,14 @@ inline constexpr bool SRange::Contains( const T oValue, const T oMin, const T oM
 template<typename T>
 inline constexpr T ToPercent( const T oValue, const T oTotal )
 {
-	return oValue * static_cast<T>( 100 ) / oTotal;
+	T oResult{ 0 };
+
+	if ( oTotal > static_cast< T >( 0 ) )
+	{
+		oResult = oValue * static_cast< T >( 100 ) / oTotal;
+	}
+
+	return oResult;
 }
 
 inline void SleepThread( const unsigned long long ullSeconds )
