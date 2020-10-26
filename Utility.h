@@ -36,6 +36,9 @@ inline constexpr T ToPercent( const T oValue, const T oTotal )
 	return oResult;
 }
 
+// ^^x
+// inline void SleepThread
+// 3BGO JIRA-238 23-10-2020
 inline void SleepThread( const unsigned long long ullSeconds )
 {
 	std::this_thread::sleep_for( std::chrono::seconds( ullSeconds ) );
