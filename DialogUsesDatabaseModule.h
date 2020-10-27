@@ -34,7 +34,7 @@ private:
 	bool IsDialogClassExcluded( const std::string& oClassNameString ) const;
 
 	static std::array<std::string_view, 2u> aszDialogDatabaseIdentifiers;
-	static std::array<std::string_view, 7u> aszDatabaseFunctionNames;
+	static std::array<std::string_view, 8u> aszDatabaseFunctionNames;
 
 	std::set<std::string> m_oDialogClassSet;
 	std::set<std::string> m_oDialogClassUsesDatabaseSet;

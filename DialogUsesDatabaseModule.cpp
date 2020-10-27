@@ -10,12 +10,13 @@ std::array<std::string_view, 2u> CDialogUsesDatabaseModule::aszDialogDatabaseIde
     "Dlg",
 };
 
-std::array<std::string_view, 7u> CDialogUsesDatabaseModule::aszDatabaseFunctionNames =
+std::array<std::string_view, 8u> CDialogUsesDatabaseModule::aszDatabaseFunctionNames =
 {
     "DbOpen",
     "DbClose",
     "DbCreateRecord",
     "DbFindRecord",
+    "DbFindFirstRecord",
     "DbSaveRecord",
     "DbUnlockRecord",
     "DbGetStatus"
