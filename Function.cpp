@@ -17,22 +17,6 @@ const std::string& CFunction::GetName() const
 }
 
 // ^^x
-// std::optional<std::string> CFunction::SetDestructor
-// 3BGO JIRA-238 09-10-2020
-void CFunction::SetDestructor( const std::string& oDestructorString )
-{
-    m_oDestructorString = oDestructorString;
-}
-
-// ^^x
-// std::optional<std::string> CFunction::GetDestructor
-// 3BGO JIRA-238 09-10-2020
-std::optional<std::string> CFunction::GetDestructor() const
-{
-    return m_oDestructorString;
-}
-
-// ^^x
 // void CFunction::SetReturnType
 // 3BGO JIRA-238 09-10-2020
 void CFunction::SetReturnType( const std::string& oReturnTypeString )
@@ -129,6 +113,22 @@ std::optional<std::vector<SFindDataResult<CVariable>>> CFunction::GetLocalVariab
 }
 
 // ^^x
+// void CFunction::SetDestructor
+// 3BGO JIRA-238 09-10-2020
+void CFunction::SetDestructor( const bool bIsDestructor )
+{
+    m_bIsDestructor = bIsDestructor;
+}
+
+// ^^x
+// bool CFunction::IsDestructor
+// 3BGO JIRA-238 09-10-2020
+bool CFunction::IsDestructor() const
+{
+    return m_bIsDestructor;
+}
+
+// ^^x
 // std::optional<SFunctionInformation> CFunction::GetInformation
 // 3BGO JIRA-238 09-10-2020
 bool CFunction::IsConstructor() const
@@ -141,21 +141,6 @@ bool CFunction::IsConstructor() const
     }
 
     return bIsConstructor;
-}
-
-// ^^x
-// std::optional<SFunctionInformation> CFunction::GetInformation
-// 3BGO JIRA-238 09-10-2020
-bool CFunction::IsDestructor() const
-{
-    bool bIsDestructor{ false };
-
-    if ( IsMember() )
-    {
-        bIsDestructor = !m_oReturnTypeString.has_value() && m_oDestructorString.has_value();
-    }
-
-    return bIsDestructor;
 }
 
 // ^^x

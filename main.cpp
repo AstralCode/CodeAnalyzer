@@ -57,6 +57,7 @@ int main( int iArgumentCount, char* apcArguments[] )
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionArgsCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CDialogUsesDatabaseModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CVariableRulesModule>();
 
 			eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath, oCommandLineArgumentDataset.oDeveloperString );
 			if ( eStatus == EProgramStatusCodes::eSuccess )

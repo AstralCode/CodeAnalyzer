@@ -112,10 +112,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 			oFunction.SetReturnType( oRegexMatchGroups[eFunctionReturnTypeGroup] );
 		}
 
-		if ( oRegexMatchGroups[eFunctionDestructorGroup].matched )
-		{
-			oFunction.SetDestructor( oRegexMatchGroups[eFunctionDestructorGroup] );
-		}
+		oFunction.SetDestructor( oRegexMatchGroups[eFunctionDestructorGroup].matched );
 
 		if ( oRegexMatchGroups[eFunctionArgumentListGroup].matched )
 		{
@@ -195,7 +192,9 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::s
 	{
 		eRegexMatch,
 		eVariableTypeGroup,
+		eVariableReferenceTypeGroup,
 		eVariableNameGroup,
+		eVariableArrayTypeGroup
 	};
 
 	std::vector<SFindDataResult<CVariable>> oVariableVector{};
@@ -207,7 +206,16 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::s
 
 		CVariable oVariable{};
 		oVariable.SetType( oRegexMatchGroups[eVariableTypeGroup] );
+
+		if ( oRegexMatchGroups[eVariableReferenceTypeGroup].matched )
+		{
+			const std::string& oReferenceTypeString = oRegexMatchGroups[eVariableReferenceTypeGroup];
+			const CVariable::EReferenceType eReferenceType = ( oReferenceTypeString.find( '&' ) != std::string::npos ) ? CVariable::EReferenceType::Reference : CVariable::EReferenceType::Pointer;
+			oVariable.SetReferenceType( eReferenceType );
+		}
+
 		oVariable.SetName( oRegexMatchGroups[eVariableNameGroup] );
+		oVariable.SetArrayType( oRegexMatchGroups[eVariableArrayTypeGroup].matched );
 
 		oVariableVector.push_back( { oRegexMatchGroups[eRegexMatch], oRegexMatchGroups.position(), oVariable } );
 	}

@@ -18,9 +18,6 @@ public:
 	void SetName( const std::string& oNameString );
 	const std::string& GetName() const;
 
-	void SetDestructor( const std::string& oDestructorString );
-	std::optional<std::string> GetDestructor() const;
-
 	void SetReturnType( const std::string& oReturnTypeString );
 	std::optional<std::string> GetReturnType() const;
 
@@ -39,18 +36,19 @@ public:
 	void SetLocalVariables( std::vector<SFindDataResult<CVariable>>&& oLocalVariableVector );
 	std::optional<std::vector<SFindDataResult<CVariable>>> GetLocalVariables() const;
 
-	bool IsConstructor() const;
+	void SetDestructor( const bool bIsDestructor );
 	bool IsDestructor() const;
 
+	bool IsConstructor() const;
 	bool IsMember() const;
 
 private:
 	std::string m_oNameString;
-	std::optional<std::string> m_oDestructorString;
 	std::optional<std::string> m_oReturnTypeString;
 	std::optional<std::string> m_oClassNameString;
 	std::optional<std::string> m_oArgumentListString;
 	std::optional<std::string> m_oBodyString;
 	std::optional<SInformation> m_oInformation;
 	std::optional<std::vector<SFindDataResult<CVariable>>> m_oLocalVariableVector;
+	bool m_bIsDestructor;
 };

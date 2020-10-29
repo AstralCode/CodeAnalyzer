@@ -31,3 +31,35 @@ const std::string& CVariable::GetType() const
 {
     return m_oTypeString;
 }
+
+// ^^x
+// void CVariable::SetReferenceType
+// 3BGO JIRA-238 28-10-2020
+void CVariable::SetReferenceType( const EReferenceType eReferenceType )
+{
+    m_eReferenceType = eReferenceType;
+}
+
+// ^^x
+// std::optional<CVariable::EReferenceType> CVariable::GetReferenceType
+// 3BGO JIRA-238 28-10-2020
+std::optional<CVariable::EReferenceType> CVariable::GetReferenceType() const
+{
+    return m_eReferenceType;
+}
+
+// ^^x
+// bool CVariable::SetArrayType
+// 3BGO JIRA-238 28-10-2020
+void CVariable::SetArrayType( const bool bIsArrayType )
+{
+    m_bIsArrayType = bIsArrayType;
+}
+
+// ^^x
+// bool CVariable::IsArrayType
+// 3BGO JIRA-238 28-10-2020
+bool CVariable::IsArrayType() const
+{
+    return m_bIsArrayType;
+}

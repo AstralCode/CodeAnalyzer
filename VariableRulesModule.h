@@ -21,15 +21,22 @@ public:
 	void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) override;
 
 private:
-	struct SVariableNameRule
+	struct SVariablePrimitiveTypeNameRule
 	{
 		std::string oVariableTypeString;
 		std::string oPrefixString;
-		std::optional<std::string> oPostfixString;
 	};
 
-	static const std::array<SVariableNameRule, 8u> m_aoVariableNameRules;
+	static const std::array<SVariablePrimitiveTypeNameRule, 13u> m_aoVariablePrimitiveTypeNameRules;
 
 	void CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection );
 	void ValidateVariables( const std::vector<SFindDataResult<CVariable>>& oVariableVector, CStatisticsCollection& oStatisticsCollection ) const;
+
+	std::string CorrectPrefixName( const CVariable& oVariable, const SVariablePrimitiveTypeNameRule& oVariableNameRule ) const;
+	std::string SimplifyVariableType( const CVariable& oVariable ) const;
+
+	bool IsVariableNameCorrect( const CVariable& oVariable, const SVariablePrimitiveTypeNameRule& oVariableNameRule ) const;
+	bool IsVariableNameFirstCharacterCorrect( const CVariable& oVariable, const SVariablePrimitiveTypeNameRule& oVariableNameRule ) const;
+	bool IsVariablePrefixNameCorrect( const CVariable& oVariable, const SVariablePrimitiveTypeNameRule& oVariableNameRule ) const;
+	bool HasVariablePrimitiveType( const CVariable& oVariable, SVariablePrimitiveTypeNameRule& oVariableNameRule ) const;
 };
