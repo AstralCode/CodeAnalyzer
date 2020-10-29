@@ -1,7 +1,5 @@
 #include "VariableRulesModule.h"
 
-#include <iostream>
-
 #include "SourceFile.h"
 #include "StatisticsCollection.h"
 #include "StringHelper.h"
@@ -84,7 +82,6 @@ void CVariableRulesModule::ValidateVariables( const std::vector<SFindDataResult<
         {
             if ( !IsVariableNameCorrect( oVariable.oData, oVariableNameRule ) )
             {
-                std::cout << oVariable.oRegexMatchString << std::endl;
                 ++oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].uiValue;
             }
         }
