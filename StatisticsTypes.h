@@ -5,8 +5,6 @@ enum class EStatisticsTypes
 	eFileCount,
 	eCodeLineCount,
 	eFunctionCount,
-	eMemberFunctionCount,
-	eMemberFunctionPercent,
 	eGlobalFunctionCount,
 	eGlobalFunctionPercent,
 	eGlobalVariableCount,

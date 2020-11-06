@@ -23,8 +23,7 @@ public:
 	void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) override;
 
 private:
-	void ProcessMemberFunction( const SFindDataResult<CFunction>& oMemberFunction, CStatisticsCollection& oStatisticsCollection );
-	void ThisDialogClassUsesDatabase( std::string& oClassNameString, CStatisticsCollection& oStatisticsCollection );
+	void ProcessMemberFunction( const SFindDataResult<CFunction>& oMemberFunction );
 
 	bool ContainsClassName( const SFindDataResult<CFunction>& oMemberFunction, std::string& oClassNameString ) const;
 	bool ContainsFunctionBody( const SFindDataResult<CFunction>& oMemberFunction, std::string& oFunctionBodyString ) const;

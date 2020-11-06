@@ -28,7 +28,7 @@ std::array<std::string_view, 8u> CDialogUsesDatabaseModule::aszDatabaseFunctionN
 void CDialogUsesDatabaseModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eDialogClassesCount].oHeaderString = "Dialogs";
-    oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].oHeaderString = "Dialogs uses database";
+    oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].oHeaderString = "Dialogs using database";
     oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabasePercent].oHeaderString = "%";
 }
 
@@ -43,13 +43,13 @@ void CDialogUsesDatabaseModule::ProcessHeaderFile( const CHeaderFile&, CStatisti
 // ^^x
 // void CDialogUsesDatabaseModule::ProcessSourceFile
 // 3BGO JIRA-238 24-10-2020
-void CDialogUsesDatabaseModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
+void CDialogUsesDatabaseModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& )
 {
     const std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = oSourceFile.GetMemberFunctions();
 
     for ( const SFindDataResult<CFunction>& oMemberFunction : oMemberFunctionVector )
     {
-        ProcessMemberFunction( oMemberFunction, oStatisticsCollection );
+        ProcessMemberFunction( oMemberFunction );
     }
 }
 
@@ -61,13 +61,14 @@ void CDialogUsesDatabaseModule::OnPostExecute( CStatisticsCollection& oStatistic
     const std::size_t uiDialogCount = m_oDialogClassSet.size();
 
     oStatisticsCollection[EStatisticsTypes::eDialogClassesCount].uiValue = uiDialogCount;
+    oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].uiValue = m_oDialogClassUsesDatabaseSet.size();
     oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabasePercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].uiValue, uiDialogCount );
 }
 
 // ^^x
 // void CDialogUsesDatabaseModule::ProcessMemberFunction
 // 3BGO JIRA-238 24-10-2020
-void CDialogUsesDatabaseModule::ProcessMemberFunction( const SFindDataResult<CFunction>& oMemberFunction, CStatisticsCollection& oStatisticsCollection )
+void CDialogUsesDatabaseModule::ProcessMemberFunction( const SFindDataResult<CFunction>& oMemberFunction )
 {
     std::string oClassNameString{};
     std::string oFunctionBodyString{};
@@ -82,21 +83,11 @@ void CDialogUsesDatabaseModule::ProcessMemberFunction( const SFindDataResult<CFu
             {
                 if ( IsMemberFunctionBodyUsesDatabase( oFunctionBodyString ) )
                 {
-                    ThisDialogClassUsesDatabase( oClassNameString, oStatisticsCollection );
+                    m_oDialogClassUsesDatabaseSet.insert( oClassNameString );
                 }
             }
         }
     }
-}
-
-// ^^x
-// void CDialogUsesDatabaseModule::ThisDialogClassUsesDatabase
-// 3BGO JIRA-238 24-10-2020
-void CDialogUsesDatabaseModule::ThisDialogClassUsesDatabase( std::string& oClassNameString, CStatisticsCollection& oStatisticsCollection )
-{
-    m_oDialogClassUsesDatabaseSet.insert( oClassNameString );
-
-    ++oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].uiValue;
 }
 
 // ^^x

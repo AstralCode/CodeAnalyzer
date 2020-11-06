@@ -10,7 +10,7 @@
 // 3BGO JIRA-238 22-10-2020
 void CFunctionArgsCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
-    oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].oHeaderString = "Functions Args 5+";
+    oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].oHeaderString = "Functions Args 6+";
     oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsPercent].oHeaderString = "%";
 }
 

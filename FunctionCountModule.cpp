@@ -10,8 +10,6 @@
 void CFunctionCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eFunctionCount].oHeaderString = "Functions";
-    oStatisticsCollection[EStatisticsTypes::eMemberFunctionCount].oHeaderString = "Member Functions";
-    oStatisticsCollection[EStatisticsTypes::eMemberFunctionPercent].oHeaderString = "%";
     oStatisticsCollection[EStatisticsTypes::eGlobalFunctionCount].oHeaderString = "Global Functions";
     oStatisticsCollection[EStatisticsTypes::eGlobalFunctionPercent].oHeaderString = "%";
 }
@@ -33,7 +31,6 @@ void CFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CS
     const std::size_t uiGlobalFunctionCount = oSourceFile.GetGlobalFunctions().size();
 
     oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue += ( uiMemberFunctionCount + uiGlobalFunctionCount );
-    oStatisticsCollection[EStatisticsTypes::eMemberFunctionCount].uiValue += uiMemberFunctionCount;
     oStatisticsCollection[EStatisticsTypes::eGlobalFunctionCount].uiValue += uiGlobalFunctionCount;
 }
 
@@ -44,6 +41,5 @@ void CFunctionCountModule::OnPostExecute( CStatisticsCollection& oStatisticsColl
 {
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 
-    oStatisticsCollection[EStatisticsTypes::eMemberFunctionPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eMemberFunctionCount].uiValue, uiFunctionCount );
     oStatisticsCollection[EStatisticsTypes::eGlobalFunctionPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eGlobalFunctionCount].uiValue, uiFunctionCount );
 }

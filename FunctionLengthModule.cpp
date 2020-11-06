@@ -20,7 +20,7 @@ void CFunctionLengthModule::OnPreExecute( CStatisticsCollection& oStatisticsColl
     oStatisticsCollection[EStatisticsTypes::eFunctionLength2PPercent].oHeaderString = "%";
     oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].oHeaderString = "Functions 4P";
     oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].oHeaderString = "%";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].oHeaderString = "Functions 4P+";
+    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].oHeaderString = "Functions 5P+";
     oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].oHeaderString = "%";
 }
 

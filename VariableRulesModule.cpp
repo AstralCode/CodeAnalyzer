@@ -187,7 +187,7 @@ bool CVariableRulesModule::IsVariablePrefixNameCorrect( const CVariable& oVariab
 // 3BGO JIRA-238 28-10-2020
 bool CVariableRulesModule::HasVariablePrimitiveType( const CVariable& oVariable, SVariablePrimitiveTypeNameRule& oVariableNameRule ) const
 {
-    std::array<SVariablePrimitiveTypeNameRule, 13u>::const_iterator oRuleIt = std::find_if( m_aoVariablePrimitiveTypeNameRules.cbegin(), m_aoVariablePrimitiveTypeNameRules.cend(), [oTypeString = SimplifyVariableType( oVariable )]( const const SVariablePrimitiveTypeNameRule& oVariableNameRule )
+    std::array<SVariablePrimitiveTypeNameRule, 13u>::const_iterator oRuleIt = std::find_if( m_aoVariablePrimitiveTypeNameRules.cbegin(), m_aoVariablePrimitiveTypeNameRules.cend(), [oTypeString = SimplifyVariableType( oVariable )]( const SVariablePrimitiveTypeNameRule& oVariableNameRule )
     {
         return oVariableNameRule.oVariableTypeString == oTypeString;
     } );
