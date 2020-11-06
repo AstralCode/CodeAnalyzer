@@ -7,7 +7,6 @@ enum class EStatisticsTypes
 	eFunctionCount,
 	eGlobalFunctionCount,
 	eGlobalFunctionPercent,
-	eGlobalVariableCount,
 	eFunctionLengthQPCount,
 	eFunctionLengthQPPercent,
 	eFunctionLengthHPCount,
@@ -22,8 +21,9 @@ enum class EStatisticsTypes
 	eFunctionLength4PPlusPercent,
 	eFunction5PlusArgsCount,
 	eFunction5PlusArgsPercent,
+	eGlobalVariableCount,
+	eVariableIncorrectNameCount,
 	eDialogClassesCount,
 	eDialogUsesDatabaseCount,
-	eDialogUsesDatabasePercent,
-	eVariableIncorrectNameCount
+	eDialogUsesDatabasePercent
 };

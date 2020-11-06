@@ -3,12 +3,12 @@
 #include "CodeAnalyzer.h"
 #include "CsvStatisticsReportWriter.h"
 #include "CodeLineCountModule.h"
-#include "GlobalCountModule.h"
 #include "FunctionCountModule.h"
 #include "FunctionLengthModule.h"
 #include "FunctionArgsCountModule.h"
-#include "DialogUsesDatabaseModule.h"
+#include "VariableGlobalCountModule.h"
 #include "VariableRulesModule.h"
+#include "DialogUsesDatabaseModule.h"
 
 // ^^x
 // EProgramStatusCodes PrepareOutputDirectory
@@ -53,11 +53,11 @@ int main( int iArgumentCount, char* apcArguments[] )
 		{
 			oCodeAnalyzer.AddAnalyzerModule<CCodeLineCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CGlobalCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionLengthModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CFunctionArgsCountModule>();
-			oCodeAnalyzer.AddAnalyzerModule<CDialogUsesDatabaseModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CVariableGlobalCountModule>();
 			oCodeAnalyzer.AddAnalyzerModule<CVariableRulesModule>();
+			oCodeAnalyzer.AddAnalyzerModule<CDialogUsesDatabaseModule>();
 
 			eStatus = oCodeAnalyzer.Execute( oCommandLineArgumentDataset.oInputDirectoryPath, oCommandLineArgumentDataset.oDeveloperString );
 			if ( eStatus == EProgramStatusCodes::eSuccess )

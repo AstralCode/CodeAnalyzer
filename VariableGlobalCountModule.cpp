@@ -1,4 +1,4 @@
-#include "GlobalCountModule.h"
+#include "VariableGlobalCountModule.h"
 
 #include <algorithm>
 
@@ -6,7 +6,7 @@
 #include "StatisticsCollection.h"
 #include "StringHelper.h"
 
-std::array<std::string_view, 19u> CGlobalCountModule::aszExcludedVariableType =
+std::array<std::string_view, 19u> CVariableGlobalCountModule::aszExcludedVariableType =
 {
     "short", "SHORT", "USHORT",
     "int", "INT", "UINT",
@@ -18,25 +18,25 @@ std::array<std::string_view, 19u> CGlobalCountModule::aszExcludedVariableType =
 };
 
 // ^^x
-// void CCodeLineCountModule::OnPreExecute
+// void CVariableGlobalCountModule::OnPreExecute
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
+void CVariableGlobalCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].oHeaderString = "Global Variables";
 }
 
 // ^^x
-// void CCodeLineCountModule::ProcessHeaderFile
+// void CVariableGlobalCountModule::ProcessHeaderFile
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
+void CVariableGlobalCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
 {
 
 }
 
 // ^^x
-// void CCodeLineCountModule::ProcessSourceFile
+// void CVariableGlobalCountModule::ProcessSourceFile
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
+void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
 {
     std::vector<SFindDataResult<CVariable>> oGlobalVariableVector = oSourceFile.GetGlobalVariables();
     FilterVariableTypes( oGlobalVariableVector );
@@ -45,17 +45,17 @@ void CGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CSta
 }
 
 // ^^x
-// void CCodeLineCountModule::OnPostExecute
+// void CVariableGlobalCountModule::OnPostExecute
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::OnPostExecute( CStatisticsCollection& )
+void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& )
 {
 
 }
 
 // ^^x
-// void CCodeLineCountModule::ProcessSourceFile
+// void CVariableGlobalCountModule::ProcessSourceFile
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::PrepareVariableType( std::string& oVariableTypeString ) const
+void CVariableGlobalCountModule::PrepareVariableType( std::string& oVariableTypeString ) const
 {
     oVariableTypeString = CStringHelper::Remove( oVariableTypeString, "static" );
     oVariableTypeString = CStringHelper::Remove( oVariableTypeString, "constexpr" );
@@ -69,9 +69,9 @@ void CGlobalCountModule::PrepareVariableType( std::string& oVariableTypeString )
 }
 
 // ^^x
-// void CGlobalCountModule::FilterVariableTypes
+// void CVariableGlobalCountModule::FilterVariableTypes
 // 3BGO JIRA-238 22-10-2020
-void CGlobalCountModule::FilterVariableTypes( std::vector<SFindDataResult<CVariable>>& oVariableVector ) const
+void CVariableGlobalCountModule::FilterVariableTypes( std::vector<SFindDataResult<CVariable>>& oVariableVector ) const
 {
     std::vector<SFindDataResult<CVariable>>::iterator oRemoveResultIt = std::remove_if( oVariableVector.begin(), oVariableVector.end(), [this]( const SFindDataResult<CVariable>& oVariable )
     {
