@@ -22,8 +22,7 @@ public:
 	void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) override;
 
 private:
-	static std::array<std::string_view, 19u> aszExcludedVariableType;
+	static std::array<std::string_view, 7u> aszExcludedVariableType;
 
-	void PrepareVariableType( std::string& oVariableTypeString ) const;
 	void FilterVariableTypes( std::vector<SFindDataResult<CVariable>>& oVariableVector ) const;
 };
