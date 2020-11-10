@@ -4,18 +4,15 @@
 
 #include "ProgramStatusCodes.h"
 #include "StatisticsCollection.h"
-#include "DateTimeHelper.h"
-#include "StringHelper.h"
 
 // ^^x
 // EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport
 // 3BGO JIRA-238 24-09-2020
-EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CStatisticsCollection& oStatisticsCollection, const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString, std::filesystem::path& oReportPath )
+EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CStatisticsCollection& oStatisticsCollection, const std::filesystem::path& oOutputPath, std::optional<std::string> oReportPrefixNameString )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
 
-	oReportPath = PrepareOutputReportPath( oOutputDirectoryPath, oReportPrefixNameString );
-	std::ofstream oFileStream{ oReportPath.string(), std::fstream::out };
+	std::ofstream oFileStream{ oOutputPath.string(), std::fstream::out };
 
 	if ( oFileStream.is_open() )
 	{
@@ -36,7 +33,6 @@ EProgramStatusCodes CCsvStatisticsReportWriter::CreateReport( const CStatisticsC
 	else
 	{
 		eStatus = EProgramStatusCodes::eOpenOutputFileError;
-		oReportPath.clear();
 	}
 
 	return eStatus;
@@ -85,21 +81,3 @@ void CCsvStatisticsReportWriter::WriteStatisticsValues( std::ofstream& oFileStre
 		}
 	}
 }
-
-// ^^x
-// std::filesystem::path CCsvStatisticsReportWriter::PrepareOutputReportPath
-// 3BGO JIRA-238 24-09-2020
-std::filesystem::path CCsvStatisticsReportWriter::PrepareOutputReportPath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const
-{
-	const std::string oCurrentDateString = CDateTimeHelper::CurrentDate();
-	const std::string oCurrentTimeString = CStringHelper::Replace( CDateTimeHelper::CurrentTime(), ':', '-' );
-
-	std::string oFilenameString{ "CodeAnalyzerReport--" + oCurrentDateString + "--" + oCurrentTimeString + ".csv" };
-
-	if ( oReportPrefixNameString.has_value() )
-	{
-		oFilenameString = *oReportPrefixNameString + "--" + oFilenameString;
-	}
-
-	return oOutputDirectoryPath / oFilenameString;
-};

@@ -51,7 +51,8 @@ std::string CCommandLineHandler::GetUsageMessage() const
 		"usage:" "\n\t"
 			"codeanalyzer.exe <input_directory_path> [--report-prefix]" "\n\n"
 		"optional options:" "\n"
-			"\t" "--report-prefix, -rp" "\t\t" "Add prefix to report filename" "\n"
+			"\t" "--report-mode, -rm"	"\t\t" "Set report mode (s - standard, e - extended)"
+			"\t" "--report-prefix, -rp"	"\t\t" "Add prefix to report filename" "\n"
 	};
 }
 
@@ -107,7 +108,11 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 
 	const std::string oOptionLowerCaseString = CStringHelper::ToLowerCase( oOptionString );
 
-	if ( oOptionLowerCaseString == "report-prefix" || oOptionLowerCaseString == "rp" )
+	if ( oOptionLowerCaseString == "report-mode" || oOptionLowerCaseString == "rm" )
+	{
+		AssignOptionalArgument( oArgumentDataset.oReportModeString, oArgumentString );
+	}
+	else if ( oOptionLowerCaseString == "report-prefix" || oOptionLowerCaseString == "rp" )
 	{
 		AssignOptionalArgument( oArgumentDataset.oReportPrefixNameString, oArgumentString );
 	}

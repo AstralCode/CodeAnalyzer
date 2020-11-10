@@ -7,10 +7,10 @@
 
 class CStatisticsCollection;
 
-class CCsvStatisticsReportWriter
+class CCsvStatisticsReportWriter final
 {
 public:
-	EProgramStatusCodes CreateReport( const CStatisticsCollection& oStatisticsCollection, const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString, std::filesystem::path& oReportPath );
+	EProgramStatusCodes CreateReport( const CStatisticsCollection& oStatisticsCollection, const std::filesystem::path& oOutputPath, std::optional<std::string> oReportPrefixNameString );
 
 	CCsvStatisticsReportWriter( const CCsvStatisticsReportWriter& ) = delete;
 	CCsvStatisticsReportWriter& operator=( const CCsvStatisticsReportWriter& ) = delete;
@@ -18,6 +18,4 @@ public:
 private:
 	void WriteStatisticsHeaders( std::ofstream& oFileStream, const CStatisticsCollection& oStatisticsCollection ) const;
 	void WriteStatisticsValues( std::ofstream& oFileStream, const CStatisticsCollection& oStatisticsCollection ) const;
-
-	std::filesystem::path PrepareOutputReportPath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString ) const;
 };

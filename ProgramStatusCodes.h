@@ -11,5 +11,5 @@ enum class EProgramStatusCodes
 	eUnknownInputFileType,
 	eProcessHeaderCodeFileError,
 	eProcessSourceCodeFileError,
-	eCreateOutputDirectoryError
+	eCreateDirectoryError
 };

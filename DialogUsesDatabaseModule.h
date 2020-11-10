@@ -15,6 +15,8 @@
 class CDialogUsesDatabaseModule final : public CCodeAnalyzerModule
 {
 public:
+	using CCodeAnalyzerModule::CCodeAnalyzerModule;
+
 	void OnPreExecute( CStatisticsCollection& oStatisticsCollection ) override;
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;

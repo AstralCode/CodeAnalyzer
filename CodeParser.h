@@ -32,6 +32,7 @@ public:
 	void RemoveStatemets( std::string& oCodeString ) const;
 	void RemoveMemberDataListInitialization( std::string& oCodeString ) const;
 	void RemoveMemberFunctionBodies( std::string& oCodeString ) const;
+	void RemoveDeclarations( std::string& oCodeString ) const;
 
 private:
 	void RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const;

@@ -6,9 +6,9 @@
 #include "StatisticsCollection.h"
 #include "StringHelper.h"
 
-std::array<std::string_view, 7u> CVariableGlobalCountModule::aszExcludedVariableType =
+std::array<std::string_view, 8u> CVariableGlobalCountModule::aszExcludedVariableType =
 {
-    "constexpr", "const", "PCTSTR", "PCUTSTR", "LPCSTR", "LPCTSTR", "LPCUTSTR"
+    "extern", "constexpr", "const", "PCTSTR", "PCUTSTR", "LPCSTR", "LPCTSTR", "LPCUTSTR"
 };
 
 // ^^x
@@ -17,6 +17,11 @@ std::array<std::string_view, 7u> CVariableGlobalCountModule::aszExcludedVariable
 void CVariableGlobalCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].oHeaderString = "Global Variables";
+
+    if ( IsLoggingEnabled() )
+    {
+        m_oLogger.Open( "GlobalVariables.txt" );
+    }
 }
 
 // ^^x
@@ -39,15 +44,29 @@ void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFi
         FilterVariableTypes( oGlobalVariableVector );
 
         oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].uiValue += oGlobalVariableVector.size();
+
+        if ( IsLoggingEnabled() )
+        {
+            for ( const SFindDataResult<CVariable>& oVariable : oGlobalVariableVector )
+            {
+                m_oLogger.Log( oVariable );
+            }
+        }
     }
 }
 
 // ^^x
 // void CVariableGlobalCountModule::OnPostExecute
 // 3BGO JIRA-238 22-10-2020
-void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& )
+void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
-
+    if ( IsLoggingEnabled() )
+    {
+        if ( oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].uiValue == 0u )
+        {
+            m_oLogger.Remove();
+        }
+    }
 }
 
 // ^^x

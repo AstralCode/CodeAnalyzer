@@ -26,6 +26,11 @@ const std::array<CVariableRulesModule::SVariablePrimitiveTypeNameRule, 13u> CVar
 void CVariableRulesModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].oHeaderString = "Incorrect Variable Names";
+
+    if ( IsLoggingEnabled() )
+    {
+        m_oLogger.Open( "IncorrectVariableNames.txt" );
+    }
 }
 
 // ^^x
@@ -48,9 +53,15 @@ void CVariableRulesModule::ProcessSourceFile( const CSourceFile& oSourceFile, CS
 // ^^x
 // void CVariableRulesModule::OnPostExecute
 // 3BGO JIRA-238 25-10-2020
-void CVariableRulesModule::OnPostExecute( CStatisticsCollection& )
+void CVariableRulesModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
-
+    if ( IsLoggingEnabled() )
+    {
+        if ( oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].uiValue == 0u )
+        {
+            m_oLogger.Remove();
+        }
+    }
 }
 
 // ^^x
@@ -82,6 +93,11 @@ void CVariableRulesModule::ValidateVariables( const std::vector<SFindDataResult<
         {
             if ( !IsVariableNameCorrect( oVariable.oData, oVariableNameRule ) )
             {
+                if ( IsLoggingEnabled() )
+                {
+                    m_oLogger.Log( oVariable );
+                }
+
                 ++oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].uiValue;
             }
         }

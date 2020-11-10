@@ -199,8 +199,11 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::s
 
 	std::vector<SFindDataResult<CVariable>> oVariableVector{};
 
+	std::string oCodeWithoutSingleComments{ oCodeString };
+	RemoveSingleLineComments( oCodeWithoutSingleComments );
+
 	const std::sregex_iterator oRegexEndIt{};
-	for ( std::sregex_iterator oRegexBeginIt{ oCodeString.cbegin(), oCodeString.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
+	for ( std::sregex_iterator oRegexBeginIt{ oCodeWithoutSingleComments.cbegin(), oCodeWithoutSingleComments.cend(), oRegexPattern }; oRegexBeginIt != oRegexEndIt; ++oRegexBeginIt )
 	{
 		std::smatch oRegexMatchGroups = *oRegexBeginIt;
 
@@ -302,6 +305,15 @@ void CCodeParser::RemoveMemberFunctionBodies( std::string& oCodeString ) const
 			uiCurrentCodeOffsetPos = uiMemberFunctionBodyBegPos;
 		}
 	}
+}
+
+// ^^x
+// void CCodeParser::RemoveDeclarations
+// 3BGO JIRA-238 05-10-2020
+void CCodeParser::RemoveDeclarations( std::string& oCodeString ) const
+{
+	oCodeString = CStringHelper::RemoveBetween( oCodeString, "struct ", "};" );
+	oCodeString = CStringHelper::RemoveBetween( oCodeString, "class ", "};" );
 }
 
 // ^^x

@@ -12,6 +12,11 @@ void CFunctionArgsCountModule::OnPreExecute( CStatisticsCollection& oStatisticsC
 {
     oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].oHeaderString = "Functions Args 6+";
     oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsPercent].oHeaderString = "%";
+
+    if ( IsLoggingEnabled() )
+    {
+        m_oLogger.Open( "FunctionsArgs6Plus.txt" );
+    }
 }
 
 // ^^x
@@ -39,6 +44,14 @@ void CFunctionArgsCountModule::OnPostExecute( CStatisticsCollection& oStatistics
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
 
     oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue, uiFunctionCount );
+
+    if ( IsLoggingEnabled() )
+    {
+        if ( oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue == 0u )
+        {
+            m_oLogger.Remove();
+        }
+    }
 }
 
 // ^^x
@@ -54,6 +67,12 @@ void CFunctionArgsCountModule::CalculateStatistics( const std::vector<SFindDataR
             if ( uiFunctionCodeLineCount > 5u )
             {
                 ++oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue;
+
+                if ( IsLoggingEnabled() )
+                {
+                    m_oLogger.Log( oFunction );
+                    m_oLogger.WriteLine();
+                }
             }
         }
     }

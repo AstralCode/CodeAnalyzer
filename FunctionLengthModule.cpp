@@ -22,6 +22,11 @@ void CFunctionLengthModule::OnPreExecute( CStatisticsCollection& oStatisticsColl
     oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].oHeaderString = "%";
     oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].oHeaderString = "Functions 5P+";
     oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].oHeaderString = "%";
+
+    if ( IsLoggingEnabled() )
+    {
+        m_oLogger.Open( "Functions2Plus.txt" );
+    }
 }
 
 // ^^x
@@ -54,6 +59,15 @@ void CFunctionLengthModule::OnPostExecute( CStatisticsCollection& oStatisticsCol
     oStatisticsCollection[EStatisticsTypes::eFunctionLength2PPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue, uiFunctionCount );
     oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue, uiFunctionCount );
     oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue, uiFunctionCount );
+
+    if ( IsLoggingEnabled() )
+    {
+        const std::size_t uiFunction2PPlustCount = oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue + oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue;
+        if ( uiFunction2PPlustCount == 0u )
+        {
+            m_oLogger.Remove();
+        }
+    }
 }
 
 // ^^x
@@ -91,10 +105,22 @@ void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResu
             else if ( SRange::Contains( uiFunctionCodeLineCount, { 125u }, { 248u } ) )
             {
                 ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue;
+
+                if ( IsLoggingEnabled() )
+                {
+                    m_oLogger.Log( oFunction );
+                    m_oLogger.WriteLine();
+                }
             }
             else if ( SRange::Contains( uiFunctionCodeLineCount, { 249u } ) )
             {
                 ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue;
+
+                if ( IsLoggingEnabled() )
+                {
+                    m_oLogger.Log( oFunction );
+                    m_oLogger.WriteLine();
+                }
             }
         }
     }

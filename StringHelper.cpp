@@ -91,11 +91,11 @@ std::string CStringHelper::RemoveBetween( const std::string& oInputString, const
 		{
 			uiCurrentOffsetPos += oLeftString.size();
 
-			std::string::size_type uiEndPos = oResultString.find_first_of( oRightString, uiCurrentOffsetPos );
+			std::string::size_type uiEndPos = oResultString.find( oRightString, uiCurrentOffsetPos );
 			
 			if ( bSameLine )
 			{
-				const std::string::size_type uiNewLinePos = oResultString.find_first_of( "\n", uiCurrentOffsetPos );
+				const std::string::size_type uiNewLinePos = oResultString.find( "\n", uiCurrentOffsetPos );
 				uiCurrentOffsetPos = uiEndPos;
 				uiEndPos = ( uiNewLinePos < uiEndPos ) ? std::string::npos : uiEndPos;
 			}

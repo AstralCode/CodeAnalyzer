@@ -109,6 +109,7 @@ void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) con
     m_oCodePareser.RemoveMacros( oFileContentString );
     m_oCodePareser.RemoveStatemets( oFileContentString );
     m_oCodePareser.RemoveMemberDataListInitialization( oFileContentString );
+    m_oCodePareser.RemoveDeclarations( oFileContentString );
 }
 
 // ^^x
@@ -175,8 +176,6 @@ void CCodeAnalyzer::FilterResults( std::vector<SFindDataResult<CFunction>>& oFun
 // 3BGO JIRA-238 22-10-2020
 void CCodeAnalyzer::OnPreExecute( const std::filesystem::path& oInputDirectoryPath, std::size_t& uiCodeFileCount )
 {
-    CConsoleInterface::PrintLine( "Code Analyzer [Version 1.0] (c) 2020 IN-Software" );
-    CConsoleInterface::NewLine();
     CConsoleInterface::PrintLine( "Code directory: \"" + oInputDirectoryPath.string() + "\"", true );
     CConsoleInterface::Print( "Calculating the number of C++ code files. Please wait...\r" );
 

@@ -14,6 +14,8 @@
 class CVariableGlobalCountModule final : public CCodeAnalyzerModule
 {
 public:
+	using CCodeAnalyzerModule::CCodeAnalyzerModule;
+
 	void OnPreExecute( CStatisticsCollection& oStatisticsCollection ) override;
 
 	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;
@@ -22,7 +24,7 @@ public:
 	void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) override;
 
 private:
-	static std::array<std::string_view, 7u> aszExcludedVariableType;
+	static std::array<std::string_view, 8u> aszExcludedVariableType;
 
 	void FilterVariableTypes( std::vector<SFindDataResult<CVariable>>& oVariableVector ) const;
 };

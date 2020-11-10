@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "CodeAnalyzerLogger.h"
+
 class CHeaderFile;
 class CSourceFile;
 class CStatisticsCollection;
@@ -10,7 +12,7 @@ class CStatisticsCollection;
 class CCodeAnalyzerModule
 {
 public:
-	CCodeAnalyzerModule() = default;
+	CCodeAnalyzerModule( const std::filesystem::path& oLoggerDirectoryPath, const bool bLoggingEnabled = false );
 	virtual ~CCodeAnalyzerModule() = default;
 
 	CCodeAnalyzerModule( const CCodeAnalyzerModule& ) = delete;
@@ -22,4 +24,12 @@ public:
 	virtual void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) = 0;
 
 	virtual void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) = 0;
+
+	bool IsLoggingEnabled() const;
+
+protected:
+	mutable CCodeAnalyzerLogger m_oLogger;
+
+private:
+	bool m_bLoggingEnabled;
 };

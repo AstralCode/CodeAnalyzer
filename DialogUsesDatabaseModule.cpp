@@ -30,6 +30,11 @@ void CDialogUsesDatabaseModule::OnPreExecute( CStatisticsCollection& oStatistics
     oStatisticsCollection[EStatisticsTypes::eDialogClassesCount].oHeaderString = "Dialogs";
     oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].oHeaderString = "Dialogs using database";
     oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabasePercent].oHeaderString = "%";
+
+    if ( IsLoggingEnabled() )
+    {
+        m_oLogger.Open( "DialogsUsingDatabase.txt" );
+    }
 }
 
 // ^^x
@@ -63,6 +68,14 @@ void CDialogUsesDatabaseModule::OnPostExecute( CStatisticsCollection& oStatistic
     oStatisticsCollection[EStatisticsTypes::eDialogClassesCount].uiValue = uiDialogCount;
     oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].uiValue = m_oDialogClassUsesDatabaseSet.size();
     oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabasePercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].uiValue, uiDialogCount );
+
+    if ( IsLoggingEnabled() )
+    {
+        if ( uiDialogCount == 0u )
+        {
+            m_oLogger.Remove();
+        }
+    }
 }
 
 // ^^x
@@ -84,6 +97,11 @@ void CDialogUsesDatabaseModule::ProcessMemberFunction( const SFindDataResult<CFu
                 if ( IsMemberFunctionBodyUsesDatabase( oFunctionBodyString ) )
                 {
                     m_oDialogClassUsesDatabaseSet.insert( oClassNameString );
+
+                    if ( IsLoggingEnabled() )
+                    {
+                        m_oLogger.WriteLine( oClassNameString );
+                    }
                 }
             }
         }
