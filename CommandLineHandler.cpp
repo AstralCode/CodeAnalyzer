@@ -51,7 +51,7 @@ std::string CCommandLineHandler::GetUsageMessage() const
 		"usage:" "\n\t"
 			"codeanalyzer.exe <input_directory_path> [--report-prefix]" "\n\n"
 		"optional options:" "\n"
-			"\t" "--report-mode, -rm"	"\t\t" "Set report mode (s - standard, e - extended)"
+			"\t" "--report-mode, -rm"	"\t\t" "Set report mode (s - standard, e - extended)" "\n"
 			"\t" "--report-prefix, -rp"	"\t\t" "Add prefix to report filename" "\n"
 	};
 }
