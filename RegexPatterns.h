@@ -27,5 +27,5 @@ constexpr const char* SZ_RGX_MEMBER_DATA_LIST_INITIALIZATION =
 R"(^[\t ]*(?:\:\s*)?(?:\w{3,}[\{\(].*[\}\)](?:\,)?)$)";
 
 constexpr const char* SZ_RGX_VARIABLE =
-R"(^[\t ]*((?:static\s+)?(?:constexpr\s+)?(?:const\s+)?(?:\w+::)*(?!(?:return|delete|class))(?:unsigned\s+|signed\s+)?\w{3,}(?: \w{3,}){0,1}(?:\<.*\>)?)([*&]+)?\s+(\w+)\s*(\[.*\])?(?:\s*(?:=\s*.*?)|(?:\{.*\}|\(.*\)|(?:\[.*\])))?;[\t ]*$)";
+R"(^[\t ]*((?:static\s+)?(?:constexpr\s+)?(?:const\s+)?(?:\w+::)*(?!(?:return|delete|using|class))(?:unsigned\s+|signed\s+)?\w{3,}(?: \w{3,}){0,1}(?:\<.*\>)?)([*&]+)?\s+(\w+)\s*(\[.*\])?(?:\s*(?:=\s*.*?)|(?:\{.*\}|\(.*\)|(?:\[.*\])))?;[\t ]*$)";
 };
