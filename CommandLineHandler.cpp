@@ -2,6 +2,7 @@
 
 #include <regex>
 
+#include "RegexPatterns.h"
 #include "StringHelper.h"
 
 constexpr unsigned int UI_REQUIRED_ARGS_COUNT = 1;
@@ -89,8 +90,8 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 
 		std::smatch oMatchRegex{};
 		
-		if ( std::regex_match( oInputString, oMatchRegex, std::regex{ R"(\-\-(\w+(?:\-\w+)*)\s+(\w+))" } ) ||
-			 std::regex_match( oInputString, oMatchRegex, std::regex{ R"(\-(\w{0,3})\s+(\w+))" } ) )
+		if ( std::regex_match( oInputString, oMatchRegex, std::regex{ RegexPatterns::SZ_RGX_OPTIONAL_ARG_EXTENDED } ) ||
+			 std::regex_match( oInputString, oMatchRegex, std::regex{ RegexPatterns::SZ_RGX_OPTIONAL_ARG_SHORT } ) )
 		{
 			HandleOptionalArgument( oArgumentDataset, oMatchRegex[1u].str(), oMatchRegex[2u].str() );
 		}
