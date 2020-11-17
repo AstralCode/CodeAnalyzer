@@ -110,6 +110,7 @@ void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) con
     m_oCodePareser.RemoveStatemets( oFileContentString );
     m_oCodePareser.RemoveMemberDataListInitialization( oFileContentString );
     m_oCodePareser.RemoveDeclarations( oFileContentString );
+    m_oCodePareser.RemoveCallingConvetions( oFileContentString );
 }
 
 // ^^x

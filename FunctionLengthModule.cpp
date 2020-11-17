@@ -77,49 +77,52 @@ void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResu
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {
-        std::size_t uiFunctionCodeLineCount = CStringHelper::SplitLines( *oFunction.oData.GetBody() ).size();
-
-        if ( uiFunctionCodeLineCount > 0u )
+        if ( oFunction.oData.GetBody().has_value() )
         {
-            if ( uiFunctionCodeLineCount >= 2u )
-            {
-                uiFunctionCodeLineCount -= 2u;
-            }
+            std::size_t uiFunctionCodeLineCount = CStringHelper::SplitLines( *oFunction.oData.GetBody() ).size();
 
-            if ( SRange::Contains( uiFunctionCodeLineCount, { 0u }, { 16u } ) )
+            if ( uiFunctionCodeLineCount > 0u )
             {
-                ++oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].uiValue;
-            }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, { 17u }, { 32u } ) )
-            {
-                ++oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].uiValue;
-            }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, { 33u }, { 62u } ) )
-            {
-                ++oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].uiValue;
-            }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, { 63u }, { 124u } ) )
-            {
-                ++oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue;
-            }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, { 125u }, { 248u } ) )
-            {
-                ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue;
-
-                if ( IsLoggingEnabled() )
+                if ( uiFunctionCodeLineCount >= 2u )
                 {
-                    m_oLogger.Log( oFunction );
-                    m_oLogger.WriteLine();
+                    uiFunctionCodeLineCount -= 2u;
                 }
-            }
-            else if ( SRange::Contains( uiFunctionCodeLineCount, { 249u } ) )
-            {
-                ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue;
 
-                if ( IsLoggingEnabled() )
+                if ( SRange::Contains( uiFunctionCodeLineCount, { 0u }, { 16u } ) )
                 {
-                    m_oLogger.Log( oFunction );
-                    m_oLogger.WriteLine();
+                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].uiValue;
+                }
+                else if ( SRange::Contains( uiFunctionCodeLineCount, { 17u }, { 32u } ) )
+                {
+                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].uiValue;
+                }
+                else if ( SRange::Contains( uiFunctionCodeLineCount, { 33u }, { 62u } ) )
+                {
+                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].uiValue;
+                }
+                else if ( SRange::Contains( uiFunctionCodeLineCount, { 63u }, { 124u } ) )
+                {
+                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue;
+                }
+                else if ( SRange::Contains( uiFunctionCodeLineCount, { 125u }, { 248u } ) )
+                {
+                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue;
+
+                    if ( IsLoggingEnabled() )
+                    {
+                        m_oLogger.Log( oFunction );
+                        m_oLogger.WriteLine();
+                    }
+                }
+                else if ( SRange::Contains( uiFunctionCodeLineCount, { 249u } ) )
+                {
+                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue;
+
+                    if ( IsLoggingEnabled() )
+                    {
+                        m_oLogger.Log( oFunction );
+                        m_oLogger.WriteLine();
+                    }
                 }
             }
         }

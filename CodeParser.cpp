@@ -312,8 +312,19 @@ void CCodeParser::RemoveMemberFunctionBodies( std::string& oCodeString ) const
 // 3BGO JIRA-238 05-10-2020
 void CCodeParser::RemoveDeclarations( std::string& oCodeString ) const
 {
+	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_STRUCT_TYPE_DECLARATION );
 	oCodeString = CStringHelper::RemoveBetween( oCodeString, "struct ", "};" );
 	oCodeString = CStringHelper::RemoveBetween( oCodeString, "class ", "};" );
+}
+
+// ^^x
+// void CCodeParser::RemoveCallingConvetions
+// 3BGO JIRA-238 17-11-2020
+void CCodeParser::RemoveCallingConvetions( std::string& oCodeString ) const
+{
+	oCodeString = CStringHelper::Remove( oCodeString, "__cdecl" );
+	oCodeString = CStringHelper::Remove( oCodeString, "__stdcall" );
+	oCodeString = CStringHelper::Remove( oCodeString, "CALLBACK" );
 }
 
 // ^^x
