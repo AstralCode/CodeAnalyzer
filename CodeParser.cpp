@@ -227,12 +227,13 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::s
 
 	return oVariableVector;
 }
-
+///****
 // ^^x
 // void CCodeParser::RemoveMultiLineComments
 // 3BGO JIRA-238 02-10-2020
 void CCodeParser::RemoveMultiLineComments( std::string& oCodeString ) const
 {
+	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_COMMENT_SINGLELINE_DOTS );
 	oCodeString = CStringHelper::RemoveBetween( oCodeString, "/*", "*/" );
 }
 

@@ -11,6 +11,9 @@ R"(^[ \t]*(?:static\s+)?([\w\:\<\>\:\,\*\&]{3,})(?:[\s\*\&]+)?\s+([\w]{3,})\s*\(
 constexpr const char* SZ_RGX_MEMBER_FUNCTION_HEADER =
 R"(^[ \t]*(?:inline\s+)?(?:([\w\:\<\>\,\*\&]{3,})(?:[\s\*\&]+)?\s+)?([\w\:\<\>\,\t ]+)::(\~)?([\w]+(?:[\t \W]{0,4})?)\s*\(\s*([\w\t \.\-\:\<\>\,\*\&\/\=\'\"\;\n]+)?\s*\)\s*(?:const)?(?:\:)?[ \t]*$)";
 
+constexpr const char* SZ_RGX_COMMENT_SINGLELINE_DOTS =
+R"(\/{2,}\*+$)";
+
 constexpr const char* SZ_RGX_COMMENT_SINGLELINE =
 R"((?:\/\/.*))";
 
