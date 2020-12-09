@@ -6,9 +6,19 @@
 #include "StatisticsCollection.h"
 #include "StringHelper.h"
 
-std::array<std::string_view, 8u> CVariableGlobalCountModule::aszExcludedVariableType =
+std::array<std::string_view, 3u> CVariableGlobalCountModule::oExcludedVariableTypeKeywordArray =
 {
-    "extern", "constexpr", "const", "PCTSTR", "PCUTSTR", "LPCSTR", "LPCTSTR", "LPCUTSTR"
+    "extern", "constexpr", "const"
+};
+
+std::array<std::string_view, 5u> CVariableGlobalCountModule::oExcludedVariableTypeArray =
+{
+    "PCTSTR", "PCUTSTR", "LPCSTR", "LPCTSTR", "LPCUTSTR"
+};
+
+std::array<std::string_view, 1u> CVariableGlobalCountModule::oExcludedVariableNameArray =
+{
+    "THIS_FILE"
 };
 
 // ^^x
@@ -41,7 +51,7 @@ void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFi
 
     if ( !oGlobalVariableVector.empty() )
     {
-        FilterVariableTypes( oGlobalVariableVector );
+        FilterVariables( oGlobalVariableVector );
 
         oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].uiValue += oGlobalVariableVector.size();
 
@@ -70,24 +80,83 @@ void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& oStatisti
 }
 
 // ^^x
-// void CVariableGlobalCountModule::FilterVariableTypes
+// void CVariableGlobalCountModule::FilterVariables
 // 3BGO JIRA-238 22-10-2020
-void CVariableGlobalCountModule::FilterVariableTypes( std::vector<SFindDataResult<CVariable>>& oVariableVector ) const
+void CVariableGlobalCountModule::FilterVariables( std::vector<SFindDataResult<CVariable>>& oVariableVector ) const
 {
     std::vector<SFindDataResult<CVariable>>::iterator oRemoveResultIt = std::remove_if( oVariableVector.begin(), oVariableVector.end(), [this]( const SFindDataResult<CVariable>& oVariable )
     {
-        const std::string oVariableTypeString = oVariable.oData.GetType();
-
-        for ( std::string_view szExcludedVariableType : aszExcludedVariableType )
+        if ( ContainsExcludedKeyword( oVariable.oData ) )
         {
-            if ( oVariableTypeString.find( szExcludedVariableType ) != std::string::npos )
-            {
-                return true;
-            }
+            return true;
+        }
+
+        if ( ContainsExcludedType( oVariable.oData ) )
+        {
+            return true;
+        }
+
+        if ( ContainsExcludedName( oVariable.oData ) )
+        {
+            return true;
         }
 
         return false;
     } );
 
     oVariableVector.erase( oRemoveResultIt, oVariableVector.cend() );
+}
+
+// ^^x
+// bool CVariableGlobalCountModule::ContainsExcludedKeyword
+// 3BGO JIRA-238 09-12-2020
+bool CVariableGlobalCountModule::ContainsExcludedKeyword( const CVariable& oVariable ) const
+{
+    const std::string oVariableTypeString = oVariable.GetType();
+
+    for ( std::string_view oExcludedKeywordString : oExcludedVariableTypeKeywordArray )
+    {
+        if ( oVariableTypeString.find( oExcludedKeywordString ) != std::string::npos )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// ^^x
+// bool CVariableGlobalCountModule::ContainsExcludedType
+// 3BGO JIRA-238 09-12-2020
+bool CVariableGlobalCountModule::ContainsExcludedType( const CVariable& oVariable ) const
+{
+    const std::string oVariableTypeString = oVariable.GetType();
+
+    for ( std::string_view oExcludedTypeString : oExcludedVariableTypeArray )
+    {
+        if ( oVariableTypeString.find( oExcludedTypeString ) != std::string::npos )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// ^^x
+// bool CVariableGlobalCountModule::ContainsExcludedName
+// 3BGO JIRA-238 09-12-2020
+bool CVariableGlobalCountModule::ContainsExcludedName( const CVariable& oVariable ) const
+{
+    const std::string oVariableNameString = CStringHelper::ToLowerCase( oVariable.GetName() );
+
+    for ( std::string_view oExcludedNameString : oExcludedVariableNameArray )
+    {
+        if ( oVariableNameString.find( CStringHelper::ToLowerCase( std::string{ oExcludedNameString } ) ) != std::string::npos )
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
