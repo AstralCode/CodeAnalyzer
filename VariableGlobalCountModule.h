@@ -8,8 +8,8 @@
 
 /*
 	### Description ###
-	This module calculates the total number of
-	global variables in the source files only.
+	This module calculates the total number of global variables in the source files only.
+	Note: One global object can itself contains multiple objects which are also treat as global objects.
 */
 class CVariableGlobalCountModule final : public CCodeAnalyzerModule
 {
