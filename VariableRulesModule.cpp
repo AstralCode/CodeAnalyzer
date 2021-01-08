@@ -1,23 +1,24 @@
 #include "VariableRulesModule.h"
 
+#include "HeaderFile.h"
 #include "SourceFile.h"
 #include "StatisticsCollection.h"
 #include "StringHelper.h"
 
-const std::array<CVariableRulesModule::SVariablePrimitiveTypeNameRule, 13u> CVariableRulesModule::m_aoVariablePrimitiveTypeNameRules =
+const CVariableRulesModule::VariableNameRuleArray CVariableRulesModule::m_aoVariableNameRules =
 {
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "char", "c" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "bool", "b" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "BOOL", "b" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "int", "i" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "WORD", "w" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "DWORD", "dw" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "short", "s" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "long", "l" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "long long", "ll" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "float", "f" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "double", "d" },
-    CVariableRulesModule::SVariablePrimitiveTypeNameRule{ "long double", "ld" }
+    CVariableRulesModule::SVariableNameRule{ "char", "c" },
+    CVariableRulesModule::SVariableNameRule{ "bool", "b" },
+    CVariableRulesModule::SVariableNameRule{ "BOOL", "b" },
+    CVariableRulesModule::SVariableNameRule{ "int", "i" },
+    CVariableRulesModule::SVariableNameRule{ "WORD", "w" },
+    CVariableRulesModule::SVariableNameRule{ "DWORD", "dw" },
+    CVariableRulesModule::SVariableNameRule{ "short", "s" },
+    CVariableRulesModule::SVariableNameRule{ "long", "l" },
+    CVariableRulesModule::SVariableNameRule{ "long long", "ll" },
+    CVariableRulesModule::SVariableNameRule{ "float", "f" },
+    CVariableRulesModule::SVariableNameRule{ "double", "d" },
+    CVariableRulesModule::SVariableNameRule{ "long double", "ld" }
 };
 
 // ^^x
@@ -36,9 +37,9 @@ void CVariableRulesModule::OnPreExecute( CStatisticsCollection& oStatisticsColle
 // ^^x
 // void CVariableRulesModule::ProcessHeaderFile
 // 3BGO JIRA-238 25-10-2020
-void CVariableRulesModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
+void CVariableRulesModule::ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection )
 {
-
+    ValidateVariables( oHeaderFile.GetMemberVariables(), true, oStatisticsCollection );
 }
 
 // ^^x
@@ -75,7 +76,7 @@ void CVariableRulesModule::CalculateStatistics( const std::vector<SFindDataResul
 
         if ( oVariableVector.has_value() )
         {
-            ValidateVariables( *oVariableVector, oStatisticsCollection );
+            ValidateVariables( *oVariableVector, false, oStatisticsCollection );
         }
     }
 }
@@ -83,23 +84,21 @@ void CVariableRulesModule::CalculateStatistics( const std::vector<SFindDataResul
 // ^^x
 // void CVariableRulesModule::ValidateVariables
 // 3BGO JIRA-238 25-10-2020
-void CVariableRulesModule::ValidateVariables( const std::vector<SFindDataResult<CVariable>>& oVariableVector, CStatisticsCollection& oStatisticsCollection ) const
+void CVariableRulesModule::ValidateVariables( const std::vector<SFindDataResult<CVariable>>& oVariableVector, const bool bIsMember, CStatisticsCollection& oStatisticsCollection ) const
 {
-    SVariablePrimitiveTypeNameRule oVariableNameRule{};
-
     for ( const SFindDataResult<CVariable>& oVariable : oVariableVector )
     {
-        if ( HasVariablePrimitiveType( oVariable.oData, oVariableNameRule ) )
-        {
-            if ( !IsVariableNameCorrect( oVariable.oData, oVariableNameRule ) )
-            {
-                if ( IsLoggingEnabled() )
-                {
-                    m_oLogger.Log( oVariable );
-                }
+        SVariableNameRule oVariableNameRule{};
+        HasVariablePrimitiveType( oVariable.oData, oVariableNameRule );
 
-                ++oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].uiValue;
+        if ( !IsVariableNameCorrect( oVariable.oData, bIsMember, oVariableNameRule ) )
+        {
+            if ( IsLoggingEnabled() )
+            {
+                m_oLogger.Log( oVariable, bIsMember );
             }
+
+            ++oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].uiValue;
         }
     }
 }
@@ -107,9 +106,14 @@ void CVariableRulesModule::ValidateVariables( const std::vector<SFindDataResult<
 // ^^x
 // std::string CVariableRulesModule::CorrectPrefixName
 // 3BGO JIRA-238 28-10-2020
-std::string CVariableRulesModule::CorrectPrefixName( const CVariable& oVariable, const SVariablePrimitiveTypeNameRule& oVariableNameRule ) const
+std::string CVariableRulesModule::CorrectPrefixName( const CVariable& oVariable, const bool bIsMember, const SVariableNameRule& oVariableNameRule ) const
 {
     std::string oCorrectPrefixNameString{};
+
+    if ( bIsMember )
+    {
+        oCorrectPrefixNameString.append( "m_" );
+    }
 
     if ( oVariable.GetReferenceType().has_value() )
     {
@@ -155,14 +159,21 @@ std::string CVariableRulesModule::SimplifyVariableType( const CVariable& oVariab
 // ^^x
 // bool CVariableRulesModule::IsVariableNameCorrect
 // 3BGO JIRA-238 28-10-2020
-bool CVariableRulesModule::IsVariableNameCorrect( const CVariable& oVariable, const SVariablePrimitiveTypeNameRule& oVariableNameRule ) const
+bool CVariableRulesModule::IsVariableNameCorrect( const CVariable& oVariable, const bool bIsMember, const SVariableNameRule& oVariableNameRule ) const
 {
     bool bIsNameFirstCharacterCorrect{ false };
 
-    const bool bIsPrefixNameCorrect = IsVariablePrefixNameCorrect( oVariable, oVariableNameRule );
+    const bool bIsPrefixNameCorrect = IsVariablePrefixNameCorrect( oVariable, bIsMember, oVariableNameRule );
     if ( bIsPrefixNameCorrect )
     {
-        bIsNameFirstCharacterCorrect = IsVariableNameFirstCharacterCorrect( oVariable, oVariableNameRule );
+        if ( oVariableNameRule.oPrefixString.empty() )
+        {
+            bIsNameFirstCharacterCorrect = true;
+        }
+        else
+        {
+            bIsNameFirstCharacterCorrect = IsVariableNameFirstCharacterCorrect( oVariable, bIsMember, oVariableNameRule );
+        }
     }
 
     return bIsPrefixNameCorrect && bIsNameFirstCharacterCorrect;
@@ -171,11 +182,11 @@ bool CVariableRulesModule::IsVariableNameCorrect( const CVariable& oVariable, co
 // ^^x
 // bool CVariableRulesModule::IsVariableNameFirstCharacterCorrect
 // 3BGO JIRA-238 28-10-2020
-bool CVariableRulesModule::IsVariableNameFirstCharacterCorrect( const CVariable& oVariable, const SVariablePrimitiveTypeNameRule& oVariableNameRule ) const
+bool CVariableRulesModule::IsVariableNameFirstCharacterCorrect( const CVariable& oVariable, const bool bIsMember, const SVariableNameRule& oVariableNameRule ) const
 {
     bool bIsNameStartsWithCapitalCharacter{ false };
 
-    const std::string oCorrectTypePrefixName = CorrectPrefixName( oVariable, oVariableNameRule );
+    const std::string oCorrectTypePrefixName = CorrectPrefixName( oVariable, bIsMember, oVariableNameRule );
     const std::string& oVariableNameString = oVariable.GetName();
 
     if ( oCorrectTypePrefixName.size() < oVariableNameString.size() )
@@ -190,9 +201,9 @@ bool CVariableRulesModule::IsVariableNameFirstCharacterCorrect( const CVariable&
 // ^^x
 // bool CVariableRulesModule::IsVariablePrefixNameCorrect
 // 3BGO JIRA-238 28-10-2020
-bool CVariableRulesModule::IsVariablePrefixNameCorrect( const CVariable& oVariable, const SVariablePrimitiveTypeNameRule& oVariableNameRule ) const
+bool CVariableRulesModule::IsVariablePrefixNameCorrect( const CVariable& oVariable, const bool bIsMember, const SVariableNameRule& oVariableNameRule ) const
 {
-    const std::string oCorrectTypePrefixName = CorrectPrefixName( oVariable, oVariableNameRule );
+    const std::string oCorrectTypePrefixName = CorrectPrefixName( oVariable, bIsMember, oVariableNameRule );
     const std::string& oVariableNameString = oVariable.GetName();
 
     return ( oVariableNameString.find( oCorrectTypePrefixName ) == 0u );
@@ -201,14 +212,14 @@ bool CVariableRulesModule::IsVariablePrefixNameCorrect( const CVariable& oVariab
 // ^^x
 // bool CVariableRulesModule::HasVariablePrimitiveType
 // 3BGO JIRA-238 28-10-2020
-bool CVariableRulesModule::HasVariablePrimitiveType( const CVariable& oVariable, SVariablePrimitiveTypeNameRule& oVariableNameRule ) const
+bool CVariableRulesModule::HasVariablePrimitiveType( const CVariable& oVariable, SVariableNameRule& oVariableNameRule ) const
 {
-    std::array<SVariablePrimitiveTypeNameRule, 13u>::const_iterator oRuleIt = std::find_if( m_aoVariablePrimitiveTypeNameRules.cbegin(), m_aoVariablePrimitiveTypeNameRules.cend(), [oTypeString = SimplifyVariableType( oVariable )]( const SVariablePrimitiveTypeNameRule& oVariableNameRule )
+    VariableNameRuleArray::const_iterator oRuleIt = std::find_if( m_aoVariableNameRules.cbegin(), m_aoVariableNameRules.cend(), [oTypeString = SimplifyVariableType( oVariable )]( const SVariableNameRule& oVariableNameRule )
     {
         return oVariableNameRule.oVariableTypeString == oTypeString;
     } );
 
-    const bool bIsFundamentalType = oRuleIt != m_aoVariablePrimitiveTypeNameRules.cend();
+    const bool bIsFundamentalType = ( oRuleIt != m_aoVariableNameRules.cend() );
     if ( bIsFundamentalType )
     {
         oVariableNameRule = *oRuleIt;

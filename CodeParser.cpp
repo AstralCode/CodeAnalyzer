@@ -3,7 +3,6 @@
 #include <regex>
 
 #include "CodeFile.h"
-#include "RegexPatterns.h"
 #include "StringHelper.h"
 
 // ^^x
@@ -149,6 +148,18 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( const 
 }
 
 // ^^x
+// std::vector<SFindDataResult<CVariable>> CSourceFile::FindMemberVariables
+// 3BGO JIRA-238 08-01-2021
+std::vector<SFindDataResult<CVariable>> CCodeParser::FindMemberVariables( const std::string& oCodeString ) const
+{
+	std::string oModifiedCodeString = oCodeString;
+	RemoveMemberFunctionBodies( oModifiedCodeString );
+	RemoveGlobalFunctionBodies( oModifiedCodeString );
+
+	return FindVariables( oModifiedCodeString, RegexPatterns::SZ_RGX_MEMBER_VARIABLE );
+}
+
+// ^^x
 // std::vector<SFindDataResult<CVariable>> CSourceFile::FindGlobalVariables
 // 3BGO JIRA-238 12-10-2020
 std::vector<SFindDataResult<CVariable>> CCodeParser::FindGlobalVariables( const std::string& oCodeString ) const
@@ -184,9 +195,10 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindLocalVariables( const C
 // ^^x
 // std::vector<SFindDataResult<CVariable>> CSourceFile::FindVariables
 // 3BGO JIRA-238 14-10-2020
-std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::string& oCodeString ) const
+// 3BGO JIRA-238 08-01-2021 (modified)
+std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::string& oCodeString, std::string_view oRegexExpressionStringView ) const
 {
-	std::regex oRegexPattern{ RegexPatterns::SZ_RGX_VARIABLE };
+	std::regex oRegexPattern{ oRegexExpressionStringView.data() };
 
 	enum EVariableRegexMatchGroups
 	{
@@ -309,9 +321,38 @@ void CCodeParser::RemoveMemberFunctionBodies( std::string& oCodeString ) const
 }
 
 // ^^x
+// void CCodeParser::RemoveGlobalFunctionBodies
+// 3BGO JIRA-238 02-10-2020
+void CCodeParser::RemoveGlobalFunctionBodies( std::string& oCodeString ) const
+{
+	RemoveSingleLineComments( oCodeString );
+
+	std::string::size_type uiCurrentCodeOffsetPos{ 0u };
+
+	const std::vector<SFindDataResult<CFunction>> oGlobalFunctionVector = FindGlobalFunctions( oCodeString );
+	for ( const SFindDataResult<CFunction>& oGlobalFunction : oGlobalFunctionVector )
+	{
+		const std::string::size_type uiGlobalFunctionBodyBegPos = oCodeString.find( *oGlobalFunction.oData.GetBody(), uiCurrentCodeOffsetPos );
+		if ( uiGlobalFunctionBodyBegPos != std::string::npos )
+		{
+			oCodeString.erase( uiGlobalFunctionBodyBegPos, oGlobalFunction.oData.GetBody()->size() );
+			uiCurrentCodeOffsetPos = uiGlobalFunctionBodyBegPos;
+		}
+	}
+}
+
+// ^^x
 // void CCodeParser::RemoveDeclarations
 // 3BGO JIRA-238 05-10-2020
 void CCodeParser::RemoveDeclarations( std::string& oCodeString ) const
+{
+	oCodeString = CStringHelper::RemoveBetween( oCodeString, "typedef", ";" );
+}
+
+// ^^x
+// void CCodeParser::RemoveClassDeclarations
+// 3BGO JIRA-238 05-10-2020
+void CCodeParser::RemoveClassDeclarations( std::string& oCodeString ) const
 {
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_STRUCT_TYPE_DECLARATION );
 	oCodeString = CStringHelper::RemoveBetween( oCodeString, "struct ", "};" );

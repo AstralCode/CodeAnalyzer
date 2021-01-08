@@ -17,7 +17,7 @@ public:
 	void Write( const std::string& oMessageString );
 	void WriteLine( const std::string& oMessageString = {} );
 
-	void Log( const SFindDataResult<CVariable>& oVariable );
+	void Log( const SFindDataResult<CVariable>& oVariable, bool bIsMember = false );
 	void Log( const SFindDataResult<CFunction>& oFunction );
 
 private:

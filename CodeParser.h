@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 
+#include "RegexPatterns.h"
 #include "Function.h"
 
 class CCodeParser final
@@ -21,9 +22,10 @@ public:
 	std::vector<SFindDataResult<CFunction>> FindMemberFunctionHeaders( const std::string& oCodeString ) const;
 	std::vector<SFindDataResult<CFunction>> FindMemberFunctions( const std::string& oCodeString ) const;
 
+	std::vector<SFindDataResult<CVariable>> FindMemberVariables( const std::string& oCodeString ) const;
 	std::vector<SFindDataResult<CVariable>> FindGlobalVariables( const std::string& oCodeString ) const;
 	std::vector<SFindDataResult<CVariable>> FindLocalVariables( const CFunction& oFunction ) const;
-	std::vector<SFindDataResult<CVariable>> FindVariables( const std::string& oCodeString ) const;
+	std::vector<SFindDataResult<CVariable>> FindVariables( const std::string& oCodeString, std::string_view oRegexExpressionStringView = RegexPatterns::SZ_RGX_VARIABLE ) const;
 
 	void RemoveMultiLineComments( std::string& oCodeString ) const;
 	void RemoveSingleLineComments( std::string& oCodeString ) const;
@@ -32,7 +34,9 @@ public:
 	void RemoveStatemets( std::string& oCodeString ) const;
 	void RemoveMemberDataListInitialization( std::string& oCodeString ) const;
 	void RemoveMemberFunctionBodies( std::string& oCodeString ) const;
+	void RemoveGlobalFunctionBodies( std::string& oCodeString ) const;
 	void RemoveDeclarations( std::string& oCodeString ) const;
+	void RemoveClassDeclarations( std::string& oCodeString ) const;
 	void RemoveCallingConvetions( std::string& oCodeString ) const;
 
 private:

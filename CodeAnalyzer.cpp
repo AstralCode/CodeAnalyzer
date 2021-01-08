@@ -75,17 +75,17 @@ EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileTypes eFileTy
     EProgramStatusCodes eStatus = ReadFileContent( oFilePath, oCodeString );
     if ( eStatus == EProgramStatusCodes::eSuccess )
     {
-        PreProcessFileContent( oCodeString );
-
         switch ( eFileType )
         {
             case ECodeFileTypes::eHeader:
                 {
+                    PreProcessHeaderFileContent( oCodeString );
                     ProcessHeaderFile( oFilePath, oCodeString, oDeveloperString );
                     break;
                 }
             case ECodeFileTypes::eSource:
                 {
+                    PreProcessSourceFileContent( oCodeString );
                     ProcessSourceFile( oFilePath, oCodeString, oDeveloperString );
                     break;
                 }
@@ -100,9 +100,9 @@ EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileTypes eFileTy
 }
 
 // ^^x
-// void CCodeAnalyzer::PreProcessFileContent
-// 3BGO JIRA-238 24-09-2020
-void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) const
+// void CCodeAnalyzer::PreProcessHeaderFileContent
+// 3BGO JIRA-238 08-01-2021
+void CCodeAnalyzer::PreProcessHeaderFileContent( std::string& oFileContentString ) const
 {
     m_oCodePareser.RemoveMultiLineComments( oFileContentString );
     m_oCodePareser.RemoveDirectives( oFileContentString );
@@ -114,12 +114,27 @@ void CCodeAnalyzer::PreProcessFileContent( std::string& oFileContentString ) con
 }
 
 // ^^x
+// void CCodeAnalyzer::PreProcessSourceFileContent
+// 3BGO JIRA-238 24-09-2020
+void CCodeAnalyzer::PreProcessSourceFileContent( std::string& oFileContentString ) const
+{
+    m_oCodePareser.RemoveMultiLineComments( oFileContentString );
+    m_oCodePareser.RemoveDirectives( oFileContentString );
+    m_oCodePareser.RemoveMacros( oFileContentString );
+    m_oCodePareser.RemoveStatemets( oFileContentString );
+    m_oCodePareser.RemoveMemberDataListInitialization( oFileContentString );
+    m_oCodePareser.RemoveClassDeclarations( oFileContentString );
+    m_oCodePareser.RemoveCallingConvetions( oFileContentString );
+}
+
+// ^^x
 // void CCodeAnalyzer::ProcessHeaderFile
 // 3BGO JIRA-238 24-09-2020
 void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString )
 {
     CHeaderFile oHeaderFile{ oFilePath };
     oHeaderFile.SetCodeLineCount( m_oCodePareser.CountLines( oFileContentString ) );
+    oHeaderFile.SetMemberVariables( m_oCodePareser.FindMemberVariables( oFileContentString ) );
 
     for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {

@@ -63,8 +63,13 @@ void CCodeAnalyzerLogger::WriteLine( const std::string& oMessageString )
 // ^^x
 // void CCodeAnalyzerLogger::Log
 // 3BGO JIRA-238 10-11-2020
-void CCodeAnalyzerLogger::Log( const SFindDataResult<CVariable>& oVariable )
+void CCodeAnalyzerLogger::Log( const SFindDataResult<CVariable>& oVariable, bool bIsMember )
 {
+	if ( bIsMember )
+	{
+		Write( "(member) " );
+	}
+
 	WriteLine( CStringHelper::Trim( CStringHelper::SimplifyString( oVariable.oRegexMatchString ) ) );
 }
 

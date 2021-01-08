@@ -29,7 +29,8 @@ private:
 	EProgramStatusCodes ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const;
 	EProgramStatusCodes ProcessCodeFile( const ECodeFileTypes eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString );
 
-	void PreProcessFileContent( std::string& oFileContentString ) const;
+	void PreProcessHeaderFileContent( std::string& oFileContentString ) const;
+	void PreProcessSourceFileContent( std::string& oFileContentString ) const;
 
 	void ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString );
 	void ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString );
