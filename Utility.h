@@ -14,7 +14,7 @@ struct SRange
 
 // ^^x
 // inline constexpr bool SRange::Contains
-// 3BGO JIRA-238 13-10-2020
+// 3BGO NTP-1 13-10-2020
 template<typename T>
 inline constexpr bool SRange::Contains( const T oValue, const T oMin, const T oMax )
 {
@@ -23,7 +23,7 @@ inline constexpr bool SRange::Contains( const T oValue, const T oMin, const T oM
 
 // ^^x
 // constexpr T ToPercent
-// 3BGO JIRA-238 23-10-2020
+// 3BGO NTP-1 23-10-2020
 template<typename T>
 constexpr T ToPercent( const T oValue, const T oTotal )
 {
@@ -39,7 +39,7 @@ constexpr T ToPercent( const T oValue, const T oTotal )
 
 // ^^x
 // void SleepThread
-// 3BGO JIRA-238 23-10-2020
+// 3BGO NTP-1 23-10-2020
 inline void SleepThread( const unsigned long long ullSeconds )
 {
 	std::this_thread::sleep_for( std::chrono::seconds( ullSeconds ) );

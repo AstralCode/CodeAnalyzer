@@ -23,7 +23,7 @@ std::array<std::string_view, 1u> CVariableGlobalCountModule::oExcludedVariableNa
 
 // ^^x
 // void CVariableGlobalCountModule::OnPreExecute
-// 3BGO JIRA-238 22-10-2020
+// 3BGO NTP-1 22-10-2020
 void CVariableGlobalCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].oHeaderString = "Global Variables";
@@ -36,7 +36,7 @@ void CVariableGlobalCountModule::OnPreExecute( CStatisticsCollection& oStatistic
 
 // ^^x
 // void CVariableGlobalCountModule::ProcessHeaderFile
-// 3BGO JIRA-238 22-10-2020
+// 3BGO NTP-1 22-10-2020
 void CVariableGlobalCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
 {
 
@@ -44,7 +44,7 @@ void CVariableGlobalCountModule::ProcessHeaderFile( const CHeaderFile&, CStatist
 
 // ^^x
 // void CVariableGlobalCountModule::ProcessSourceFile
-// 3BGO JIRA-238 22-10-2020
+// 3BGO NTP-1 22-10-2020
 void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
 {
     std::vector<SFindDataResult<CVariable>> oGlobalVariableVector = oSourceFile.GetGlobalVariables();
@@ -67,7 +67,7 @@ void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFi
 
 // ^^x
 // void CVariableGlobalCountModule::OnPostExecute
-// 3BGO JIRA-238 22-10-2020
+// 3BGO NTP-1 22-10-2020
 void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
     if ( IsLoggingEnabled() )
@@ -81,7 +81,7 @@ void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& oStatisti
 
 // ^^x
 // void CVariableGlobalCountModule::FilterVariables
-// 3BGO JIRA-238 22-10-2020
+// 3BGO NTP-1 22-10-2020
 void CVariableGlobalCountModule::FilterVariables( std::vector<SFindDataResult<CVariable>>& oVariableVector ) const
 {
     std::vector<SFindDataResult<CVariable>>::iterator oRemoveResultIt = std::remove_if( oVariableVector.begin(), oVariableVector.end(), [this]( const SFindDataResult<CVariable>& oVariable )
@@ -109,7 +109,7 @@ void CVariableGlobalCountModule::FilterVariables( std::vector<SFindDataResult<CV
 
 // ^^x
 // bool CVariableGlobalCountModule::ContainsExcludedKeyword
-// 3BGO JIRA-238 09-12-2020
+// 3BGO NTP-1 09-12-2020
 bool CVariableGlobalCountModule::ContainsExcludedKeyword( const CVariable& oVariable ) const
 {
     const std::string oVariableTypeString = oVariable.GetType();
@@ -127,7 +127,7 @@ bool CVariableGlobalCountModule::ContainsExcludedKeyword( const CVariable& oVari
 
 // ^^x
 // bool CVariableGlobalCountModule::ContainsExcludedType
-// 3BGO JIRA-238 09-12-2020
+// 3BGO NTP-1 09-12-2020
 bool CVariableGlobalCountModule::ContainsExcludedType( const CVariable& oVariable ) const
 {
     const std::string oVariableTypeString = oVariable.GetType();
@@ -145,7 +145,7 @@ bool CVariableGlobalCountModule::ContainsExcludedType( const CVariable& oVariabl
 
 // ^^x
 // bool CVariableGlobalCountModule::ContainsExcludedName
-// 3BGO JIRA-238 09-12-2020
+// 3BGO NTP-1 09-12-2020
 bool CVariableGlobalCountModule::ContainsExcludedName( const CVariable& oVariable ) const
 {
     const std::string oVariableNameString = CStringHelper::ToLowerCase( oVariable.GetName() );

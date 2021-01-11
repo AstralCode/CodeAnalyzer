@@ -2,7 +2,7 @@
 
 // ^^x
 // void CFunction::SetName
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CFunction::SetName( const std::string& oNameString )
 {
     m_oNameString = oNameString;
@@ -10,7 +10,7 @@ void CFunction::SetName( const std::string& oNameString )
 
 // ^^x
 // const std::string& CFunction::GetName
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 const std::string& CFunction::GetName() const
 {
     return m_oNameString;
@@ -18,7 +18,7 @@ const std::string& CFunction::GetName() const
 
 // ^^x
 // void CFunction::SetReturnType
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CFunction::SetReturnType( const std::string& oReturnTypeString )
 {
     m_oReturnTypeString = oReturnTypeString;
@@ -26,7 +26,7 @@ void CFunction::SetReturnType( const std::string& oReturnTypeString )
 
 // ^^x
 // std::optional<std::string> CFunction::GetReturnType
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 std::optional<std::string> CFunction::GetReturnType() const
 {
     return m_oReturnTypeString;
@@ -34,7 +34,7 @@ std::optional<std::string> CFunction::GetReturnType() const
 
 // ^^x
 // void CFunction::SetClassName
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CFunction::SetClassName( const std::string& oClassNameString )
 {
     m_oClassNameString = oClassNameString;
@@ -42,7 +42,7 @@ void CFunction::SetClassName( const std::string& oClassNameString )
 
 // ^^x
 // std::optional<std::string> CFunction::GetClassName
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 std::optional<std::string> CFunction::GetClassName() const
 {
     return m_oClassNameString;
@@ -50,7 +50,7 @@ std::optional<std::string> CFunction::GetClassName() const
 
 // ^^x
 // void CFunction::SetArgumentList
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CFunction::SetArgumentList( const std::string& oArgumentListString )
 {
     m_oArgumentListString = oArgumentListString;
@@ -58,7 +58,7 @@ void CFunction::SetArgumentList( const std::string& oArgumentListString )
 
 // ^^x
 // std::optional<std::string> CFunction::GetArgumentList
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 std::optional<std::string> CFunction::GetArgumentList() const
 {
     return m_oArgumentListString;
@@ -66,7 +66,7 @@ std::optional<std::string> CFunction::GetArgumentList() const
 
 // ^^x
 // void CFunction::SetBody
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CFunction::SetBody( const std::string& oBodyString )
 {
     m_oBodyString = oBodyString;
@@ -74,7 +74,7 @@ void CFunction::SetBody( const std::string& oBodyString )
 
 // ^^x
 // std::optional<std::string> CFunction::GetBody
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 std::optional<std::string> CFunction::GetBody() const
 {
     return m_oBodyString;
@@ -82,7 +82,7 @@ std::optional<std::string> CFunction::GetBody() const
 
 // ^^x
 // void CFunction::SetInformation
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CFunction::SetInformation( const SInformation& oInformation )
 {
     m_oInformation = oInformation;
@@ -90,7 +90,7 @@ void CFunction::SetInformation( const SInformation& oInformation )
 
 // ^^x
 // std::optional<SInformation> CFunction::GetInformation
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 std::optional<CFunction::SInformation> CFunction::GetInformation() const
 {
     return m_oInformation;
@@ -98,7 +98,7 @@ std::optional<CFunction::SInformation> CFunction::GetInformation() const
 
 // ^^x
 // void CFunction::SetLocalVariables
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CFunction::SetLocalVariables( std::vector<SFindDataResult<CVariable>>&& oVariableVector )
 {
     m_oLocalVariableVector = std::move( oVariableVector );
@@ -106,7 +106,7 @@ void CFunction::SetLocalVariables( std::vector<SFindDataResult<CVariable>>&& oVa
 
 // ^^x
 // std::optional<std::vector<SFindDataResult<CVariable>>> CFunction::GetLocalVariables
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 std::optional<std::vector<SFindDataResult<CVariable>>> CFunction::GetLocalVariables() const
 {
     return m_oLocalVariableVector;
@@ -114,7 +114,7 @@ std::optional<std::vector<SFindDataResult<CVariable>>> CFunction::GetLocalVariab
 
 // ^^x
 // void CFunction::SetDestructor
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CFunction::SetDestructor( const bool bIsDestructor )
 {
     m_bIsDestructor = bIsDestructor;
@@ -122,7 +122,7 @@ void CFunction::SetDestructor( const bool bIsDestructor )
 
 // ^^x
 // bool CFunction::IsDestructor
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 bool CFunction::IsDestructor() const
 {
     return m_bIsDestructor;
@@ -130,7 +130,7 @@ bool CFunction::IsDestructor() const
 
 // ^^x
 // std::optional<SFunctionInformation> CFunction::GetInformation
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 bool CFunction::IsConstructor() const
 {
     bool bIsConstructor{ false };
@@ -145,7 +145,7 @@ bool CFunction::IsConstructor() const
 
 // ^^x
 // bool CFunction::IsMember
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 bool CFunction::IsMember() const
 {
     return m_oClassNameString.has_value();

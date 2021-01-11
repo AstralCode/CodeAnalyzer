@@ -6,7 +6,7 @@
 
 // ^^x
 // void CCodeLineCountModule::OnPreExecute
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeLineCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eCodeLineCount].oHeaderString = "Code Lines";
@@ -14,7 +14,7 @@ void CCodeLineCountModule::OnPreExecute( CStatisticsCollection& oStatisticsColle
 
 // ^^x
 // void CCodeLineCountModule::ProcessHeaderFile
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeLineCountModule::ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eCodeLineCount].uiValue += oHeaderFile.GetCodeLineCount();
@@ -22,7 +22,7 @@ void CCodeLineCountModule::ProcessHeaderFile( const CHeaderFile& oHeaderFile, CS
 
 // ^^x
 // void CCodeLineCountModule::ProcessSourceFile
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeLineCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eCodeLineCount].uiValue += oSourceFile.GetCodeLineCount();
@@ -30,7 +30,7 @@ void CCodeLineCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CS
 
 // ^^x
 // void CCodeLineCountModule::OnPostExecute
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeLineCountModule::OnPostExecute( CStatisticsCollection& )
 {
 

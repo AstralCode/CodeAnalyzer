@@ -4,7 +4,7 @@
 
 // ^^x
 // CCodeAnalyzerLogger::CCodeAnalyzerLogger
-// 3BGO JIRA-238 10-11-2020
+// 3BGO NTP-1 10-11-2020
 CCodeAnalyzerLogger::CCodeAnalyzerLogger( const std::filesystem::path& oDirectoryPath ) :
 	m_oDirectoryPath{ oDirectoryPath }
 {
@@ -13,7 +13,7 @@ CCodeAnalyzerLogger::CCodeAnalyzerLogger( const std::filesystem::path& oDirector
 
 // ^^x
 // void CCodeAnalyzerLogger::Open
-// 3BGO JIRA-238 10-11-2020
+// 3BGO NTP-1 10-11-2020
 void CCodeAnalyzerLogger::Open( const std::string& oFilenameString )
 {
 	if ( !m_oFileStream.is_open() )
@@ -28,7 +28,7 @@ void CCodeAnalyzerLogger::Open( const std::string& oFilenameString )
 
 // ^^x
 // void CCodeAnalyzerLogger::Remove
-// 3BGO JIRA-238 10-11-2020
+// 3BGO NTP-1 10-11-2020
 void CCodeAnalyzerLogger::Remove()
 {
 	if ( m_oFileStream.is_open() )
@@ -40,7 +40,7 @@ void CCodeAnalyzerLogger::Remove()
 
 // ^^x
 // void CCodeAnalyzerLogger::Write
-// 3BGO JIRA-238 10-11-2020
+// 3BGO NTP-1 10-11-2020
 void CCodeAnalyzerLogger::Write( const std::string& oMessageString )
 {
 	if ( m_oFileStream.is_open() )
@@ -51,7 +51,7 @@ void CCodeAnalyzerLogger::Write( const std::string& oMessageString )
 
 // ^^x
 // void CCodeAnalyzerLogger::WriteLine
-// 3BGO JIRA-238 10-11-2020
+// 3BGO NTP-1 10-11-2020
 void CCodeAnalyzerLogger::WriteLine( const std::string& oMessageString )
 {
 	if ( m_oFileStream.is_open() )
@@ -62,7 +62,7 @@ void CCodeAnalyzerLogger::WriteLine( const std::string& oMessageString )
 
 // ^^x
 // void CCodeAnalyzerLogger::Log
-// 3BGO JIRA-238 10-11-2020
+// 3BGO NTP-1 10-11-2020
 void CCodeAnalyzerLogger::Log( const SFindDataResult<CVariable>& oVariable, bool bIsMember )
 {
 	if ( bIsMember )
@@ -75,7 +75,7 @@ void CCodeAnalyzerLogger::Log( const SFindDataResult<CVariable>& oVariable, bool
 
 // ^^x
 // void CCodeAnalyzerLogger::Log
-// 3BGO JIRA-238 10-11-2020
+// 3BGO NTP-1 10-11-2020
 void CCodeAnalyzerLogger::Log( const SFindDataResult<CFunction>& oFunction )
 {
 	WriteLine( CStringHelper::Trim( CStringHelper::SimplifyString( oFunction.oRegexMatchString ) ) );

@@ -7,7 +7,7 @@
 
 // ^^x
 // void CFunctionLengthModule::OnPreExecute
-// 3BGO JIRA-238 30-09-2020
+// 3BGO NTP-1 30-09-2020
 void CFunctionLengthModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].oHeaderString = "Functions QP";
@@ -31,7 +31,7 @@ void CFunctionLengthModule::OnPreExecute( CStatisticsCollection& oStatisticsColl
 
 // ^^x
 // void CFunctionLengthModule::ProcessHeaderFile
-// 3BGO JIRA-238 30-09-2020
+// 3BGO NTP-1 30-09-2020
 void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
 {
 
@@ -39,7 +39,7 @@ void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCo
 
 // ^^x
 // void CFunctionLengthModule::ProcessSourceFile
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CFunctionLengthModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
 {
     CalculateStatistics( oSourceFile.GetGlobalFunctions(), oStatisticsCollection );
@@ -48,7 +48,7 @@ void CFunctionLengthModule::ProcessSourceFile( const CSourceFile& oSourceFile, C
 
 // ^^x
 // void CFunctionLengthModule::OnPostExecute
-// 3BGO JIRA-238 30-09-2020
+// 3BGO NTP-1 30-09-2020
 void CFunctionLengthModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
@@ -72,7 +72,7 @@ void CFunctionLengthModule::OnPostExecute( CStatisticsCollection& oStatisticsCol
 
 // ^^x
 // void CFunctionLengthModule::CalculateStatistics
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection )
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )

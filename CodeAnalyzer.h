@@ -59,7 +59,7 @@ private:
 
 // ^^x
 // void CCodeAnalyzer::AddAnalyzerModule
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 template<typename TDerivedCodeAnalyzerModule, typename... TArguments>
 inline void CCodeAnalyzer::AddAnalyzerModule( TArguments&&... oArguments )
 {

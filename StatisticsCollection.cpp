@@ -2,7 +2,7 @@
 
 // ^^x
 // SStatisticsResult& CStatisticsCollection::operator[]
-// 3BGO JIRA-238 23-10-2020
+// 3BGO NTP-1 23-10-2020
 SStatisticsResult& CStatisticsCollection::operator[]( const EStatisticsTypes eType )
 {
 	return m_oStatisticsResultMap[ eType ];
@@ -10,7 +10,7 @@ SStatisticsResult& CStatisticsCollection::operator[]( const EStatisticsTypes eTy
 
 // ^^x
 // std::vector<SStatisticsResult> CStatisticsCollection::GetStatisticsCollection
-// 3BGO JIRA-238 23-10-2020
+// 3BGO NTP-1 23-10-2020
 std::vector<SStatisticsResult> CStatisticsCollection::GetStatisticsCollection() const
 {
 	std::vector<SStatisticsResult> oStatisticsVector{};

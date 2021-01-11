@@ -7,7 +7,7 @@
 
 // ^^x
 // std::size_t CCodeParser::CountLines
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 std::size_t CCodeParser::CountLines( const std::string& oCodeString ) const
 {
 	return CStringHelper::SplitLines( oCodeString ).size();
@@ -15,7 +15,7 @@ std::size_t CCodeParser::CountLines( const std::string& oCodeString ) const
 
 // ^^x
 // std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( const std::string& oCodeString ) const
 {
 	enum EGlobalFunctionRegexMatchGroups
@@ -64,7 +64,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctionHeaders( 
 
 // ^^x
 // std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctions
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctions( const std::string& oCodeString ) const
 {
 	std::string oModifiedCodeString = oCodeString;
@@ -79,7 +79,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindGlobalFunctions( const 
 
 // ^^x
 // std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( const std::string& oCodeString ) const
 {
 	enum EMemberFunctionRegexMatchGroups
@@ -137,7 +137,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctionHeaders( 
 
 // ^^x
 // std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( const std::string& oCodeString ) const
 {
 	std::vector<SFindDataResult<CFunction>> oFunctionVector = FindMemberFunctionHeaders( oCodeString );
@@ -149,7 +149,7 @@ std::vector<SFindDataResult<CFunction>> CCodeParser::FindMemberFunctions( const 
 
 // ^^x
 // std::vector<SFindDataResult<CVariable>> CSourceFile::FindMemberVariables
-// 3BGO JIRA-238 08-01-2021
+// 3BGO NTP-1 08-01-2021
 std::vector<SFindDataResult<CVariable>> CCodeParser::FindMemberVariables( const std::string& oCodeString ) const
 {
 	std::string oModifiedCodeString = oCodeString;
@@ -161,7 +161,7 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindMemberVariables( const 
 
 // ^^x
 // std::vector<SFindDataResult<CVariable>> CSourceFile::FindGlobalVariables
-// 3BGO JIRA-238 12-10-2020
+// 3BGO NTP-1 12-10-2020
 std::vector<SFindDataResult<CVariable>> CCodeParser::FindGlobalVariables( const std::string& oCodeString ) const
 {
 	const std::vector<SFindDataResult<CFunction>> oGlobalFunctionHeaderVector = FindGlobalFunctionHeaders( oCodeString );
@@ -179,7 +179,7 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindGlobalVariables( const 
 
 // ^^x
 // std::vector<SFindDataResult<CVariable>> CSourceFile::FindLocalVariables
-// 3BGO JIRA-238 12-10-2020
+// 3BGO NTP-1 12-10-2020
 std::vector<SFindDataResult<CVariable>> CCodeParser::FindLocalVariables( const CFunction& oFunction ) const
 {
 	std::vector<SFindDataResult<CVariable>> oVariableVector{};
@@ -194,8 +194,8 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindLocalVariables( const C
 
 // ^^x
 // std::vector<SFindDataResult<CVariable>> CSourceFile::FindVariables
-// 3BGO JIRA-238 14-10-2020
-// 3BGO JIRA-238 08-01-2021 (modified)
+// 3BGO NTP-1 14-10-2020
+// 3BGO NTP-1 08-01-2021 (modified)
 std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::string& oCodeString, std::string_view oRegexExpressionStringView ) const
 {
 	std::regex oRegexPattern{ oRegexExpressionStringView.data() };
@@ -242,7 +242,7 @@ std::vector<SFindDataResult<CVariable>> CCodeParser::FindVariables( const std::s
 ///****
 // ^^x
 // void CCodeParser::RemoveMultiLineComments
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 void CCodeParser::RemoveMultiLineComments( std::string& oCodeString ) const
 {
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_COMMENT_SINGLELINE_DOTS );
@@ -251,7 +251,7 @@ void CCodeParser::RemoveMultiLineComments( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveSingleLineComments
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 void CCodeParser::RemoveSingleLineComments( std::string& oCodeString ) const
 {
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_COMMENT_SINGLELINE );
@@ -259,7 +259,7 @@ void CCodeParser::RemoveSingleLineComments( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveDirectives
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 void CCodeParser::RemoveDirectives( std::string& oCodeString ) const
 {
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_DIRECTIVE_INCLUDE );
@@ -267,7 +267,7 @@ void CCodeParser::RemoveDirectives( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveMacros
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 void CCodeParser::RemoveMacros( std::string& oCodeString ) const
 {
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_MACRO_IMPLEMENT_DYNAMIC );
@@ -278,7 +278,7 @@ void CCodeParser::RemoveMacros( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveStatemets
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 void CCodeParser::RemoveStatemets( std::string& oCodeString ) const
 {
 	oCodeString = CStringHelper::Remove( oCodeString, R"('{')" );
@@ -293,7 +293,7 @@ void CCodeParser::RemoveStatemets( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveMemberDataListInitialization
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 void CCodeParser::RemoveMemberDataListInitialization( std::string& oCodeString ) const
 {
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_MEMBER_DATA_LIST_INITIALIZATION );
@@ -301,7 +301,7 @@ void CCodeParser::RemoveMemberDataListInitialization( std::string& oCodeString )
 
 // ^^x
 // void CCodeParser::RemoveMemberFunctionBodies
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 void CCodeParser::RemoveMemberFunctionBodies( std::string& oCodeString ) const
 {
 	RemoveSingleLineComments( oCodeString );
@@ -322,7 +322,7 @@ void CCodeParser::RemoveMemberFunctionBodies( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveGlobalFunctionBodies
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 void CCodeParser::RemoveGlobalFunctionBodies( std::string& oCodeString ) const
 {
 	RemoveSingleLineComments( oCodeString );
@@ -343,7 +343,7 @@ void CCodeParser::RemoveGlobalFunctionBodies( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveDeclarations
-// 3BGO JIRA-238 05-10-2020
+// 3BGO NTP-1 05-10-2020
 void CCodeParser::RemoveDeclarations( std::string& oCodeString ) const
 {
 	oCodeString = CStringHelper::RemoveBetween( oCodeString, "typedef", ";" );
@@ -351,7 +351,7 @@ void CCodeParser::RemoveDeclarations( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveClassDeclarations
-// 3BGO JIRA-238 05-10-2020
+// 3BGO NTP-1 05-10-2020
 void CCodeParser::RemoveClassDeclarations( std::string& oCodeString ) const
 {
 	RemoveMatches( oCodeString, RegexPatterns::SZ_RGX_STRUCT_TYPE_DECLARATION );
@@ -361,7 +361,7 @@ void CCodeParser::RemoveClassDeclarations( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RemoveCallingConvetions
-// 3BGO JIRA-238 17-11-2020
+// 3BGO NTP-1 17-11-2020
 void CCodeParser::RemoveCallingConvetions( std::string& oCodeString ) const
 {
 	oCodeString = CStringHelper::Remove( oCodeString, "__cdecl" );
@@ -371,7 +371,7 @@ void CCodeParser::RemoveCallingConvetions( std::string& oCodeString ) const
 
 // ^^x
 // void CCodeParser::RetrieveBodyFunctions
-// 3BGO JIRA-238 05-10-2020
+// 3BGO NTP-1 05-10-2020
 void CCodeParser::RetrieveBodyFunctions( const std::string& oCodeString, std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const
 {
 	std::string::size_type uiCurrentCodeOffsetPos{ 0u };
@@ -388,7 +388,7 @@ void CCodeParser::RetrieveBodyFunctions( const std::string& oCodeString, std::ve
 
 // ^^x
 // void CCodeParser::FindLocalVariables
-// 3BGO JIRA-238 12-10-2020
+// 3BGO NTP-1 12-10-2020
 void CCodeParser::FindLocalVariables( std::vector<SFindDataResult<CFunction>>& oFunctionVector ) const
 {
 	for ( SFindDataResult<CFunction>& oFunction : oFunctionVector )
@@ -399,7 +399,7 @@ void CCodeParser::FindLocalVariables( std::vector<SFindDataResult<CFunction>>& o
 
 // ^^x
 // void CCodeParser::RemoveMatches
-// 3BGO JIRA-238 12-10-2020
+// 3BGO NTP-1 12-10-2020
 void CCodeParser::RemoveMatches( std::string& oCodeString, const char* szRegexPattern ) const
 {
 	if ( szRegexPattern != nullptr )
@@ -410,7 +410,7 @@ void CCodeParser::RemoveMatches( std::string& oCodeString, const char* szRegexPa
 
 // ^^x
 // std::string CCodeParser::PrepareFindGlobalFunctionRegexString
-// 3BGO JIRA-238 06-10-2020
+// 3BGO NTP-1 06-10-2020
 std::string CCodeParser::PrepareFindGlobalFunctionRegexString() const
 {
 	std::string oRegexPatternString{ RegexPatterns::SZ_RGX_FUNCTION_HEADER_INFORMATION };
@@ -421,7 +421,7 @@ std::string CCodeParser::PrepareFindGlobalFunctionRegexString() const
 
 // ^^x
 // std::string CCodeParser::PrepareFindMemberFunctionRegexString
-// 3BGO JIRA-238 06-10-2020
+// 3BGO NTP-1 06-10-2020
 std::string CCodeParser::PrepareFindMemberFunctionRegexString() const
 {
 	std::string oRegexPatternString{ RegexPatterns::SZ_RGX_FUNCTION_HEADER_INFORMATION };
@@ -432,7 +432,7 @@ std::string CCodeParser::PrepareFindMemberFunctionRegexString() const
 
 // ^^x
 // std::size_t CCodeParser::FindFunctionBracketOpenPosition
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCodeString, const std::string& oFunctionNameString, const std::string::size_type uiCurrentCodeOffsetPos ) const
 {
 	const std::string::size_type uiFunctionHeaderBegPos = oCodeString.find( oFunctionNameString, uiCurrentCodeOffsetPos );
@@ -443,7 +443,7 @@ std::size_t CCodeParser::FindFunctionBracketOpenPosition( const std::string& oCo
 
 // ^^x
 // std::size_t CCodeParser::FindFunctionBracketClosePosition
-// 3BGO JIRA-238 02-10-2020
+// 3BGO NTP-1 02-10-2020
 std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oCodeString, std::string::size_type uiCurrentCodeOffsetPos ) const
 {
 	std::string::size_type uiFunctionBracketLevel{ 1u };
@@ -478,7 +478,7 @@ std::size_t CCodeParser::FindFunctionBracketClosePosition( const std::string& oC
 
 // ^^x
 // std::string CCodeParser::RetrieveBodyFunction
-// 3BGO JIRA-238 10-10-2020
+// 3BGO NTP-1 10-10-2020
 std::string CCodeParser::RetrieveBodyFunction( const std::string& oCodeString, const std::string& oFunctionHeaderString, std::string::size_type& uiCurrentCodeOffsetPos ) const
 {
 	std::string oFunctionBodyString{};
@@ -512,7 +512,7 @@ std::string CCodeParser::RetrieveBodyFunction( const std::string& oCodeString, c
 
 // ^^x
 // std::string CCodeParser::SimplifyCode
-// 3BGO JIRA-238 05-10-2020
+// 3BGO NTP-1 05-10-2020
 std::string CCodeParser::SimplifyCode( const std::string& oCodeString ) const
 {
 	return CStringHelper::Replace( CStringHelper::SimplifyString( oCodeString ), '\n', ' ' );

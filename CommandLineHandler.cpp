@@ -9,7 +9,7 @@ constexpr unsigned int UI_REQUIRED_ARGS_COUNT = 1;
 
 // ^^x
 // CCommandLineHandler::CCommandLineHandler
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 CCommandLineHandler::CCommandLineHandler( int iArgumentCount, char* apcArguments[] )
 {
 	for ( int iArgIndex{ 1u }; iArgIndex < iArgumentCount; ++iArgIndex )
@@ -20,7 +20,7 @@ CCommandLineHandler::CCommandLineHandler( int iArgumentCount, char* apcArguments
 
 // ^^x
 // EProgramStatusCodes CCommandLineHandler::HandleArguments
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 EProgramStatusCodes CCommandLineHandler::HandleArguments( SCommandLineArgumentDataset& oArgumentDataset ) const
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
@@ -45,7 +45,7 @@ EProgramStatusCodes CCommandLineHandler::HandleArguments( SCommandLineArgumentDa
 
 // ^^x
 // std::string CCommandLineHandler::GetUsageMessage
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 std::string CCommandLineHandler::GetUsageMessage() const
 {
 	return {
@@ -59,7 +59,7 @@ std::string CCommandLineHandler::GetUsageMessage() const
 
 // ^^x
 // EProgramStatusCodes CCommandLineHandler::HandleRequiredArguments
-// 3BGO JIRA-238 06-10-2020
+// 3BGO NTP-1 06-10-2020
 EProgramStatusCodes CCommandLineHandler::HandleRequiredArguments( SCommandLineArgumentDataset& oArgumentDataset ) const
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
@@ -79,7 +79,7 @@ EProgramStatusCodes CCommandLineHandler::HandleRequiredArguments( SCommandLineAr
 
 // ^^x
 // EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments
-// 3BGO JIRA-238 06-10-2020
+// 3BGO NTP-1 06-10-2020
 EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineArgumentDataset& oArgumentDataset ) const
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
@@ -102,7 +102,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArguments( SCommandLineAr
 
 // ^^x
 // EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument
-// 3BGO JIRA-238 06-10-2020
+// 3BGO NTP-1 06-10-2020
 EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArgumentDataset& oArgumentDataset, const std::string& oOptionString, const std::string& oArgumentString ) const
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
@@ -131,7 +131,7 @@ EProgramStatusCodes CCommandLineHandler::HandleOptionalArgument( SCommandLineArg
 
 // ^^x
 // void CCommandLineHandler::AssignOptionalArgument
-// 3BGO JIRA-238 09-10-2020
+// 3BGO NTP-1 09-10-2020
 void CCommandLineHandler::AssignOptionalArgument( std::optional<std::string>& oOutputString, const std::string& oArgumentString ) const
 {
 	if ( !oOutputString.has_value() )

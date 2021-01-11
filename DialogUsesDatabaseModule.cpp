@@ -24,7 +24,7 @@ std::array<std::string_view, 8u> CDialogUsesDatabaseModule::aszDatabaseFunctionN
 
 // ^^x
 // void CDialogUsesDatabaseModule::OnPreExecute
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 void CDialogUsesDatabaseModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eDialogClassesCount].oHeaderString = "Dialogs";
@@ -39,7 +39,7 @@ void CDialogUsesDatabaseModule::OnPreExecute( CStatisticsCollection& oStatistics
 
 // ^^x
 // void CDialogUsesDatabaseModule::ProcessHeaderFile
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 void CDialogUsesDatabaseModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
 {
 
@@ -47,7 +47,7 @@ void CDialogUsesDatabaseModule::ProcessHeaderFile( const CHeaderFile&, CStatisti
 
 // ^^x
 // void CDialogUsesDatabaseModule::ProcessSourceFile
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 void CDialogUsesDatabaseModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& )
 {
     const std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = oSourceFile.GetMemberFunctions();
@@ -60,7 +60,7 @@ void CDialogUsesDatabaseModule::ProcessSourceFile( const CSourceFile& oSourceFil
 
 // ^^x
 // void CDialogUsesDatabaseModule::OnPostExecute
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 void CDialogUsesDatabaseModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
     const std::size_t uiDialogCount = m_oDialogClassSet.size();
@@ -80,7 +80,7 @@ void CDialogUsesDatabaseModule::OnPostExecute( CStatisticsCollection& oStatistic
 
 // ^^x
 // void CDialogUsesDatabaseModule::ProcessMemberFunction
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 void CDialogUsesDatabaseModule::ProcessMemberFunction( const SFindDataResult<CFunction>& oMemberFunction )
 {
     std::string oClassNameString{};
@@ -110,7 +110,7 @@ void CDialogUsesDatabaseModule::ProcessMemberFunction( const SFindDataResult<CFu
 
 // ^^x
 // bool CDialogUsesDatabaseModule::ContainsClassName
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 bool CDialogUsesDatabaseModule::ContainsClassName( const SFindDataResult<CFunction>& oMemberFunction, std::string& oClassNameString ) const
 {
     bool bHasClassName = oMemberFunction.oData.GetClassName().has_value();
@@ -124,7 +124,7 @@ bool CDialogUsesDatabaseModule::ContainsClassName( const SFindDataResult<CFuncti
 
 // ^^x
 // bool CDialogUsesDatabaseModule::ContainsFunctionBody
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 bool CDialogUsesDatabaseModule::ContainsFunctionBody( const SFindDataResult<CFunction>& oMemberFunction, std::string& oFunctionBodyString ) const
 {
     bool bHasFunctionBody = oMemberFunction.oData.GetBody().has_value();
@@ -138,7 +138,7 @@ bool CDialogUsesDatabaseModule::ContainsFunctionBody( const SFindDataResult<CFun
 
 // ^^x
 // bool CDialogUsesDatabaseModule::IsMemberFunctionBodyUsesDatabase
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 bool CDialogUsesDatabaseModule::IsMemberFunctionBodyUsesDatabase( std::string& oFunctionBodyString ) const
 {
     bool bIsFunctionUsesDatabase{ false };
@@ -157,7 +157,7 @@ bool CDialogUsesDatabaseModule::IsMemberFunctionBodyUsesDatabase( std::string& o
 
 // ^^x
 // bool CDialogUsesDatabaseModule::IsDialogClass
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 bool CDialogUsesDatabaseModule::IsDialogClass( const std::string& oClassNameString ) const
 {
     bool bIsDialogClass{ false };
@@ -176,7 +176,7 @@ bool CDialogUsesDatabaseModule::IsDialogClass( const std::string& oClassNameStri
 
 // ^^x
 // bool CDialogUsesDatabaseModule::IsDialogClassExcluded
-// 3BGO JIRA-238 24-10-2020
+// 3BGO NTP-1 24-10-2020
 bool CDialogUsesDatabaseModule::IsDialogClassExcluded( const std::string& oClassNameString ) const
 {
     return m_oDialogClassUsesDatabaseSet.find( oClassNameString ) != m_oDialogClassUsesDatabaseSet.cend();

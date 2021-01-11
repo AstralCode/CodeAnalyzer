@@ -10,7 +10,7 @@
 
 // ^^x
 // const CStatisticsCollection& CCodeAnalyzer::GetStatisticsCollection
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 const CStatisticsCollection& CCodeAnalyzer::GetStatisticsCollection() const
 {
     return m_oStatisticsCollection;
@@ -18,7 +18,7 @@ const CStatisticsCollection& CCodeAnalyzer::GetStatisticsCollection() const
 
 // ^^x
 // EProgramStatusCodes CCodeAnalyzer::Execute
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputDirectoryPath, std::optional<std::string> oDeveloperString )
 {
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
@@ -47,7 +47,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
 
 // ^^x
 // EProgramStatusCodes CCodeAnalyzer::ReadFileContent
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path& oFilePath, std::string& oFileContentString ) const
 {
     EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
@@ -67,7 +67,7 @@ EProgramStatusCodes CCodeAnalyzer::ReadFileContent( const std::filesystem::path&
 
 // ^^x
 // EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileTypes eFileType, const std::filesystem::path& oFilePath, std::optional<std::string> oDeveloperString )
 {
     std::string oCodeString{};
@@ -101,7 +101,7 @@ EProgramStatusCodes CCodeAnalyzer::ProcessCodeFile( const ECodeFileTypes eFileTy
 
 // ^^x
 // void CCodeAnalyzer::PreProcessHeaderFileContent
-// 3BGO JIRA-238 08-01-2021
+// 3BGO NTP-1 08-01-2021
 void CCodeAnalyzer::PreProcessHeaderFileContent( std::string& oFileContentString ) const
 {
     m_oCodePareser.RemoveMultiLineComments( oFileContentString );
@@ -115,7 +115,7 @@ void CCodeAnalyzer::PreProcessHeaderFileContent( std::string& oFileContentString
 
 // ^^x
 // void CCodeAnalyzer::PreProcessSourceFileContent
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeAnalyzer::PreProcessSourceFileContent( std::string& oFileContentString ) const
 {
     m_oCodePareser.RemoveMultiLineComments( oFileContentString );
@@ -129,7 +129,7 @@ void CCodeAnalyzer::PreProcessSourceFileContent( std::string& oFileContentString
 
 // ^^x
 // void CCodeAnalyzer::ProcessHeaderFile
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString )
 {
     CHeaderFile oHeaderFile{ oFilePath };
@@ -144,7 +144,7 @@ void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, c
 
 // ^^x
 // void CCodeAnalyzer::ProcessSourceFile
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, const std::string& oFileContentString, std::optional<std::string> oDeveloperString )
 {
     CSourceFile oSourceFile{ oFilePath };
@@ -168,7 +168,7 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
 
 // ^^x
 // void CCodeAnalyzer::FilterResults
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeAnalyzer::FilterResults( std::vector<SFindDataResult<CFunction>>& oFunctionVector, std::optional<std::string> oDeveloperString ) const
 {
     if ( oDeveloperString.has_value() )
@@ -189,7 +189,7 @@ void CCodeAnalyzer::FilterResults( std::vector<SFindDataResult<CFunction>>& oFun
 
 // ^^x
 // void CCodeAnalyzer::OnPreExecute
-// 3BGO JIRA-238 22-10-2020
+// 3BGO NTP-1 22-10-2020
 void CCodeAnalyzer::OnPreExecute( const std::filesystem::path& oInputDirectoryPath, std::size_t& uiCodeFileCount )
 {
     CConsoleInterface::PrintLine( "Code directory: \"" + oInputDirectoryPath.string() + "\"", true );
@@ -214,7 +214,7 @@ void CCodeAnalyzer::OnPreExecute( const std::filesystem::path& oInputDirectoryPa
 
 // ^^x
 // void CCodeAnalyzer::OnPostExecute
-// 3BGO JIRA-238 22-10-2020
+// 3BGO NTP-1 22-10-2020
 void CCodeAnalyzer::OnPostExecute( const EProgramStatusCodes eStatus )
 {
     if ( eStatus == EProgramStatusCodes::eSuccess )
@@ -231,7 +231,7 @@ void CCodeAnalyzer::OnPostExecute( const EProgramStatusCodes eStatus )
 
 // ^^x
 // std::size_t CCodeAnalyzer::CountNumberCodeFiles
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 std::size_t CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath ) const
 {
     return std::count_if( std::filesystem::recursive_directory_iterator{ oDirectoryPath },
@@ -241,7 +241,7 @@ std::size_t CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oD
 
 // ^^x
 // std::size_t CCodeAnalyzer::CountNumberCodeFiles
-// 3BGO JIRA-238 25-10-2020
+// 3BGO NTP-1 25-10-2020
 std::size_t CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oDirectoryPath, const ECodeFileTypes eCodeFileType ) const
 {
     return std::count_if( std::filesystem::recursive_directory_iterator{ oDirectoryPath },
@@ -255,7 +255,7 @@ std::size_t CCodeAnalyzer::CountNumberCodeFiles( const std::filesystem::path& oD
 
 // ^^x
 // std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles( const std::filesystem::path& oDirectoryPath ) const
 {
     std::uintmax_t ullFileCodeSizes = 0u;
@@ -274,7 +274,7 @@ std::uintmax_t CCodeAnalyzer::CountSizeCodeFiles( const std::filesystem::path& o
 
 // ^^x
 // ECodeFileTypes CCodeAnalyzer::CheckFileType
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 ECodeFileTypes CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFilePath ) const
 {
     ECodeFileTypes eType{ ECodeFileTypes::eUnknown };
@@ -299,7 +299,7 @@ ECodeFileTypes CCodeAnalyzer::CheckFileType( const std::filesystem::path& oFileP
 
 // ^^x
 // bool CCodeAnalyzer::IsCodeFile
-// 3BGO JIRA-238 06-10-2020
+// 3BGO NTP-1 06-10-2020
 bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath ) const
 {
     return CheckFileType( oFilePath ) != ECodeFileTypes::eUnknown;
@@ -307,7 +307,7 @@ bool CCodeAnalyzer::IsCodeFile( const std::filesystem::path& oFilePath ) const
 
 // ^^x
 // void CCodeAnalyzer::PrintProgress
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CCodeAnalyzer::PrintProgress( const std::size_t uiFileNumber, const std::size_t uiFileCount ) const
 {
     const std::size_t uiCurrentProgressPos = uiFileNumber * 100u / uiFileCount;

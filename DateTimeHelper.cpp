@@ -6,7 +6,7 @@
 
 // ^^x
 // std::string CDateTimeHelper::CurrentDate
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 std::string CDateTimeHelper::CurrentDate()
 {
 	const ::tm oDateTime = CurrentDateTime();
@@ -19,7 +19,7 @@ std::string CDateTimeHelper::CurrentDate()
 
 // ^^x
 // std::string CDateTimeHelper::CurrentTime
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 std::string CDateTimeHelper::CurrentTime()
 {
 	const ::tm oDateTime = CurrentDateTime();
@@ -32,7 +32,7 @@ std::string CDateTimeHelper::CurrentTime()
 
 // ^^x
 // std::tm CDateTimeHelper::CurrentDateTime
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 std::tm CDateTimeHelper::CurrentDateTime()
 {
 	const std::chrono::system_clock::time_point oCurrentTime = std::chrono::system_clock::now();

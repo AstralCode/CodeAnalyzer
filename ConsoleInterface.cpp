@@ -7,7 +7,7 @@
 
 // ^^x
 // void CConsoleInterface::Print
-// 3BGO JIRA-238 01-10-2020
+// 3BGO NTP-1 01-10-2020
 void CConsoleInterface::Print( const std::string& oMessageString, const bool bPrintTime )
 {
 	if ( bPrintTime )
@@ -20,7 +20,7 @@ void CConsoleInterface::Print( const std::string& oMessageString, const bool bPr
 
 // ^^x
 // void CConsoleInterface::PrintLine
-// 3BGO JIRA-238 01-10-2020
+// 3BGO NTP-1 01-10-2020
 void CConsoleInterface::PrintLine( const std::string& oMessageString, const bool bPrintTime )
 {
 	if ( bPrintTime )
@@ -33,7 +33,7 @@ void CConsoleInterface::PrintLine( const std::string& oMessageString, const bool
 
 // ^^x
 // void CConsoleInterface::NewLine
-// 3BGO JIRA-238 01-10-2020
+// 3BGO NTP-1 01-10-2020
 void CConsoleInterface::NewLine()
 {
 	std::cout << '\n';
@@ -41,7 +41,7 @@ void CConsoleInterface::NewLine()
 
 // ^^x
 // void CConsoleInterface::ClearLine
-// 3BGO JIRA-238 01-10-2020
+// 3BGO NTP-1 01-10-2020
 void CConsoleInterface::ClearLine()
 {
 	std::cout << '\r' << std::setw( 100 ) << ' ' << '\r';

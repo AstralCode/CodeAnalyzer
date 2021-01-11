@@ -6,7 +6,7 @@
 
 // ^^x
 // void CFunctionLengthModule::OnPreExecute
-// 3BGO JIRA-238 23-10-2020
+// 3BGO NTP-1 23-10-2020
 void CFunctionCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
 {
     oStatisticsCollection[EStatisticsTypes::eFunctionCount].oHeaderString = "Functions";
@@ -16,7 +16,7 @@ void CFunctionCountModule::OnPreExecute( CStatisticsCollection& oStatisticsColle
 
 // ^^x
 // void CFunctionCountModule::ProcessHeaderFile
-// 3BGO JIRA-238 01-10-2020
+// 3BGO NTP-1 01-10-2020
 void CFunctionCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
 {
 
@@ -24,7 +24,7 @@ void CFunctionCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCol
 
 // ^^x
 // void CFunctionCountModule::ProcessSourceFile
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 void CFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
 {
     const std::size_t uiMemberFunctionCount = oSourceFile.GetMemberFunctions().size();
@@ -36,7 +36,7 @@ void CFunctionCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CS
 
 // ^^x
 // void CFunctionCountModule::OnPostExecute
-// 3BGO JIRA-238 23-10-2020
+// 3BGO NTP-1 23-10-2020
 void CFunctionCountModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
 {
     const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;

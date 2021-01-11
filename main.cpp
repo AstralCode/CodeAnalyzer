@@ -15,7 +15,7 @@
 
 // ^^x
 // EProgramStatusCodes PrepareDirectory
-// 3BGO JIRA-238 23-10-2020
+// 3BGO NTP-1 23-10-2020
 EProgramStatusCodes PrepareDirectory( const std::string& oDirectoryNameString, std::filesystem::path& oOutputDirectoryPath )
 {
 	EProgramStatusCodes eStatus{ EProgramStatusCodes::eSuccess };
@@ -37,7 +37,7 @@ EProgramStatusCodes PrepareDirectory( const std::string& oDirectoryNameString, s
 
 // ^^x
 // std::filesystem::path PrepareReportPath
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 std::filesystem::path PrepareReportPath( const std::filesystem::path& oOutputDirectoryPath, std::optional<std::string> oReportPrefixNameString )
 {
 	const std::string oCurrentDateString = CDateTimeHelper::CurrentDate();
@@ -55,7 +55,7 @@ std::filesystem::path PrepareReportPath( const std::filesystem::path& oOutputDir
 
 // ^^x
 // int main
-// 3BGO JIRA-238 24-09-2020
+// 3BGO NTP-1 24-09-2020
 int main( int iArgumentCount, char* apcArguments[] )
 {
 	CConsoleInterface::PrintLine( "Code Analyzer [Version 1.2] (c) 2020 IN-Software" );
