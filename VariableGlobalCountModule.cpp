@@ -3,7 +3,6 @@
 #include <algorithm>
 
 #include "SourceFile.h"
-#include "StatisticsCollection.h"
 #include "StringHelper.h"
 
 std::array<std::string_view, 3u> CVariableGlobalCountModule::oExcludedVariableTypeKeywordArray =
@@ -24,20 +23,15 @@ std::array<std::string_view, 1u> CVariableGlobalCountModule::oExcludedVariableNa
 // ^^x
 // void CVariableGlobalCountModule::OnPreExecute
 // 3BGO NTP-1 22-10-2020
-void CVariableGlobalCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
+void CVariableGlobalCountModule::OnPreExecute()
 {
-    oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].oHeaderString = "Global Variables";
-
-    if ( IsLoggingEnabled() )
-    {
-        m_oLogger.Open( "GlobalVariables.txt" );
-    }
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eGlobalVariableCount, "Global Variables" );
 }
 
 // ^^x
 // void CVariableGlobalCountModule::ProcessHeaderFile
 // 3BGO NTP-1 22-10-2020
-void CVariableGlobalCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
+void CVariableGlobalCountModule::ProcessHeaderFile( const CHeaderFile& )
 {
 
 }
@@ -45,7 +39,7 @@ void CVariableGlobalCountModule::ProcessHeaderFile( const CHeaderFile&, CStatist
 // ^^x
 // void CVariableGlobalCountModule::ProcessSourceFile
 // 3BGO NTP-1 22-10-2020
-void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
+void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
     std::vector<SFindDataResult<CVariable>> oGlobalVariableVector = oSourceFile.GetGlobalVariables();
 
@@ -53,14 +47,9 @@ void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFi
     {
         FilterVariables( oGlobalVariableVector );
 
-        oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].uiValue += oGlobalVariableVector.size();
-
-        if ( IsLoggingEnabled() )
+        for ( const SFindDataResult<CVariable>& oVariable : oGlobalVariableVector )
         {
-            for ( const SFindDataResult<CVariable>& oVariable : oGlobalVariableVector )
-            {
-                m_oLogger.Log( oVariable );
-            }
+            m_oGlobalVariableSet.insert( oVariable );
         }
     }
 }
@@ -68,13 +57,28 @@ void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFi
 // ^^x
 // void CVariableGlobalCountModule::OnPostExecute
 // 3BGO NTP-1 22-10-2020
-void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
+void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection )
+{
+    m_oStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eGlobalVariableCount, m_oGlobalVariableSet.size() );
+
+    oFinalStatisticsCollection.MergeStatistics( m_oStatisticsCollection );
+}
+
+// ^^x
+// void CVariableGlobalCountModule::OnCollectedStatistics
+// 3BGO NTP-1 11-01-2021
+void CVariableGlobalCountModule::OnCollectedStatistics( CStatisticsCollection& )
 {
     if ( IsLoggingEnabled() )
     {
-        if ( oStatisticsCollection[EStatisticsTypes::eGlobalVariableCount].uiValue == 0u )
+        if ( !m_oGlobalVariableSet.empty() )
         {
-            m_oLogger.Remove();
+            m_oLogger.Open( "GlobalVariables.txt" );
+
+            std::for_each( m_oGlobalVariableSet.cbegin(), m_oGlobalVariableSet.cend(), [this]( const SFindDataResult<CVariable>& oVariable )
+            {
+                m_oLogger.Log( oVariable );
+            } );
         }
     }
 }

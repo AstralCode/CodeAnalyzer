@@ -1,11 +1,47 @@
 #include "StatisticsCollection.h"
 
 // ^^x
-// SStatisticsResult& CStatisticsCollection::operator[]
-// 3BGO NTP-1 23-10-2020
-SStatisticsResult& CStatisticsCollection::operator[]( const EStatisticsTypes eType )
+// void CStatisticsCollection::AddStatistics
+// 3BGO NTP-1 11-01-2021
+void CStatisticsCollection::AddStatistics( const EStatisticsTypes eType, const std::string_view oHeaderStringView, const SStatisticsResult::ValueType uiValue )
 {
-	return m_oStatisticsResultMap[ eType ];
+	m_oStatisticsResultMap.emplace( eType, SStatisticsResult{ oHeaderStringView.data(), uiValue } );
+}
+
+// ^^x
+// void CStatisticsCollection::SetStatisticsValue
+// 3BGO NTP-1 11-01-2021
+void CStatisticsCollection::SetStatisticsValue( const EStatisticsTypes eType, const SStatisticsResult::ValueType uiValue )
+{
+	m_oStatisticsResultMap.at( eType ).uiValue = uiValue;
+}
+
+// ^^x
+// SStatisticsResult::ValueType CStatisticsCollection::GetStatisticsValue
+// 3BGO NTP-1 11-01-2021
+SStatisticsResult::ValueType CStatisticsCollection::GetStatisticsValue( const EStatisticsTypes eType ) const
+{
+	return m_oStatisticsResultMap.at( eType ).uiValue;
+}
+
+// ^^x
+// void CStatisticsCollection::AccumulateStatisticsValue
+// 3BGO NTP-1 11-01-2021
+void CStatisticsCollection::AccumulateStatisticsValue( const EStatisticsTypes eType, const SStatisticsResult::ValueType uiValue )
+{
+	std::map<EStatisticsTypes, SStatisticsResult>::iterator oStatisticsResultIt = m_oStatisticsResultMap.find( eType );
+	if ( oStatisticsResultIt != m_oStatisticsResultMap.cend() )
+	{
+		oStatisticsResultIt->second.uiValue += uiValue;
+	}
+}
+
+// ^^x
+// void CStatisticsCollection::MergeStatistics
+// 3BGO NTP-1 11-01-2021
+void CStatisticsCollection::MergeStatistics( CStatisticsCollection& oStatisticsCollection )
+{
+	m_oStatisticsResultMap.merge( oStatisticsCollection.m_oStatisticsResultMap );
 }
 
 // ^^x

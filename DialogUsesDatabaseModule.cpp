@@ -1,7 +1,6 @@
 #include "DialogUsesDatabaseModule.h"
 
 #include "SourceFile.h"
-#include "StatisticsCollection.h"
 #include "Utility.h"
 
 std::array<std::string_view, 2u> CDialogUsesDatabaseModule::aszDialogDatabaseIdentifiers =
@@ -25,22 +24,17 @@ std::array<std::string_view, 8u> CDialogUsesDatabaseModule::aszDatabaseFunctionN
 // ^^x
 // void CDialogUsesDatabaseModule::OnPreExecute
 // 3BGO NTP-1 24-10-2020
-void CDialogUsesDatabaseModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
+void CDialogUsesDatabaseModule::OnPreExecute()
 {
-    oStatisticsCollection[EStatisticsTypes::eDialogClassesCount].oHeaderString = "Dialogs";
-    oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].oHeaderString = "Dialogs using database";
-    oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabasePercent].oHeaderString = "%";
-
-    if ( IsLoggingEnabled() )
-    {
-        m_oLogger.Open( "DialogsUsingDatabase.txt" );
-    }
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eDialogClassesCount, "Dialogs" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eDialogUsesDatabaseCount, "Dialogs using database" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eDialogUsesDatabasePercent, "%" );
 }
 
 // ^^x
 // void CDialogUsesDatabaseModule::ProcessHeaderFile
 // 3BGO NTP-1 24-10-2020
-void CDialogUsesDatabaseModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
+void CDialogUsesDatabaseModule::ProcessHeaderFile( const CHeaderFile& )
 {
 
 }
@@ -48,7 +42,7 @@ void CDialogUsesDatabaseModule::ProcessHeaderFile( const CHeaderFile&, CStatisti
 // ^^x
 // void CDialogUsesDatabaseModule::ProcessSourceFile
 // 3BGO NTP-1 24-10-2020
-void CDialogUsesDatabaseModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& )
+void CDialogUsesDatabaseModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
     const std::vector<SFindDataResult<CFunction>> oMemberFunctionVector = oSourceFile.GetMemberFunctions();
 
@@ -61,19 +55,35 @@ void CDialogUsesDatabaseModule::ProcessSourceFile( const CSourceFile& oSourceFil
 // ^^x
 // void CDialogUsesDatabaseModule::OnPostExecute
 // 3BGO NTP-1 24-10-2020
-void CDialogUsesDatabaseModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
+void CDialogUsesDatabaseModule::OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection )
 {
-    const std::size_t uiDialogCount = m_oDialogClassSet.size();
+    m_oStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eDialogClassesCount, m_oDialogClassSet.size() );
+    m_oStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eDialogUsesDatabaseCount, m_oDialogClassUsesDatabaseSet.size() );
 
-    oStatisticsCollection[EStatisticsTypes::eDialogClassesCount].uiValue = uiDialogCount;
-    oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].uiValue = m_oDialogClassUsesDatabaseSet.size();
-    oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabasePercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eDialogUsesDatabaseCount].uiValue, uiDialogCount );
+    oFinalStatisticsCollection.MergeStatistics( m_oStatisticsCollection );
+}
+
+// ^^x
+// void CDialogUsesDatabaseModule::OnCollectedStatistics
+// 3BGO NTP-1 11-01-2021
+void CDialogUsesDatabaseModule::OnCollectedStatistics( CStatisticsCollection& oFinalStatisticsCollection )
+{
+    const SStatisticsResult::ValueType uiDialogCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eDialogClassesCount );
+    const SStatisticsResult::ValueType uiDialogUsesDatabaseCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eDialogUsesDatabaseCount );
+
+    const SStatisticsResult::ValueType uiDialogCountPercent = ToPercent( uiDialogUsesDatabaseCount, uiDialogCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eDialogUsesDatabasePercent, uiDialogCountPercent );
 
     if ( IsLoggingEnabled() )
     {
-        if ( uiDialogCount == 0u )
+        if ( !m_oDialogClassUsesDatabaseSet.empty() )
         {
-            m_oLogger.Remove();
+            m_oLogger.Open( "DialogsUsingDatabase.txt" );
+
+            std::for_each( m_oDialogClassUsesDatabaseSet.cbegin(), m_oDialogClassUsesDatabaseSet.cend(), [this]( const std::string& oClassNameString )
+            {
+                m_oLogger.WriteLine( oClassNameString );
+            } );
         }
     }
 }
@@ -97,11 +107,6 @@ void CDialogUsesDatabaseModule::ProcessMemberFunction( const SFindDataResult<CFu
                 if ( IsMemberFunctionBodyUsesDatabase( oFunctionBodyString ) )
                 {
                     m_oDialogClassUsesDatabaseSet.insert( oClassNameString );
-
-                    if ( IsLoggingEnabled() )
-                    {
-                        m_oLogger.WriteLine( oClassNameString );
-                    }
                 }
             }
         }

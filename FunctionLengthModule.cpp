@@ -1,38 +1,32 @@
 #include "FunctionLengthModule.h"
 
 #include "SourceFile.h"
-#include "StatisticsCollection.h"
 #include "StringHelper.h"
 #include "Utility.h"
 
 // ^^x
 // void CFunctionLengthModule::OnPreExecute
 // 3BGO NTP-1 30-09-2020
-void CFunctionLengthModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
+void CFunctionLengthModule::OnPreExecute()
 {
-    oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].oHeaderString = "Functions QP";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPPercent].oHeaderString = "%";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].oHeaderString = "Functions HP";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPPercent].oHeaderString = "%";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].oHeaderString = "Functions 1P";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength1PPercent].oHeaderString = "%";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].oHeaderString = "Functions 2P";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength2PPercent].oHeaderString = "%";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].oHeaderString = "Functions 4P";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].oHeaderString = "%";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].oHeaderString = "Functions 5P+";
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].oHeaderString = "%";
-
-    if ( IsLoggingEnabled() )
-    {
-        m_oLogger.Open( "Functions2Plus.txt" );
-    }
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLengthQPCount, "Functions QP" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLengthQPPercent, "%" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLengthHPCount, "Functions HP" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLengthHPPercent, "%" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength1PCount, "Functions 1P" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength1PPercent, "%" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength2PCount, "Functions 2P" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength2PPercent, "%" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength4PCount, "Functions 4P" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength4PPercent, "%" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength4PPlusCount, "Functions 5P+" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength4PPlusPercent, "%" );
 }
 
 // ^^x
 // void CFunctionLengthModule::ProcessHeaderFile
 // 3BGO NTP-1 30-09-2020
-void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
+void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile& )
 {
 
 }
@@ -40,32 +34,62 @@ void CFunctionLengthModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCo
 // ^^x
 // void CFunctionLengthModule::ProcessSourceFile
 // 3BGO NTP-1 24-09-2020
-void CFunctionLengthModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
+void CFunctionLengthModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    CalculateStatistics( oSourceFile.GetGlobalFunctions(), oStatisticsCollection );
-    CalculateStatistics( oSourceFile.GetMemberFunctions(), oStatisticsCollection );
+    CalculateStatistics( oSourceFile.GetGlobalFunctions() );
+    CalculateStatistics( oSourceFile.GetMemberFunctions() );
 }
 
 // ^^x
 // void CFunctionLengthModule::OnPostExecute
 // 3BGO NTP-1 30-09-2020
-void CFunctionLengthModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
+void CFunctionLengthModule::OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection )
 {
-    const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
+    oFinalStatisticsCollection.MergeStatistics( m_oStatisticsCollection );
+}
 
-    oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].uiValue, uiFunctionCount );
-    oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].uiValue, uiFunctionCount );
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength1PPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].uiValue, uiFunctionCount );
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength2PPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue, uiFunctionCount );
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue, uiFunctionCount );
-    oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue, uiFunctionCount );
+// ^^x
+// void CFunctionLengthModule::OnCollectedStatistics
+// 3BGO NTP-1 11-01-2021
+void CFunctionLengthModule::OnCollectedStatistics( CStatisticsCollection& oFinalStatisticsCollection )
+{
+    const SStatisticsResult::ValueType uiFunctionCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionCount );
+
+    const SStatisticsResult::ValueType uiFunctionLengthQPCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionLengthQPCount );
+    const SStatisticsResult::ValueType uiFunctionLengthQPCountPercent = ToPercent( uiFunctionLengthQPCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLengthQPPercent, uiFunctionLengthQPCountPercent );
+
+    const SStatisticsResult::ValueType uiFunctionLengthHPCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionLengthHPCount );
+    const SStatisticsResult::ValueType uiFunctionLengthHPCountPercent = ToPercent( uiFunctionLengthHPCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLengthHPPercent, uiFunctionLengthHPCountPercent );
+
+    const SStatisticsResult::ValueType uiFunctionLength1PCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionLength1PCount );
+    const SStatisticsResult::ValueType uiFunctionLength1PCountPercent = ToPercent( uiFunctionLength1PCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength1PPercent, uiFunctionLength1PCountPercent );
+
+    const SStatisticsResult::ValueType uiFunctionLength2PCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionLength2PCount );
+    const SStatisticsResult::ValueType uiFunctionLength2PCountPercent = ToPercent( uiFunctionLength2PCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength2PPercent, uiFunctionLength2PCountPercent );
+
+    const SStatisticsResult::ValueType uiFunctionLength4PCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionLength4PCount );
+    const SStatisticsResult::ValueType uiFunctionLength4PCountPercent = ToPercent( uiFunctionLength4PCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength4PPercent, uiFunctionLength4PCountPercent );
+
+    const SStatisticsResult::ValueType uiFunctionLength4PPlusCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionLength4PPlusCount );
+    const SStatisticsResult::ValueType uiFunctionLength4PPlusCountPercent = ToPercent( uiFunctionLength4PPlusCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength4PPlusPercent, uiFunctionLength4PPlusCountPercent );
 
     if ( IsLoggingEnabled() )
     {
-        const std::size_t uiFunction2PPlustCount = oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue + oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue;
-        if ( uiFunction2PPlustCount == 0u )
+        if ( !m_oFunctionSet.empty() )
         {
-            m_oLogger.Remove();
+            m_oLogger.Open( "Functions2Plus.txt" );
+
+            std::for_each( m_oFunctionSet.cbegin(), m_oFunctionSet.cend(), [this]( const SFindDataResult<CFunction>& oFunction )
+            {
+                m_oLogger.Log( oFunction );
+                m_oLogger.WriteLine();
+            } );
         }
     }
 }
@@ -73,7 +97,7 @@ void CFunctionLengthModule::OnPostExecute( CStatisticsCollection& oStatisticsCol
 // ^^x
 // void CFunctionLengthModule::CalculateStatistics
 // 3BGO NTP-1 24-09-2020
-void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection )
+void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector )
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {
@@ -90,39 +114,29 @@ void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResu
 
                 if ( SRange::Contains( uiFunctionCodeLineCount, { 0u }, { 16u } ) )
                 {
-                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLengthQPCount].uiValue;
+                    m_oStatisticsCollection.AccumulateStatisticsValue( EStatisticsTypes::eFunctionLengthQPCount, 1u );
                 }
                 else if ( SRange::Contains( uiFunctionCodeLineCount, { 17u }, { 32u } ) )
                 {
-                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLengthHPCount].uiValue;
+                    m_oStatisticsCollection.AccumulateStatisticsValue( EStatisticsTypes::eFunctionLengthHPCount, 1u );
                 }
                 else if ( SRange::Contains( uiFunctionCodeLineCount, { 33u }, { 62u } ) )
                 {
-                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLength1PCount].uiValue;
+                    m_oStatisticsCollection.AccumulateStatisticsValue( EStatisticsTypes::eFunctionLength1PCount, 1u );
                 }
                 else if ( SRange::Contains( uiFunctionCodeLineCount, { 63u }, { 124u } ) )
                 {
-                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLength2PCount].uiValue;
+                    m_oStatisticsCollection.AccumulateStatisticsValue( EStatisticsTypes::eFunctionLength2PCount, 1u );
                 }
                 else if ( SRange::Contains( uiFunctionCodeLineCount, { 125u }, { 248u } ) )
                 {
-                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PCount].uiValue;
-
-                    if ( IsLoggingEnabled() )
-                    {
-                        m_oLogger.Log( oFunction );
-                        m_oLogger.WriteLine();
-                    }
+                    m_oStatisticsCollection.AccumulateStatisticsValue( EStatisticsTypes::eFunctionLength4PCount, 1u );
+                    m_oFunctionSet.insert( oFunction );
                 }
                 else if ( SRange::Contains( uiFunctionCodeLineCount, { 249u } ) )
                 {
-                    ++oStatisticsCollection[EStatisticsTypes::eFunctionLength4PPlusCount].uiValue;
-
-                    if ( IsLoggingEnabled() )
-                    {
-                        m_oLogger.Log( oFunction );
-                        m_oLogger.WriteLine();
-                    }
+                    m_oStatisticsCollection.AccumulateStatisticsValue( EStatisticsTypes::eFunctionLength4PPlusCount, 1u );
+                    m_oFunctionSet.insert( oFunction );
                 }
             }
         }

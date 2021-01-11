@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <set>
 
 #include "CodeAnalyzerModule.h"
 #include "FindDataResult.h"
@@ -16,12 +17,14 @@ class CVariableGlobalCountModule final : public CCodeAnalyzerModule
 public:
 	using CCodeAnalyzerModule::CCodeAnalyzerModule;
 
-	void OnPreExecute( CStatisticsCollection& oStatisticsCollection ) override;
+	void OnPreExecute() override;
 
-	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;
-	void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) override;
+	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
+	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
 
-	void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) override;
+	void OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection ) override;
+
+	void OnCollectedStatistics( CStatisticsCollection& oFinalStatisticsCollection ) override;
 
 private:
 	static std::array<std::string_view, 3u> oExcludedVariableTypeKeywordArray;
@@ -33,4 +36,6 @@ private:
 	bool ContainsExcludedKeyword( const CVariable& oVariable ) const;
 	bool ContainsExcludedType( const CVariable& oVariable ) const;
 	bool ContainsExcludedName( const CVariable& oVariable ) const;
+
+	std::set<SFindDataResult<CVariable>> m_oGlobalVariableSet;
 };

@@ -17,12 +17,14 @@ class CDialogUsesDatabaseModule final : public CCodeAnalyzerModule
 public:
 	using CCodeAnalyzerModule::CCodeAnalyzerModule;
 
-	void OnPreExecute( CStatisticsCollection& oStatisticsCollection ) override;
+	void OnPreExecute() override;
 
-	void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) override;
-	void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) override;
+	void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) override;
+	void ProcessSourceFile( const CSourceFile& oSourceFile ) override;
 
-	void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) override;
+	void OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection ) override;
+
+	void OnCollectedStatistics( CStatisticsCollection& oFinalStatisticsCollection ) override;
 
 private:
 	void ProcessMemberFunction( const SFindDataResult<CFunction>& oMemberFunction );

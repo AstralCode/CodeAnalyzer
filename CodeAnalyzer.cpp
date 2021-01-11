@@ -26,8 +26,7 @@ EProgramStatusCodes CCodeAnalyzer::Execute( const std::filesystem::path& oInputD
     std::size_t uiCodeFileCount{ 0u };
 
     OnPreExecute( oInputDirectoryPath, uiCodeFileCount );
-
-    m_oStatisticsCollection[EStatisticsTypes::eFileCount] = { "Files", uiCodeFileCount };
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFileCount, "Files", uiCodeFileCount );
 
     std::filesystem::recursive_directory_iterator oDirectoryIterator{ oInputDirectoryPath };
     for ( const std::filesystem::path& oFilePath : oDirectoryIterator )
@@ -138,7 +137,7 @@ void CCodeAnalyzer::ProcessHeaderFile( const std::filesystem::path& oFilePath, c
 
     for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
-        upoAnalyzerModule->ProcessHeaderFile( oHeaderFile, m_oStatisticsCollection );
+        upoAnalyzerModule->ProcessHeaderFile( oHeaderFile );
     }
 }
 
@@ -162,7 +161,7 @@ void CCodeAnalyzer::ProcessSourceFile( const std::filesystem::path& oFilePath, c
 
     for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
-        upoAnalyzerModule->ProcessSourceFile( oSourceFile, m_oStatisticsCollection );
+        upoAnalyzerModule->ProcessSourceFile( oSourceFile );
     }
 }
 
@@ -208,7 +207,7 @@ void CCodeAnalyzer::OnPreExecute( const std::filesystem::path& oInputDirectoryPa
 
     for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
     {
-        upoAnalyzerModule->OnPreExecute( m_oStatisticsCollection );
+        upoAnalyzerModule->OnPreExecute();
     }
 }
 
@@ -222,6 +221,11 @@ void CCodeAnalyzer::OnPostExecute( const EProgramStatusCodes eStatus )
         for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
         {
             upoAnalyzerModule->OnPostExecute( m_oStatisticsCollection );
+        }
+
+        for ( std::unique_ptr<CCodeAnalyzerModule>& upoAnalyzerModule : m_oAnalyzerModuleVector )
+        {
+            upoAnalyzerModule->OnCollectedStatistics( m_oStatisticsCollection );
         }
 
         CConsoleInterface::ClearLine();

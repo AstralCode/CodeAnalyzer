@@ -2,7 +2,6 @@
 
 #include "HeaderFile.h"
 #include "SourceFile.h"
-#include "StatisticsCollection.h"
 #include "StringHelper.h"
 
 const CVariableRulesModule::VariableNameRuleArray CVariableRulesModule::m_aoVariableNameRules =
@@ -24,43 +23,61 @@ const CVariableRulesModule::VariableNameRuleArray CVariableRulesModule::m_aoVari
 // ^^x
 // void CVariableRulesModule::OnPreExecute
 // 3BGO NTP-1 25-10-2020
-void CVariableRulesModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
+void CVariableRulesModule::OnPreExecute()
 {
-    oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].oHeaderString = "Incorrect Variable Names";
-
-    if ( IsLoggingEnabled() )
-    {
-        m_oLogger.Open( "IncorrectVariableNames.txt" );
-    }
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eVariableIncorrectNameCount, "Incorrect Variable Names" );
 }
 
 // ^^x
 // void CVariableRulesModule::ProcessHeaderFile
 // 3BGO NTP-1 25-10-2020
-void CVariableRulesModule::ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection )
+void CVariableRulesModule::ProcessHeaderFile( const CHeaderFile& oHeaderFile )
 {
-    ValidateVariables( oHeaderFile.GetMemberVariables(), true, oStatisticsCollection );
+    ValidateVariables( oHeaderFile.GetMemberVariables(), true );
 }
 
 // ^^x
 // void CVariableRulesModule::ProcessSourceFile
 // 3BGO NTP-1 25-10-2020
-void CVariableRulesModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
+void CVariableRulesModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    CalculateStatistics( oSourceFile.GetGlobalFunctions(), oStatisticsCollection );
-    CalculateStatistics( oSourceFile.GetMemberFunctions(), oStatisticsCollection );
+    CalculateStatistics( oSourceFile.GetGlobalFunctions() );
+    CalculateStatistics( oSourceFile.GetMemberFunctions() );
 }
 
 // ^^x
 // void CVariableRulesModule::OnPostExecute
 // 3BGO NTP-1 25-10-2020
-void CVariableRulesModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
+void CVariableRulesModule::OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection )
+{
+    const std::size_t uiVariableCount = m_oVariableSet.size();
+    const std::size_t uiMemberVariableCount = m_oMemberVariableSet.size();
+
+    m_oStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eVariableIncorrectNameCount, ( uiVariableCount + uiMemberVariableCount ) );
+
+    oFinalStatisticsCollection.MergeStatistics( m_oStatisticsCollection );
+}
+
+// ^^x
+// void CVariableRulesModule::OnCollectedStatistics
+// 3BGO NTP-1 11-01-2021
+void CVariableRulesModule::OnCollectedStatistics( CStatisticsCollection& )
 {
     if ( IsLoggingEnabled() )
     {
-        if ( oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].uiValue == 0u )
+        if ( !m_oVariableSet.empty() || !m_oMemberVariableSet.empty() )
         {
-            m_oLogger.Remove();
+            m_oLogger.Open( "IncorrectVariableNames.txt" );
+
+            std::for_each( m_oVariableSet.cbegin(), m_oVariableSet.cend(), [this]( const SFindDataResult<CVariable>& oVariable )
+            {
+                m_oLogger.Log( oVariable );
+            } );
+
+            std::for_each( m_oMemberVariableSet.cbegin(), m_oMemberVariableSet.cend(), [this]( const SFindDataResult<CVariable>& oVariable )
+            {
+                m_oLogger.Log( oVariable, true );
+            } );
         }
     }
 }
@@ -68,7 +85,7 @@ void CVariableRulesModule::OnPostExecute( CStatisticsCollection& oStatisticsColl
 // ^^x
 // void CVariableRulesModule::CalculateStatistics
 // 3BGO NTP-1 25-10-2020
-void CVariableRulesModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection )
+void CVariableRulesModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector )
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {
@@ -76,7 +93,7 @@ void CVariableRulesModule::CalculateStatistics( const std::vector<SFindDataResul
 
         if ( oVariableVector.has_value() )
         {
-            ValidateVariables( *oVariableVector, false, oStatisticsCollection );
+            ValidateVariables( *oVariableVector, false );
         }
     }
 }
@@ -84,7 +101,7 @@ void CVariableRulesModule::CalculateStatistics( const std::vector<SFindDataResul
 // ^^x
 // void CVariableRulesModule::ValidateVariables
 // 3BGO NTP-1 25-10-2020
-void CVariableRulesModule::ValidateVariables( const std::vector<SFindDataResult<CVariable>>& oVariableVector, const bool bIsMember, CStatisticsCollection& oStatisticsCollection ) const
+void CVariableRulesModule::ValidateVariables( const std::vector<SFindDataResult<CVariable>>& oVariableVector, const bool bIsMember )
 {
     for ( const SFindDataResult<CVariable>& oVariable : oVariableVector )
     {
@@ -93,12 +110,14 @@ void CVariableRulesModule::ValidateVariables( const std::vector<SFindDataResult<
 
         if ( !IsVariableNameCorrect( oVariable.oData, bIsMember, oVariableNameRule ) )
         {
-            if ( IsLoggingEnabled() )
+            if ( bIsMember )
             {
-                m_oLogger.Log( oVariable, bIsMember );
+                m_oMemberVariableSet.insert( oVariable );
             }
-
-            ++oStatisticsCollection[EStatisticsTypes::eVariableIncorrectNameCount].uiValue;
+            else
+            {
+                m_oVariableSet.insert( oVariable );
+            }
         }
     }
 }

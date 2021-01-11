@@ -1,28 +1,22 @@
 #include "FunctionArgsCountModule.h"
 
 #include "SourceFile.h"
-#include "StatisticsCollection.h"
 #include "StringHelper.h"
 #include "Utility.h"
 
 // ^^x
 // void CFunctionLengthModule::OnPreExecute
 // 3BGO NTP-1 22-10-2020
-void CFunctionArgsCountModule::OnPreExecute( CStatisticsCollection& oStatisticsCollection )
+void CFunctionArgsCountModule::OnPreExecute()
 {
-    oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].oHeaderString = "Functions Args 6+";
-    oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsPercent].oHeaderString = "%";
-
-    if ( IsLoggingEnabled() )
-    {
-        m_oLogger.Open( "FunctionsArgs6Plus.txt" );
-    }
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunction6PlusArgsCount, "Functions Args 6+" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunction6PlusArgsPercent, "%" );
 }
 
 // ^^x
 // void CFunctionLengthModule::ProcessHeaderFile
 // 3BGO NTP-1 22-10-2020
-void CFunctionArgsCountModule::ProcessHeaderFile( const CHeaderFile&, CStatisticsCollection& )
+void CFunctionArgsCountModule::ProcessHeaderFile( const CHeaderFile& )
 {
 
 }
@@ -30,26 +24,44 @@ void CFunctionArgsCountModule::ProcessHeaderFile( const CHeaderFile&, CStatistic
 // ^^x
 // void CFunctionLengthModule::ProcessSourceFile
 // 3BGO NTP-1 22-10-2020
-void CFunctionArgsCountModule::ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection )
+void CFunctionArgsCountModule::ProcessSourceFile( const CSourceFile& oSourceFile )
 {
-    CalculateStatistics( oSourceFile.GetGlobalFunctions(), oStatisticsCollection );
-    CalculateStatistics( oSourceFile.GetMemberFunctions(), oStatisticsCollection );
+    CalculateStatistics( oSourceFile.GetGlobalFunctions() );
+    CalculateStatistics( oSourceFile.GetMemberFunctions() );
 }
 
 // ^^x
 // void CFunctionLengthModule::OnPostExecute
 // 3BGO NTP-1 22-10-2020
-void CFunctionArgsCountModule::OnPostExecute( CStatisticsCollection& oStatisticsCollection )
+void CFunctionArgsCountModule::OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection )
 {
-    const std::size_t uiFunctionCount = oStatisticsCollection[EStatisticsTypes::eFunctionCount].uiValue;
+    m_oStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunction6PlusArgsCount, m_oFunctionSet.size() );
 
-    oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsPercent].uiValue = ToPercent( oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue, uiFunctionCount );
+    oFinalStatisticsCollection.MergeStatistics( m_oStatisticsCollection );
+}
+
+// ^^x
+// void CFunctionArgsCountModule::OnCollectedStatistics
+// 3BGO NTP-1 11-01-2021
+void CFunctionArgsCountModule::OnCollectedStatistics( CStatisticsCollection& oFinalStatisticsCollection )
+{
+    const SStatisticsResult::ValueType uiFunctionCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionCount );
+    const SStatisticsResult::ValueType uiFunction6PlusArgsCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunction6PlusArgsCount );
+
+    const SStatisticsResult::ValueType uiFunction6PlusArgsCountPercent = ToPercent( uiFunction6PlusArgsCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunction6PlusArgsPercent, uiFunction6PlusArgsCountPercent );
 
     if ( IsLoggingEnabled() )
     {
-        if ( oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue == 0u )
+        if ( !m_oFunctionSet.empty() )
         {
-            m_oLogger.Remove();
+            m_oLogger.Open( "FunctionsArgs6Plus.txt" );
+
+            std::for_each( m_oFunctionSet.cbegin(), m_oFunctionSet.cend(), [this]( const SFindDataResult<CFunction>& oFunction )
+            {
+                m_oLogger.Log( oFunction );
+                m_oLogger.WriteLine();
+            } );
         }
     }
 }
@@ -57,22 +69,16 @@ void CFunctionArgsCountModule::OnPostExecute( CStatisticsCollection& oStatistics
 // ^^x
 // void CFunctionLengthModule::CalculateStatistics
 // 3BGO NTP-1 22-10-2020
-void CFunctionArgsCountModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector, CStatisticsCollection& oStatisticsCollection )
+void CFunctionArgsCountModule::CalculateStatistics( const std::vector<SFindDataResult<CFunction>>& oFunctionVector )
 {
     for ( const SFindDataResult<CFunction>& oFunction : oFunctionVector )
     {
         if ( oFunction.oData.GetArgumentList().has_value() )
         {
             const std::size_t uiFunctionCodeLineCount = CStringHelper::Split( *oFunction.oData.GetArgumentList(), ',' ).size();
-            if ( uiFunctionCodeLineCount > 5u )
+            if ( uiFunctionCodeLineCount >= 6u )
             {
-                ++oStatisticsCollection[EStatisticsTypes::eFunction5PlusArgsCount].uiValue;
-
-                if ( IsLoggingEnabled() )
-                {
-                    m_oLogger.Log( oFunction );
-                    m_oLogger.WriteLine();
-                }
+                m_oFunctionSet.insert( oFunction );
             }
         }
     }

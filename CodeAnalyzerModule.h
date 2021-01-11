@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "StatisticsCollection.h"
 #include "CodeAnalyzerLogger.h"
 
 class CHeaderFile;
@@ -18,16 +19,19 @@ public:
 	CCodeAnalyzerModule( const CCodeAnalyzerModule& ) = delete;
 	CCodeAnalyzerModule& operator=( const CCodeAnalyzerModule& ) = delete;
 
-	virtual void OnPreExecute( CStatisticsCollection& oStatisticsCollection ) = 0;
+	virtual void OnPreExecute() = 0;
 
-	virtual void ProcessHeaderFile( const CHeaderFile& oHeaderFile, CStatisticsCollection& oStatisticsCollection ) = 0;
-	virtual void ProcessSourceFile( const CSourceFile& oSourceFile, CStatisticsCollection& oStatisticsCollection ) = 0;
+	virtual void ProcessHeaderFile( const CHeaderFile& oHeaderFile ) = 0;
+	virtual void ProcessSourceFile( const CSourceFile& oSourceFile ) = 0;
 
-	virtual void OnPostExecute( CStatisticsCollection& oStatisticsCollection ) = 0;
+	virtual void OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection ) = 0;
+
+	virtual void OnCollectedStatistics( CStatisticsCollection& oFinalStatisticsCollection ) = 0;
 
 	bool IsLoggingEnabled() const;
 
 protected:
+	CStatisticsCollection m_oStatisticsCollection;
 	mutable CCodeAnalyzerLogger m_oLogger;
 
 private:
