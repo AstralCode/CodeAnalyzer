@@ -25,7 +25,8 @@ std::array<std::string_view, 1u> CVariableGlobalCountModule::oExcludedVariableNa
 // 3BGO NTP-1 22-10-2020
 void CVariableGlobalCountModule::OnPreExecute()
 {
-    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eGlobalVariableCount, "Global Variables" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eGlobalSimpleVariableCount, "Global Simple Variables" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eGlobalObjectsCount, "Global Objects" );
 }
 
 // ^^x
@@ -49,7 +50,24 @@ void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFi
 
         for ( const SFindDataResult<CVariable>& oVariable : oGlobalVariableVector )
         {
-            m_oGlobalVariableSet.insert( oVariable );
+            std::string oVariableTypeString = CStringHelper::Trim( oVariable.oData.GetType() );
+
+            oVariableTypeString = CStringHelper::Remove( oVariableTypeString, "static" );
+            oVariableTypeString = CStringHelper::Remove( oVariableTypeString, "constexpr" );
+            oVariableTypeString = CStringHelper::Remove( oVariableTypeString, "const" );
+            oVariableTypeString = CStringHelper::Remove( oVariableTypeString, "unsigned" );
+            oVariableTypeString = CStringHelper::Remove( oVariableTypeString, "*" );
+            oVariableTypeString = CStringHelper::Remove( oVariableTypeString, "&" );
+            oVariableTypeString = CStringHelper::Trim( oVariableTypeString );
+
+            if ( !std::islower( oVariableTypeString[0], {} ) && oVariableTypeString[0] == 'C' && oVariableTypeString != "CHAR" )
+            {
+                m_oGlobalObjectsSet.insert( oVariable );
+            }
+            else
+            {
+                m_oGlobalSimpleVariableSet.insert( oVariable );
+            }
         }
     }
 }
@@ -59,7 +77,8 @@ void CVariableGlobalCountModule::ProcessSourceFile( const CSourceFile& oSourceFi
 // 3BGO NTP-1 22-10-2020
 void CVariableGlobalCountModule::OnPostExecute( CStatisticsCollection& oFinalStatisticsCollection )
 {
-    m_oStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eGlobalVariableCount, m_oGlobalVariableSet.size() );
+    m_oStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eGlobalSimpleVariableCount, m_oGlobalSimpleVariableSet.size() );
+    m_oStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eGlobalObjectsCount, m_oGlobalObjectsSet.size());
 
     oFinalStatisticsCollection.MergeStatistics( m_oStatisticsCollection );
 }
@@ -71,14 +90,19 @@ void CVariableGlobalCountModule::OnCollectedStatistics( CStatisticsCollection& )
 {
     if ( IsLoggingEnabled() )
     {
-        if ( !m_oGlobalVariableSet.empty() )
+        if ( !m_oGlobalSimpleVariableSet.empty() || !m_oGlobalObjectsSet.empty() )
         {
             m_oLogger.Open( "GlobalVariables.txt" );
 
-            std::for_each( m_oGlobalVariableSet.cbegin(), m_oGlobalVariableSet.cend(), [this]( const SFindDataResult<CVariable>& oVariable )
+            std::for_each( m_oGlobalSimpleVariableSet.cbegin(), m_oGlobalSimpleVariableSet.cend(), [this]( const SFindDataResult<CVariable>& oVariable )
             {
                 m_oLogger.Log( oVariable );
             } );
+
+            std::for_each( m_oGlobalObjectsSet.cbegin(), m_oGlobalObjectsSet.cend(), [this](const SFindDataResult<CVariable>& oVariable )
+            {
+                m_oLogger.Log( oVariable );
+            });
         }
     }
 }

@@ -37,5 +37,6 @@ private:
 	bool ContainsExcludedType( const CVariable& oVariable ) const;
 	bool ContainsExcludedName( const CVariable& oVariable ) const;
 
-	std::set<SFindDataResult<CVariable>> m_oGlobalVariableSet;
+	std::set<SFindDataResult<CVariable>> m_oGlobalSimpleVariableSet;
+	std::set<SFindDataResult<CVariable>> m_oGlobalObjectsSet;
 };

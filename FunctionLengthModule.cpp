@@ -19,8 +19,10 @@ void CFunctionLengthModule::OnPreExecute()
     m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength2PPercent, "%" );
     m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength4PCount, "Functions 4P" );
     m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength4PPercent, "%" );
-    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength4PPlusCount, "Functions 5P+" );
-    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength4PPlusPercent, "%" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength5PPlusCount, "Functions 5P+" );
+    m_oStatisticsCollection.AddStatistics( EStatisticsTypes::eFunctionLength5PPlusPercent, "%" );
+    m_oStatisticsCollection.AddStatistics(EStatisticsTypes::eFunctionLength2PPlusCount, "Functions 2P+");
+    m_oStatisticsCollection.AddStatistics(EStatisticsTypes::eFunctionLength2PPlusPercent, "%");
 }
 
 // ^^x
@@ -75,9 +77,15 @@ void CFunctionLengthModule::OnCollectedStatistics( CStatisticsCollection& oFinal
     const SStatisticsResult::ValueType uiFunctionLength4PCountPercent = ToPercent( uiFunctionLength4PCount, uiFunctionCount );
     oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength4PPercent, uiFunctionLength4PCountPercent );
 
-    const SStatisticsResult::ValueType uiFunctionLength4PPlusCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionLength4PPlusCount );
-    const SStatisticsResult::ValueType uiFunctionLength4PPlusCountPercent = ToPercent( uiFunctionLength4PPlusCount, uiFunctionCount );
-    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength4PPlusPercent, uiFunctionLength4PPlusCountPercent );
+    const SStatisticsResult::ValueType uiFunctionLength5PPlusCount = oFinalStatisticsCollection.GetStatisticsValue( EStatisticsTypes::eFunctionLength5PPlusCount );
+    const SStatisticsResult::ValueType uiFunctionLength5PPlusCountPercent = ToPercent( uiFunctionLength5PPlusCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength5PPlusPercent, uiFunctionLength5PPlusCountPercent );
+
+    const SStatisticsResult::ValueType uiFunctionLength2PPlusCount = uiFunctionLength2PCount + uiFunctionLength4PCount + uiFunctionLength5PPlusCount;
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength2PPlusCount, uiFunctionLength2PPlusCount );
+
+    const SStatisticsResult::ValueType uiFunctionLength2PPlusCountPercent = ToPercent( uiFunctionLength2PPlusCount, uiFunctionCount );
+    oFinalStatisticsCollection.SetStatisticsValue( EStatisticsTypes::eFunctionLength2PPlusPercent, uiFunctionLength2PPlusCountPercent );
 
     if ( IsLoggingEnabled() )
     {
@@ -135,7 +143,7 @@ void CFunctionLengthModule::CalculateStatistics( const std::vector<SFindDataResu
                 }
                 else if ( SRange::Contains( uiFunctionCodeLineCount, { 249u } ) )
                 {
-                    m_oStatisticsCollection.AccumulateStatisticsValue( EStatisticsTypes::eFunctionLength4PPlusCount, 1u );
+                    m_oStatisticsCollection.AccumulateStatisticsValue( EStatisticsTypes::eFunctionLength5PPlusCount, 1u );
                     m_oFunctionSet.insert( oFunction );
                 }
             }

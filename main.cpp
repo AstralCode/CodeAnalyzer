@@ -58,7 +58,7 @@ std::filesystem::path PrepareReportPath( const std::filesystem::path& oOutputDir
 // 3BGO NTP-1 24-09-2020
 int main( int iArgumentCount, char* apcArguments[] )
 {
-	CConsoleInterface::PrintLine( "Code Analyzer [Version 1.2] (c) 2020 IN-Software" );
+	CConsoleInterface::PrintLine( "Code Analyzer [Version 1.3] (c) 2020 IN-Software" );
 	CConsoleInterface::NewLine();
 
 	CCommandLineHandler oCommandLineHandler{ iArgumentCount, apcArguments };
